@@ -7,15 +7,8 @@
   <meta name="description" content="Tour opérateur exclusif en Patagonie chilienne. Circuits accompagnés, fjords d'Aysén, Parc Patagonia. FR / EN / ES / PT." />
   <link rel="icon" type="image/png" href="Logos/favicon.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Dancing+Script:wght@600&display=swap" rel="stylesheet" />
 <style>
-@font-face {
-  font-family: 'ReklameScript';
-  src: url('assets/fonts/ReklameScript-Regular.otf') format('opentype');
-  font-weight: normal;
-  font-style: normal;
-  font-display: swap;
-}
 :root {
   --navy:   #1B3A6B;
   --sky:    #0057A8;
@@ -25,7 +18,7 @@
   --text:   #1C2B3A;
   --muted:  #6B7F8F;
   --border: rgba(27,58,107,0.12);
-  --fd: 'ReklameScript', Georgia, serif;
+  --fd: 'Dancing Script', Georgia, serif;
   --fb: 'Raleway', sans-serif;
   --shadow: 0 8px 40px rgba(28,58,94,0.10);
   --shadow-lg: 0 20px 60px rgba(28,58,94,0.16);
@@ -374,7 +367,7 @@ textarea.form-control { resize: vertical; min-height: 130px; }
 
   <section class="hero">
     <div class="hero-bg">
-      <img src="assets/images/hero.jpg" alt="Laguna Taplia, Patagonie" />
+      <img src="assets/images/hero.jpg" alt="" />
     </div>
     <div class="hero-content">
       <div style="margin-bottom:2rem">
@@ -622,7 +615,7 @@ document.querySelectorAll('.lang-btn').forEach(btn=>btn.addEventListener('click'
 
 /* ── PROGRAMMES DATA ─────────────────────────────────── */
 const PROGRAMMES=[
-  {id:"parc-patagonia",featured:true,badge:"Bestseller",duration:7,price_usd:2400,image:"assets/images/programmes/parc-patagonia.jpg",
+  {id:"parc-patagonia",featured:true,badge:"Bestseller",duration:7,price_usd:2400,image:"assets/images/programmes/parc-patagonia.jpeg",
    title:{fr:"Cœur du Parc Patagonia",en:"Heart of Patagonia Park",es:"Corazón del Parque Patagonia",pt:"Coração do Parque Patagônia"},
    desc:{fr:"Explorez les pampas, les lagunes turquoise et les condors du Parc Patagonia, joyau de la conservation chilienne.",en:"Explore the pampas, turquoise lagoons and condors of Patagonia Park, a jewel of Chilean conservation.",es:"Explora las pampas, las lagunas turquesa y los cóndores del Parque Patagonia.",pt:"Explore as pampas, as lagoas turquesas e os condores do Parque Patagônia."},
    full:{fr:"Un circuit de 7 jours au cœur du Parc Patagonia, un des plus beaux parcs nationaux du Chili. Randonnées guidées, observations de condors, nuits en lodge premium, cuisine locale et rencontres avec les rangers de conservation.",en:"A 7-day tour at the heart of Patagonia Park. Guided hikes, condor spotting, premium lodge nights, local cuisine and meetings with conservation rangers.",es:"Un circuito de 7 días en el corazón del Parque Patagonia. Senderismo guiado, avistamiento de cóndores, noches en lodge premium y encuentros con rangers de conservación.",pt:"Um circuito de 7 dias no coração do Parque Patagônia. Caminhadas guiadas, observação de condores, noites em lodge premium e encontros com guardas de conservação."}},
@@ -630,11 +623,11 @@ const PROGRAMMES=[
    title:{fr:"Fjords & Glaciers d'Aysén",en:"Fjords & Glaciers of Aysén",es:"Fiordos y Glaciares de Aysén",pt:"Fiordes e Glaciares do Aysén"},
    desc:{fr:"Navigation privée dans les fjords de l'Aysén, trekking sur glaciers et lodges au bout du monde.",en:"Private sailing through the fjords of Aysén, glacier trekking and lodges at the end of the world.",es:"Navegación privada por los fiordos de Aysén, trekking en glaciares y lodges en el fin del mundo.",pt:"Navegação privada pelos fiordes do Aysén, trekking em geleiras e lodges no fim do mundo."},
    full:{fr:"10 jours d'exploration des fjords et glaciers de la région d'Aysén en bateau privé. Le circuit le plus exclusif de notre catalogue — groupes de 4 à 8 personnes maximum.",en:"10 days exploring the fjords and glaciers of the Aysén region by private boat. The most exclusive tour in our catalogue — groups of 4 to 8 maximum.",es:"10 días explorando los fiordos y glaciares de Aysén en barco privado. El circuito más exclusivo de nuestro catálogo — grupos de 4 a 8 personas máximo.",pt:"10 dias explorando os fiordes e geleiras do Aysén em barco privado. O circuito mais exclusivo do catálogo — grupos de 4 a 8 pessoas."}},
-  {id:"carretera-austral",featured:true,badge:"",duration:12,price_usd:3200,image:"assets/images/programmes/carretera-austral.jpg",
+  {id:"carretera-austral",featured:true,badge:"",duration:12,price_usd:3200,image:"assets/images/programmes/carretera-austral.jpeg",
    title:{fr:"La Carretera Austral",en:"The Carretera Austral",es:"La Carretera Austral",pt:"A Carretera Austral"},
    desc:{fr:"Le grand voyage de la Route 7 — de Puerto Montt à Villa O'Higgins à travers les paysages les plus sauvages du Chili.",en:"The great Route 7 journey — from Puerto Montt to Villa O'Higgins through Chile's wildest landscapes.",es:"El gran viaje de la Ruta 7 — de Puerto Montt a Villa O'Higgins por los paisajes más salvajes de Chile.",pt:"A grande viagem da Rota 7 — de Puerto Montt a Villa O'Higgins pelos paisagens mais selvagens do Chile."},
    full:{fr:"12 jours sur la mythique Carretera Austral. Volcans, lacs, forêts tempérées, cascades et villages isolés — un voyage hors du commun.",en:"12 days on the mythical Carretera Austral. Volcanoes, lakes, temperate forests, waterfalls and isolated villages.",es:"12 días en la mítica Carretera Austral. Volcanes, lagos, bosques templados, cascadas y pueblos aislados.",pt:"12 dias na mítica Carretera Austral. Vulcões, lagos, florestas temperadas, cachoeiras e vilas isoladas."}},
-  {id:"lago-general-carrera",featured:false,badge:"",duration:5,price_usd:1800,image:"assets/images/programmes/lago-general-carrera.jpg",
+  {id:"lago-general-carrera",featured:false,badge:"",duration:5,price_usd:1800,image:"assets/images/programmes/lago-general-carrera.jpeg",
    title:{fr:"Lac General Carrera & Marbres",en:"Lake General Carrera & Marble Caves",es:"Lago General Carrera y Cuevas de Mármol",pt:"Lago General Carrera e Cavernas de Mármore"},
    desc:{fr:"Le plus grand lac de Patagonie et ses célèbres grottes de marbre — une merveille géologique unique au monde.",en:"Patagonia's largest lake and its famous marble caves — a geological wonder unique in the world.",es:"El lago más grande de la Patagonia y sus famosas cuevas de mármol.",pt:"O maior lago da Patagônia e suas famosas cavernas de mármore."},
    full:{fr:"5 jours autour du Lac General Carrera pour découvrir les grottes de marbre en kayak et les villages de Puerto Guadal et Chile Chico.",en:"5 days around Lake General Carrera to discover the marble caves by kayak and the villages of Puerto Guadal and Chile Chico.",es:"5 días alrededor del Lago General Carrera para descubrir las cuevas de mármol en kayak y los pueblos de Puerto Guadal y Chile Chico.",pt:"5 dias ao redor do Lago General Carrera para descobrir as cavernas de mármore de caiaque e as vilas de Puerto Guadal e Chile Chico."}}
