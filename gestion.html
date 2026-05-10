@@ -616,12 +616,16 @@ try {
   }
   sb = createClient(SUPABASE_URL, SUPABASE_KEY);
   sb.auth.onAuthStateChange((event, session) => {
-    if(session){
+    if((event === 'SIGNED_IN' || event === 'INITIAL_SESSION') && session) {
       document.getElementById('auth-wrap').style.display = 'none';
       document.getElementById('app').classList.add('visible');
       document.getElementById('header-user').textContent = session.user.email;
-      initApp();
-    } else {
+      if(!window._appInitialized) {
+        window._appInitialized = true;
+        initApp();
+      }
+    } else if(event === 'SIGNED_OUT') {
+      window._appInitialized = false;
       document.getElementById('auth-wrap').style.display = 'flex';
       document.getElementById('app').classList.remove('visible');
     }
