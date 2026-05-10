@@ -1,0 +1,1271 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Pristine Patagonia — Outil Interne</title>
+<link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+/* ── CONFIG ── Remplacer ces deux valeurs après création du projet Supabase */
+/* Voir SUPABASE_URL et SUPABASE_ANON_KEY dans le script ci-dessous */
+
+:root {
+  --navy:#1B3A6B; --blue:#0057A8; --blue-lt:#E8F1FA; --blue-md:#B8D4F0;
+  --cream:#F6F2EC; --white:#fff; --text:#1C2B3A; --muted:#6B7F8F;
+  --border:#D5DDE5; --bg:#F0F3F7;
+  --success:#1a7a4a; --warn:#C17D00; --danger:#B83232;
+  --fb:'Raleway',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--fb);font-size:14px;color:var(--text);background:var(--bg)}
+
+/* AUTH */
+.auth-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;background:var(--navy)}
+.auth-box{background:white;border-radius:12px;padding:2.5rem;width:380px}
+.auth-logo{font-size:22px;font-weight:700;color:var(--navy);text-align:center;margin-bottom:0.3rem}
+.auth-sub{text-align:center;color:var(--muted);font-size:13px;margin-bottom:2rem}
+.auth-error{background:#FFF0F0;border:1px solid #F0B8B8;color:var(--danger);padding:0.7rem 1rem;border-radius:6px;font-size:12px;margin-bottom:1rem;display:none}
+
+/* LAYOUT */
+.app{display:none}
+.app.visible{display:block}
+.header{background:var(--navy);color:white;padding:0 2rem;height:56px;display:flex;align-items:center;justify-content:space-between;position:fixed;top:0;left:0;right:0;z-index:100}
+.header-title{font-size:15px;font-weight:700;letter-spacing:0.04em;display:flex;align-items:center;gap:10px}
+.header-badge{background:rgba(255,255,255,0.15);font-size:10px;padding:2px 10px;border-radius:20px;font-weight:500;letter-spacing:0.10em;text-transform:uppercase}
+.main{margin-top:56px;display:grid;grid-template-columns:220px 1fr;min-height:calc(100vh - 56px)}
+
+/* SIDEBAR */
+.sidebar{background:white;border-right:1px solid var(--border);padding:1.5rem 0;position:sticky;top:56px;height:calc(100vh - 56px);overflow-y:auto}
+.sidebar-section{padding:0 1rem 1.2rem;border-bottom:1px solid var(--border);margin-bottom:1.2rem}
+.sidebar-label{font-size:10px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);margin-bottom:0.7rem;padding:0 0.3rem}
+.nav-item{display:flex;align-items:center;gap:9px;padding:0.55rem 0.75rem;border-radius:6px;cursor:pointer;font-size:13px;font-weight:500;color:var(--muted);transition:all 0.15s;margin-bottom:2px;border:none;background:none;width:100%;text-align:left;font-family:var(--fb)}
+.nav-item:hover{background:var(--blue-lt);color:var(--blue)}
+.nav-item.active{background:var(--blue-lt);color:var(--blue);font-weight:700}
+.nav-icon{font-size:16px;width:18px;text-align:center;flex-shrink:0}
+.badge-count{margin-left:auto;background:var(--blue);color:white;font-size:10px;font-weight:700;padding:1px 7px;border-radius:20px}
+
+/* CONTENT */
+.content{padding:2rem;max-width:1150px}
+.page{display:none}
+.page.active{display:block}
+.page-title{font-size:20px;font-weight:700;color:var(--navy);margin-bottom:0.3rem}
+.page-sub{font-size:13px;color:var(--muted);margin-bottom:1.5rem}
+
+/* CARDS */
+.card{background:white;border:1px solid var(--border);border-radius:10px;padding:1.5rem;margin-bottom:1.5rem}
+.card-title{font-size:12px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--navy);margin-bottom:1.2rem;display:flex;align-items:center;justify-content:space-between}
+.card-title-left{display:flex;align-items:center;gap:8px}
+.card-title-left::before{content:'';width:3px;height:14px;background:var(--blue);border-radius:2px}
+
+/* FORM */
+.form-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1rem}
+.form-group{display:flex;flex-direction:column;gap:5px}
+.form-group.span2{grid-column:span 2}
+.form-group.span3{grid-column:span 3}
+.form-label{font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted)}
+.form-control{padding:0.55rem 0.8rem;border:1px solid var(--border);border-radius:6px;font-family:var(--fb);font-size:13px;color:var(--text);background:white;outline:none;transition:border-color 0.15s;width:100%}
+.form-control:focus{border-color:var(--blue)}
+select.form-control{cursor:pointer}
+textarea.form-control{resize:vertical;min-height:80px}
+
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:0.5rem 1.1rem;border-radius:6px;font-family:var(--fb);font-size:12px;font-weight:600;cursor:pointer;transition:all 0.15s;border:1.5px solid transparent;letter-spacing:0.03em}
+.btn-primary{background:var(--blue);color:white;border-color:var(--blue)}
+.btn-primary:hover{background:#004A8C}
+.btn-outline{background:white;color:var(--navy);border-color:var(--border)}
+.btn-outline:hover{border-color:var(--blue);color:var(--blue)}
+.btn-success{background:var(--success);color:white;border-color:var(--success)}
+.btn-danger{background:white;color:var(--danger);border-color:#F0B8B8}
+.btn-danger:hover{background:#FFF0F0}
+.btn-sm{padding:0.35rem 0.8rem;font-size:11px}
+.btn-xs{padding:0.25rem 0.6rem;font-size:11px}
+.btn-icon{padding:0.4rem 0.7rem}
+
+/* TABLES */
+.data-table{width:100%;border-collapse:collapse;font-size:13px}
+.data-table th{background:#F5F7FA;padding:9px 12px;text-align:left;font-size:10px;font-weight:700;letter-spacing:0.10em;text-transform:uppercase;color:var(--muted);border-bottom:2px solid var(--border);white-space:nowrap}
+.data-table td{padding:10px 12px;border-bottom:1px solid #F0F3F7;vertical-align:middle}
+.data-table tr:hover td{background:#FAFBFC}
+.data-table .actions{display:flex;gap:6px;justify-content:flex-end}
+
+/* COST TABLE */
+.cost-tbl{width:100%;border-collapse:collapse;font-size:12px}
+.cost-tbl th{background:#F5F7FA;padding:6px 8px;font-size:9px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);border-bottom:2px solid var(--border);white-space:nowrap;text-align:center}
+.cost-tbl th.grp{background:#EEF2F8;color:var(--navy);border-bottom:2px solid var(--blue);font-size:10px}
+.cost-tbl th.grp-act{background:#EEF5EE;border-color:#2a7a2a}
+.cost-tbl th.grp-ldg{background:#F5F0EE;border-color:#8a4a1a}
+.cost-tbl th.grp-eat{background:#F0EEF5;border-color:#5a3a8a}
+.cost-tbl th.grp-gui{background:#EEF0F5;border-color:#1a3a6a}
+.cost-tbl td{padding:4px 5px;border-bottom:1px solid #F0F3F7;vertical-align:middle}
+.cost-tbl .day-lbl{font-weight:700;color:var(--navy);font-size:12px;padding:6px 8px;white-space:nowrap}
+.cost-tbl .note-row td{background:#FAFBFC;font-size:11px;color:var(--muted)}
+.cost-tbl .tot-row td{background:#EEF2F8;font-weight:700;color:var(--navy);border-top:2px solid var(--border)}
+.cost-in{width:100%;border:1px solid transparent;border-radius:4px;padding:4px 5px;font-family:var(--fb);font-size:12px;color:var(--text);background:transparent;outline:none;text-align:right;transition:all 0.15s;min-width:65px}
+.cost-in:focus{border-color:var(--blue);background:white}
+.cost-in::placeholder{color:#C0C8D0}
+.prest-sel{width:100%;border:1px solid transparent;border-radius:4px;padding:3px 4px;font-family:var(--fb);font-size:11px;color:var(--navy);background:transparent;outline:none;cursor:pointer;min-width:110px;max-width:150px}
+.prest-sel:focus{border-color:var(--blue);background:white}
+.col-tot{font-weight:700;color:var(--navy);font-size:12px;text-align:right;padding:4px 8px}
+
+/* METRICS */
+.metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:1.5rem}
+.metric{background:white;border:1px solid var(--border);border-radius:8px;padding:1rem 1.2rem}
+.metric-lbl{font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);margin-bottom:5px}
+.metric-val{font-size:20px;font-weight:700;color:var(--navy);line-height:1}
+.metric-val.blue{color:var(--blue)}
+.metric-val.green{color:var(--success)}
+.metric-sub{font-size:11px;color:var(--muted);margin-top:3px}
+
+/* STATUS BADGES */
+.badge{display:inline-flex;align-items:center;padding:2px 10px;border-radius:20px;font-size:10px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase}
+.badge-draft{background:#F0F3F7;color:var(--muted)}
+.badge-active{background:#E8F5EE;color:var(--success)}
+.badge-pub{background:var(--blue-lt);color:var(--blue)}
+.badge-arch{background:#FFF5E8;color:var(--warn)}
+
+/* PRICE TABLE */
+.price-tbl{width:100%;border-collapse:collapse;font-size:12px}
+.price-tbl th{background:var(--navy);color:white;padding:9px 12px;font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;text-align:center}
+.price-tbl th:first-child{text-align:left}
+.price-tbl td{padding:8px 12px;border-bottom:1px solid var(--border);text-align:center;font-size:13px}
+.price-tbl td:first-child{text-align:left;font-weight:600;color:var(--navy)}
+.price-tbl .hl td{background:#E8F5EE;font-weight:700}
+
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(10,20,40,0.6);z-index:200;display:flex;align-items:center;justify-content:center;padding:2rem;opacity:0;pointer-events:none;transition:opacity 0.2s}
+.modal-overlay.open{opacity:1;pointer-events:all}
+.modal-box{background:white;border-radius:10px;max-width:640px;width:100%;max-height:88vh;overflow-y:auto;transform:translateY(16px);transition:transform 0.2s}
+.modal-overlay.open .modal-box{transform:translateY(0)}
+.modal-header{padding:1.5rem;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.modal-title{font-size:15px;font-weight:700;color:var(--navy)}
+.modal-body{padding:1.5rem}
+.modal-footer{padding:1rem 1.5rem;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:8px;background:#FAFBFC;border-radius:0 0 10px 10px}
+
+/* MISC */
+.alert{padding:0.7rem 1rem;border-radius:6px;font-size:12px;margin-bottom:1rem;display:flex;align-items:flex-start;gap:8px}
+.alert-info{background:var(--blue-lt);color:var(--blue);border:1px solid var(--blue-md)}
+.alert-success{background:#E8F5EE;color:var(--success);border:1px solid #9FD4B4}
+.divider{height:1px;background:var(--border);margin:1.5rem 0}
+.section-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem}
+.empty{text-align:center;padding:3rem 2rem;color:var(--muted)}
+.notif{position:fixed;bottom:1.5rem;right:1.5rem;background:var(--navy);color:white;padding:0.8rem 1.4rem;border-radius:8px;font-size:13px;font-weight:500;z-index:999;transform:translateY(10px);opacity:0;transition:all 0.3s;pointer-events:none}
+.notif.show{transform:translateY(0);opacity:1}
+.loader{display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,0.3);border-top-color:white;border-radius:50%;animation:spin 0.7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.summary-box{background:var(--navy);color:white;border-radius:10px;padding:1.5rem;margin-bottom:1.5rem}
+.summary-box .metric-lbl{color:rgba(255,255,255,0.6)}
+.summary-box .metric-val{color:white}
+.summary-box .metric-sub{color:rgba(255,255,255,0.45)}
+.tabs-sm{display:flex;gap:3px;background:#F0F3F7;border-radius:7px;padding:3px;margin-bottom:1.2rem;width:fit-content}
+.tab-sm{padding:0.4rem 1rem;border-radius:5px;font-size:12px;font-weight:600;cursor:pointer;color:var(--muted);transition:all 0.15s;border:none;background:none;font-family:var(--fb)}
+.tab-sm.active{background:white;color:var(--navy);box-shadow:0 1px 4px rgba(0,0,0,0.08)}
+@media(max-width:768px){.main{grid-template-columns:1fr}.sidebar{display:none}.form-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<!-- AUTH -->
+<div class="auth-wrap" id="auth-wrap">
+  <div class="auth-box">
+    <div class="auth-logo">🦅 Pristine Patagonia</div>
+    <div class="auth-sub">Outil de gestion interne</div>
+    <div class="auth-error" id="auth-error"></div>
+    <div class="form-group" style="margin-bottom:1rem">
+      <label class="form-label">Email</label>
+      <input class="form-control" type="email" id="auth-email" placeholder="votre@email.com" />
+    </div>
+    <div class="form-group" style="margin-bottom:1.5rem">
+      <label class="form-label">Mot de passe</label>
+      <input class="form-control" type="password" id="auth-pass" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()" />
+    </div>
+    <button class="btn btn-primary" style="width:100%;justify-content:center" onclick="doLogin()" id="login-btn">
+      Se connecter
+    </button>
+    <div style="margin-top:1rem;text-align:center">
+      <div id="config-warning" style="font-size:11px;color:var(--warn);display:none">
+        ⚠️ Configurer SUPABASE_URL et SUPABASE_ANON_KEY dans le code source
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- APP -->
+<div class="app" id="app">
+  <div class="header">
+    <div class="header-title">
+      Pristine Patagonia
+      <span class="header-badge">Gestion Interne</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:12px">
+      <span id="header-user" style="font-size:12px;color:rgba(255,255,255,0.6)"></span>
+      <button class="btn btn-outline btn-sm" onclick="doLogout()" style="color:white;border-color:rgba(255,255,255,0.25)">Déconnexion</button>
+    </div>
+  </div>
+
+  <div class="main">
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+      <div class="sidebar-section">
+        <div class="sidebar-label">Navigation</div>
+        <button class="nav-item active" onclick="showPage('dashboard')" id="nav-dashboard">
+          <span class="nav-icon">📊</span> Dashboard
+        </button>
+        <button class="nav-item" onclick="showPage('programmes')" id="nav-programmes">
+          <span class="nav-icon">🗺</span> Programmes
+          <span class="badge-count" id="cnt-programmes">0</span>
+        </button>
+        <button class="nav-item" onclick="showPage('prestataires')" id="nav-prestataires">
+          <span class="nav-icon">🏨</span> Prestataires
+          <span class="badge-count" id="cnt-prest">0</span>
+        </button>
+        <button class="nav-item" onclick="showPage('parametres')" id="nav-parametres">
+          <span class="nav-icon">⚙️</span> Paramètres
+        </button>
+      </div>
+      <div class="sidebar-section">
+        <div class="sidebar-label">Raccourcis</div>
+        <button class="nav-item" onclick="openNewProgramme()">
+          <span class="nav-icon">✚</span> Nouveau programme
+        </button>
+        <button class="nav-item" onclick="openNewPrestataire()">
+          <span class="nav-icon">✚</span> Nouveau prestataire
+        </button>
+      </div>
+    </div>
+
+    <!-- CONTENT -->
+    <div class="content">
+
+      <!-- DASHBOARD -->
+      <div class="page active" id="page-dashboard">
+        <div class="page-title">Dashboard</div>
+        <div class="page-sub">Bienvenue dans l'outil de gestion Pristine Patagonia</div>
+        <div class="metrics" id="dash-metrics">
+          <div class="metric"><div class="metric-lbl">Programmes actifs</div><div class="metric-val blue" id="dash-actifs">—</div></div>
+          <div class="metric"><div class="metric-lbl">Programmes publiés</div><div class="metric-val green" id="dash-publis">—</div></div>
+          <div class="metric"><div class="metric-lbl">Prestataires</div><div class="metric-val" id="dash-prest">—</div></div>
+          <div class="metric"><div class="metric-lbl">Taux USD/CLP</div><div class="metric-val" id="dash-usd">—</div><div class="metric-sub">mis à jour manuellement</div></div>
+        </div>
+        <div class="card">
+          <div class="card-title"><div class="card-title-left">Programmes récents</div></div>
+          <div id="dash-recent"></div>
+        </div>
+      </div>
+
+      <!-- PROGRAMMES LIST -->
+      <div class="page" id="page-programmes">
+        <div class="section-hdr">
+          <div>
+            <div class="page-title">Programmes</div>
+            <div class="page-sub">Gérez vos circuits et calculez les prix</div>
+          </div>
+          <button class="btn btn-primary" onclick="openNewProgramme()">+ Nouveau programme</button>
+        </div>
+        <div class="card" style="padding:0">
+          <table class="data-table" id="prog-table">
+            <thead><tr>
+              <th>Programme</th><th>Catégorie</th><th>Durée</th><th>PAX min</th>
+              <th>Prix USD</th><th>Statut</th><th>Publié</th><th></th>
+            </tr></thead>
+            <tbody id="prog-tbody"><tr><td colspan="8" class="empty">Chargement…</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- PROGRAMME EDITOR -->
+      <div class="page" id="page-pricing">
+        <div class="section-hdr">
+          <div>
+            <div class="page-title" id="pricing-title">Nouveau programme</div>
+            <div class="page-sub">Calcul des coûts et prix de vente</div>
+          </div>
+          <div style="display:flex;gap:8px">
+            <button class="btn btn-outline" onclick="showPage('programmes')">← Retour</button>
+            <button class="btn btn-outline btn-sm" onclick="saveCurrentProg(false)">Sauvegarder</button>
+            <button class="btn btn-success btn-sm" onclick="saveCurrentProg(true)">✓ Publier sur le site</button>
+          </div>
+        </div>
+
+        <!-- Onglets du pricing -->
+        <div class="tabs-sm">
+          <button class="tab-sm active" onclick="switchPricingTab('info')" id="ptab-info">Informations</button>
+          <button class="tab-sm" onclick="switchPricingTab('costs')" id="ptab-costs">Coûts / jour</button>
+          <button class="tab-sm" onclick="switchPricingTab('fixes')" id="ptab-fixes">Coûts fixes</button>
+          <button class="tab-sm" onclick="switchPricingTab('recap')" id="ptab-recap">Récapitulatif</button>
+          <button class="tab-sm" onclick="switchPricingTab('content')" id="ptab-content">Contenu site</button>
+        </div>
+
+        <!-- INFO -->
+        <div id="pp-info" class="pp-panel">
+          <div class="card">
+            <div class="card-title"><div class="card-title-left">Informations générales</div></div>
+            <div class="form-grid">
+              <div class="form-group span2">
+                <label class="form-label">Nom du programme</label>
+                <input class="form-control" id="pp-nom" placeholder="Ex: Cœur du Parc Patagonia" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Catégorie</label>
+                <select class="form-control" id="pp-cat">
+                  <option>Parc Patagonia</option>
+                  <option>Fjords & Glaciers</option>
+                  <option>Carretera Austral</option>
+                  <option>Lac General Carrera</option>
+                  <option>Sur mesure</option>
+                  <option>Incoming / Agence</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Durée (jours)</label>
+                <input class="form-control" type="number" id="pp-jours" value="7" min="1" max="30" onchange="buildCostTable()" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">PAX minimum</label>
+                <input class="form-control" type="number" id="pp-pax" value="4" min="1" onchange="recalc()" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Marché cible</label>
+                <select class="form-control" id="pp-marche">
+                  <option>Français</option><option>Nord-américain</option>
+                  <option>Brésilien</option><option>Multi-marchés</option><option>Incoming / TO</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Badge</label>
+                <select class="form-control" id="pp-badge">
+                  <option value="">Aucun</option><option>Bestseller</option>
+                  <option>Exclusif</option><option>Nouveau</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Statut</label>
+                <select class="form-control" id="pp-statut">
+                  <option value="brouillon">Brouillon</option>
+                  <option value="actif">Actif</option>
+                  <option value="archive">Archivé</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title"><div class="card-title-left">Paramètres financiers</div></div>
+            <div class="form-grid">
+              <div class="form-group">
+                <label class="form-label">Marge (%)</label>
+                <input class="form-control" type="number" id="pp-marge" value="30" onchange="recalc()" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Frais CB (%)</label>
+                <input class="form-control" type="number" id="pp-ccfee" value="3.5" step="0.1" onchange="recalc()" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Taux USD/CLP</label>
+                <input class="form-control" type="number" id="pp-usd" value="920" onchange="recalc()" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Taux EUR/CLP</label>
+                <input class="form-control" type="number" id="pp-eur" value="1020" onchange="recalc()" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Taux BRL/CLP</label>
+                <input class="form-control" type="number" id="pp-brl" value="180" onchange="recalc()" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Commission TO (%)</label>
+                <input class="form-control" type="number" id="pp-tocomm" value="15" onchange="recalc()" />
+              </div>
+            </div>
+          </div>
+          <div style="display:flex;gap:8px">
+            <button class="btn btn-outline" onclick="showPage('programmes')">← Annuler</button>
+            <button class="btn btn-primary" onclick="switchPricingTab('costs')">Suivant : Coûts →</button>
+          </div>
+        </div>
+
+        <!-- COSTS -->
+        <div id="pp-costs" class="pp-panel" style="display:none">
+          <div class="alert alert-info">Montants en CLP. Sélectionnez un prestataire pour pré-remplir le prix automatiquement.</div>
+          <div class="card" style="padding:1rem;overflow-x:auto">
+            <table class="cost-tbl" id="cost-tbl">
+              <thead>
+                <tr>
+                  <th rowspan="2" style="min-width:55px;text-align:left">Jour</th>
+                  <th colspan="3" class="grp">Transport</th>
+                  <th colspan="3" class="grp grp-act">Activités</th>
+                  <th colspan="2" class="grp grp-ldg">Logement</th>
+                  <th colspan="3" class="grp grp-eat">Alimentation</th>
+                  <th colspan="3" class="grp grp-gui">Guides</th>
+                  <th rowspan="2" style="text-align:right;min-width:70px">Total</th>
+                </tr>
+                <tr>
+                  <th>Transferts</th><th>Véhicule</th><th>Vol/Bus</th>
+                  <th>Activité</th><th>Parcs</th><th>Équip.</th>
+                  <th>Lodge</th><th>Var.</th>
+                  <th>P.Déj</th><th>Lunch</th><th>Dîner</th>
+                  <th>Salaire</th><th>Logmt</th><th>Repas</th>
+                </tr>
+              </thead>
+              <tbody id="cost-tbody"></tbody>
+              <tfoot><tr class="tot-row">
+                <td>TOTAL</td>
+                <td colspan="15"></td>
+                <td class="col-tot" id="gtotal">0</td>
+              </tr></tfoot>
+            </table>
+          </div>
+          <div style="display:flex;justify-content:space-between;gap:8px">
+            <button class="btn btn-outline" onclick="switchPricingTab('info')">← Info</button>
+            <button class="btn btn-primary" onclick="switchPricingTab('fixes')">Coûts fixes →</button>
+          </div>
+        </div>
+
+        <!-- FIXES -->
+        <div id="pp-fixes" class="pp-panel" style="display:none">
+          <div class="card">
+            <div class="card-title"><div class="card-title-left">Guides & Personnel</div></div>
+            <div class="form-grid">
+              <div class="form-group"><label class="form-label">Lead guide (trip)</label><input class="form-control" type="number" id="pf-g1" placeholder="0 CLP" onchange="recalc()" /></div>
+              <div class="form-group"><label class="form-label">2e guide (trip)</label><input class="form-control" type="number" id="pf-g2" placeholder="0 CLP" onchange="recalc()" /></div>
+              <div class="form-group"><label class="form-label">Logement guides</label><input class="form-control" type="number" id="pf-gl" placeholder="0 CLP" onchange="recalc()" /></div>
+              <div class="form-group"><label class="form-label">Transport guides</label><input class="form-control" type="number" id="pf-gt" placeholder="0 CLP" onchange="recalc()" /></div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title"><div class="card-title-left">Véhicules & Transport</div></div>
+            <div class="form-grid">
+              <div class="form-group"><label class="form-label">Location véhicule</label><input class="form-control" type="number" id="pf-v1" placeholder="0 CLP" onchange="recalc()" /></div>
+              <div class="form-group"><label class="form-label">Essence & Péages</label><input class="form-control" type="number" id="pf-fuel" placeholder="0 CLP" onchange="recalc()" /></div>
+              <div class="form-group"><label class="form-label">2e véhicule</label><input class="form-control" type="number" id="pf-v2" placeholder="0 CLP" onchange="recalc()" /></div>
+              <div class="form-group"><label class="form-label">Vols intérieurs</label><input class="form-control" type="number" id="pf-fly" placeholder="0 CLP" onchange="recalc()" /></div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title"><div class="card-title-left">Autres</div></div>
+            <div class="form-grid">
+              <div class="form-group"><label class="form-label">Assurance groupe</label><input class="form-control" type="number" id="pf-ins" placeholder="0 CLP" onchange="recalc()" /></div>
+              <div class="form-group"><label class="form-label">Équipement collectif</label><input class="form-control" type="number" id="pf-eq" placeholder="0 CLP" onchange="recalc()" /></div>
+              <div class="form-group"><label class="form-label">Divers</label><input class="form-control" type="number" id="pf-misc" placeholder="0 CLP" onchange="recalc()" /></div>
+              <div class="form-group"><label class="form-label">Extra 1 (CLP)</label><input class="form-control" type="number" id="pf-x1" placeholder="0 CLP" onchange="recalc()" /></div>
+              <div class="form-group"><label class="form-label">Libellé extra 1</label><input class="form-control" id="pf-x1l" placeholder="Description" /></div>
+              <div class="form-group"><label class="form-label">Extra 2 (CLP)</label><input class="form-control" type="number" id="pf-x2" placeholder="0 CLP" onchange="recalc()" /></div>
+              <div class="form-group"><label class="form-label">Libellé extra 2</label><input class="form-control" id="pf-x2l" placeholder="Description" /></div>
+            </div>
+          </div>
+          <div style="display:flex;justify-content:space-between">
+            <button class="btn btn-outline" onclick="switchPricingTab('costs')">← Coûts</button>
+            <button class="btn btn-primary" onclick="switchPricingTab('recap')">Récapitulatif →</button>
+          </div>
+        </div>
+
+        <!-- RECAP -->
+        <div id="pp-recap" class="pp-panel" style="display:none">
+          <div id="recap-content"></div>
+        </div>
+
+        <!-- CONTENT SITE -->
+        <div id="pp-content" class="pp-panel" style="display:none">
+          <div class="alert alert-info">Ces textes s'affichent sur pristinepatagonia.cl lorsque le programme est publié.</div>
+          <div class="card">
+            <div class="card-title"><div class="card-title-left">Description courte</div></div>
+            <div class="form-grid">
+              <div class="form-group span2"><label class="form-label">Français</label><textarea class="form-control" id="pc-df" placeholder="Description courte FR (150 car. max)"></textarea></div>
+              <div class="form-group span2"><label class="form-label">English</label><textarea class="form-control" id="pc-de" placeholder="Short description EN"></textarea></div>
+              <div class="form-group span2"><label class="form-label">Español</label><textarea class="form-control" id="pc-des" placeholder="Descripción corta ES"></textarea></div>
+              <div class="form-group span2"><label class="form-label">Português</label><textarea class="form-control" id="pc-dp" placeholder="Descrição curta PT"></textarea></div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title"><div class="card-title-left">Description complète</div></div>
+            <div class="form-grid">
+              <div class="form-group span2"><label class="form-label">Français</label><textarea class="form-control" id="pc-ff" placeholder="Description complète FR" style="min-height:120px"></textarea></div>
+              <div class="form-group span2"><label class="form-label">English</label><textarea class="form-control" id="pc-fe" placeholder="Full description EN" style="min-height:120px"></textarea></div>
+              <div class="form-group span2"><label class="form-label">Español</label><textarea class="form-control" id="pc-fes" placeholder="Descripción completa ES" style="min-height:120px"></textarea></div>
+              <div class="form-group span2"><label class="form-label">Português</label><textarea class="form-control" id="pc-fp" placeholder="Descrição completa PT" style="min-height:120px"></textarea></div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title"><div class="card-title-left">Image</div></div>
+            <div class="form-group"><label class="form-label">URL de l'image</label><input class="form-control" id="pc-img" placeholder="assets/images/programmes/nom-programme.jpg" /></div>
+            <div style="font-size:12px;color:var(--muted);margin-top:8px">Uploader l'image dans GitHub sous assets/images/programmes/ puis coller l'URL ici.</div>
+          </div>
+          <div style="display:flex;justify-content:flex-end;gap:8px">
+            <button class="btn btn-outline btn-sm" onclick="saveCurrentProg(false)">Sauvegarder (brouillon)</button>
+            <button class="btn btn-success btn-sm" onclick="saveCurrentProg(true)">✓ Publier sur le site</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- PRESTATAIRES -->
+      <div class="page" id="page-prestataires">
+        <div class="section-hdr">
+          <div>
+            <div class="page-title">Base Prestataires</div>
+            <div class="page-sub">Hôtels, transports, activités, guides — tarifs CLP</div>
+          </div>
+          <button class="btn btn-primary" onclick="openNewPrestataire()">+ Nouveau prestataire</button>
+        </div>
+        <!-- Filtres -->
+        <div style="display:flex;gap:8px;margin-bottom:1rem;flex-wrap:wrap">
+          <button class="btn btn-outline btn-sm active-filter" onclick="filterPrest('')" data-cat="">Tous</button>
+          <button class="btn btn-outline btn-sm" onclick="filterPrest('lodging')" data-cat="lodging">🏨 Logement</button>
+          <button class="btn btn-outline btn-sm" onclick="filterPrest('transport')" data-cat="transport">🚐 Transport</button>
+          <button class="btn btn-outline btn-sm" onclick="filterPrest('activity')" data-cat="activity">🧗 Activités</button>
+          <button class="btn btn-outline btn-sm" onclick="filterPrest('meals')" data-cat="meals">🍽 Repas</button>
+          <button class="btn btn-outline btn-sm" onclick="filterPrest('guide')" data-cat="guide">👤 Guides</button>
+          <button class="btn btn-outline btn-sm" onclick="filterPrest('autre')" data-cat="autre">Autre</button>
+        </div>
+        <div class="card" style="padding:0">
+          <table class="data-table" id="prest-table">
+            <thead><tr>
+              <th>Nom</th><th>Catégorie</th><th>Localisation</th>
+              <th>Prix CLP</th><th>Type</th><th>Par PAX</th><th>Statut</th><th></th>
+            </tr></thead>
+            <tbody id="prest-tbody"><tr><td colspan="8" class="empty">Chargement…</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- PARAMETRES -->
+      <div class="page" id="page-parametres">
+        <div class="page-title">Paramètres</div>
+        <div class="page-sub">Taux de change et paramètres globaux</div>
+        <div class="card">
+          <div class="card-title"><div class="card-title-left">Taux de change</div>
+            <button class="btn btn-primary btn-sm" onclick="saveParams()">Sauvegarder</button>
+          </div>
+          <div class="alert alert-info" style="margin-bottom:1.2rem">
+            Mettre à jour régulièrement. Ces valeurs sont utilisées par défaut dans tous les nouveaux programmes.
+          </div>
+          <div class="form-grid" id="params-form"></div>
+        </div>
+      </div>
+
+    </div><!-- /content -->
+  </div><!-- /main -->
+</div><!-- /app -->
+
+<!-- MODAL PRESTATAIRE -->
+<div class="modal-overlay" id="modal-prest">
+  <div class="modal-box" style="max-width:580px">
+    <div class="modal-header">
+      <div class="modal-title" id="modal-prest-title">Nouveau prestataire</div>
+      <button class="btn btn-outline btn-xs" onclick="closeModal('modal-prest')">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="mp-id" />
+      <div class="form-grid">
+        <div class="form-group span2"><label class="form-label">Nom</label><input class="form-control" id="mp-nom" placeholder="Ex: Lodge Rio Baker" /></div>
+        <div class="form-group"><label class="form-label">Catégorie</label>
+          <select class="form-control" id="mp-cat">
+            <option value="lodging">🏨 Logement</option>
+            <option value="transport">🚐 Transport</option>
+            <option value="activity">🧗 Activité</option>
+            <option value="meals">🍽 Repas</option>
+            <option value="guide">👤 Guide</option>
+            <option value="autre">Autre</option>
+          </select>
+        </div>
+        <div class="form-group"><label class="form-label">Sous-catégorie</label><input class="form-control" id="mp-scat" placeholder="Ex: Lodge premium, Van, Kayak..." /></div>
+        <div class="form-group"><label class="form-label">Localisation</label><input class="form-control" id="mp-loc" placeholder="Ex: Cochrane, Puerto Guadal..." /></div>
+        <div class="form-group"><label class="form-label">Contact</label><input class="form-control" id="mp-contact" placeholder="Email ou téléphone" /></div>
+        <div class="form-group"><label class="form-label">Prix CLP</label><input class="form-control" type="number" id="mp-prix" placeholder="0" /></div>
+        <div class="form-group"><label class="form-label">Type de prix</label>
+          <select class="form-control" id="mp-type">
+            <option value="nuit">Par nuit</option>
+            <option value="journee">Par journée</option>
+            <option value="demi-journee">Demi-journée</option>
+            <option value="heure">Par heure</option>
+            <option value="personne">Par personne</option>
+            <option value="forfait">Forfait</option>
+          </select>
+        </div>
+        <div class="form-group"><label class="form-label">Prix par PAX ?</label>
+          <select class="form-control" id="mp-parpax">
+            <option value="false">Non (prix groupe)</option>
+            <option value="true">Oui (× nb pax)</option>
+          </select>
+        </div>
+        <div class="form-group span2"><label class="form-label">Notes</label><textarea class="form-control" id="mp-notes" placeholder="Conditions, inclusions, contacts..."></textarea></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('modal-prest')">Annuler</button>
+      <button class="btn btn-primary" onclick="savePrestataire()">Enregistrer</button>
+    </div>
+  </div>
+</div>
+
+<div class="notif" id="notif"></div>
+
+<script>
+// ══════════════════════════════════════════════════════════
+// CONFIG SUPABASE — Remplacer par vos valeurs
+// ══════════════════════════════════════════════════════════
+const SUPABASE_URL  = 'https://rdepvqaojrkjsayzfcal.supabase.co';
+const SUPABASE_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJkZXB2cWFvanJranNheXpmY2FsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg0NDg3MzIsImV4cCI6MjA5NDAyNDczMn0.MTm3lEGCz_oTUPv1J1N6H7nsmjMGiY46X6xYBMxow9U';
+// ══════════════════════════════════════════════════════════
+
+const { createClient } = supabase;
+let sb;
+
+// ── INIT ─────────────────────────────────────────────────
+try {
+  if(SUPABASE_URL.includes('VOTRE')){
+    document.getElementById('config-warning').style.display = 'block';
+  }
+  sb = createClient(SUPABASE_URL, SUPABASE_KEY);
+  sb.auth.onAuthStateChange((event, session) => {
+    if(session){
+      document.getElementById('auth-wrap').style.display = 'none';
+      document.getElementById('app').classList.add('visible');
+      document.getElementById('header-user').textContent = session.user.email;
+      initApp();
+    } else {
+      document.getElementById('auth-wrap').style.display = 'flex';
+      document.getElementById('app').classList.remove('visible');
+    }
+  });
+} catch(e){ console.error('Supabase init error:', e); }
+
+// ── AUTH ─────────────────────────────────────────────────
+async function doLogin(){
+  const email = document.getElementById('auth-email').value.trim();
+  const pass  = document.getElementById('auth-pass').value;
+  const btn   = document.getElementById('login-btn');
+  const err   = document.getElementById('auth-error');
+  err.style.display = 'none';
+  btn.innerHTML = '<span class="loader"></span>';
+  btn.disabled = true;
+  try {
+    const { error } = await sb.auth.signInWithPassword({ email, password: pass });
+    if(error) throw error;
+  } catch(e) {
+    err.textContent = e.message || 'Erreur de connexion';
+    err.style.display = 'block';
+    btn.innerHTML = 'Se connecter';
+    btn.disabled = false;
+  }
+}
+
+async function doLogout(){
+  await sb.auth.signOut();
+}
+
+// ── APP INIT ─────────────────────────────────────────────
+async function initApp(){
+  await loadParams();
+  await loadDashboard();
+  await loadProgrammes();
+  await loadPrestataires();
+}
+
+// ── NAVIGATION ───────────────────────────────────────────
+function showPage(p){
+  document.querySelectorAll('.page').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+  document.getElementById('page-' + p).classList.add('active');
+  const navEl = document.getElementById('nav-' + p);
+  if(navEl) navEl.classList.add('active');
+}
+
+// ── DASHBOARD ────────────────────────────────────────────
+async function loadDashboard(){
+  const [{ data: progs }, { data: prests }] = await Promise.all([
+    sb.from('pp_programmes').select('statut,publie,nom,updated_at,prix_usd,duree_jours').order('updated_at',{ascending:false}).limit(5),
+    sb.from('prestataires').select('id').eq('actif',true)
+  ]);
+  const params = window._params || {};
+  document.getElementById('dash-actifs').textContent  = progs?.filter(p=>p.statut==='actif').length || 0;
+  document.getElementById('dash-publis').textContent  = progs?.filter(p=>p.publie).length || 0;
+  document.getElementById('dash-prest').textContent   = prests?.length || 0;
+  document.getElementById('dash-usd').textContent     = params['taux_usd'] || '—';
+  document.getElementById('cnt-programmes').textContent = progs?.length || 0;
+  document.getElementById('cnt-prest').textContent    = prests?.length || 0;
+  document.getElementById('dash-recent').innerHTML = progs?.length ?
+    `<table class="data-table"><thead><tr><th>Programme</th><th>Durée</th><th>Prix USD</th><th>Statut</th><th></th></tr></thead><tbody>` +
+    progs.map(p => `<tr>
+      <td><strong>${p.nom}</strong></td>
+      <td>${p.duree_jours}j</td>
+      <td>${p.prix_usd ? Math.round(p.prix_usd).toLocaleString()+' USD' : '—'}</td>
+      <td>${statusBadge(p.statut, p.publie)}</td>
+      <td><button class="btn btn-outline btn-xs" onclick="editProg('${p.id}')">Éditer</button></td>
+    </tr>`).join('') + '</tbody></table>'
+    : '<div class="empty">Aucun programme</div>';
+}
+
+function statusBadge(statut, publie){
+  if(publie) return '<span class="badge badge-pub">Publié</span>';
+  if(statut==='actif') return '<span class="badge badge-active">Actif</span>';
+  if(statut==='archive') return '<span class="badge badge-arch">Archivé</span>';
+  return '<span class="badge badge-draft">Brouillon</span>';
+}
+
+// ── PARAMS ───────────────────────────────────────────────
+async function loadParams(){
+  const { data } = await sb.from('pp_parametres').select('*');
+  const params = {};
+  data?.forEach(r => params[r.cle] = r.valeur);
+  window._params = params;
+  const form = document.getElementById('params-form');
+  if(form) form.innerHTML = data?.map(r => `
+    <div class="form-group">
+      <label class="form-label">${r.label || r.cle}</label>
+      <input class="form-control" type="number" step="0.01" id="param-${r.cle}" value="${r.valeur}" />
+    </div>`).join('') || '';
+  // Sync defaults into pricing form
+  if(params['taux_usd']) document.getElementById('pp-usd').value = params['taux_usd'];
+  if(params['taux_eur']) document.getElementById('pp-eur').value = params['taux_eur'];
+  if(params['taux_brl']) document.getElementById('pp-brl').value = params['taux_brl'];
+  if(params['marge_defaut']) document.getElementById('pp-marge').value = params['marge_defaut'];
+  if(params['ccfee_defaut']) document.getElementById('pp-ccfee').value = params['ccfee_defaut'];
+  if(params['commission_to']) document.getElementById('pp-tocomm').value = params['commission_to'];
+}
+
+async function saveParams(){
+  const { data } = await sb.from('pp_parametres').select('cle');
+  const updates = data?.map(r => {
+    const el = document.getElementById('param-' + r.cle);
+    return el ? sb.from('pp_parametres').update({valeur: el.value, updated_at: new Date().toISOString()}).eq('cle', r.cle) : null;
+  }).filter(Boolean);
+  await Promise.all(updates);
+  await loadParams();
+  notify('Paramètres sauvegardés');
+}
+
+// ── PROGRAMMES ───────────────────────────────────────────
+let _programmes = [];
+
+async function loadProgrammes(){
+  const { data, error } = await sb.from('pp_programmes').select('*').order('updated_at',{ascending:false});
+  _programmes = data || [];
+  renderProgTable();
+  document.getElementById('cnt-programmes').textContent = _programmes.length;
+}
+
+function renderProgTable(){
+  const tbody = document.getElementById('prog-tbody');
+  if(!_programmes.length){ tbody.innerHTML = '<tr><td colspan="8" class="empty">Aucun programme — créez-en un</td></tr>'; return; }
+  tbody.innerHTML = _programmes.map(p => `<tr>
+    <td><strong>${p.nom}</strong></td>
+    <td><span style="font-size:12px;color:var(--muted)">${p.categorie||''}</span></td>
+    <td>${p.duree_jours}j</td>
+    <td>${p.pax_min} pax</td>
+    <td>${p.prix_usd ? Math.round(p.prix_usd).toLocaleString()+' USD' : '—'}</td>
+    <td>${statusBadge(p.statut, p.publie)}</td>
+    <td>${p.publie ? '✅' : '—'}</td>
+    <td class="actions">
+      <button class="btn btn-outline btn-xs" onclick="editProg('${p.id}')">Éditer</button>
+      <button class="btn btn-danger btn-xs" onclick="deleteProg('${p.id}')">×</button>
+    </td>
+  </tr>`).join('');
+}
+
+// ── PROGRAMME EDITOR ─────────────────────────────────────
+let _currentProgId = null;
+let _dayData = {};
+let _prestataires = [];
+
+async function openNewProgramme(){
+  _currentProgId = null;
+  _dayData = {};
+  clearPricingForm();
+  await loadParams();
+  buildCostTable();
+  document.getElementById('pricing-title').textContent = 'Nouveau programme';
+  showPage('pricing');
+  switchPricingTab('info');
+}
+
+async function editProg(id){
+  _currentProgId = id;
+  const { data: prog } = await sb.from('pp_programmes').select('*').eq('id',id).single();
+  const { data: jours } = await sb.from('pp_programme_jours').select('*').eq('programme_id',id);
+  const { data: fixes } = await sb.from('pp_programme_fixes').select('*').eq('programme_id',id).single();
+  
+  clearPricingForm();
+  if(prog){
+    document.getElementById('pp-nom').value    = prog.nom || '';
+    document.getElementById('pp-cat').value    = prog.categorie || 'Parc Patagonia';
+    document.getElementById('pp-jours').value  = prog.duree_jours || 7;
+    document.getElementById('pp-pax').value    = prog.pax_min || 4;
+    document.getElementById('pp-marche').value = prog.marche || 'Français';
+    document.getElementById('pp-badge').value  = prog.badge || '';
+    document.getElementById('pp-statut').value = prog.statut || 'brouillon';
+    document.getElementById('pp-marge').value  = prog.marge || 30;
+    document.getElementById('pp-ccfee').value  = prog.ccfee || 3.5;
+    document.getElementById('pp-usd').value    = prog.prix_usd ? (prog.prix_usd * (prog.marge ? 1 : 1)) : (window._params?.taux_usd || 920);
+    document.getElementById('pp-eur').value    = window._params?.taux_eur || 1020;
+    document.getElementById('pp-brl').value    = window._params?.taux_brl || 180;
+    document.getElementById('pp-tocomm').value = prog.commission_to || 15;
+    // Content
+    document.getElementById('pc-df').value  = prog.desc_fr || '';
+    document.getElementById('pc-de').value  = prog.desc_en || '';
+    document.getElementById('pc-des').value = prog.desc_es || '';
+    document.getElementById('pc-dp').value  = prog.desc_pt || '';
+    document.getElementById('pc-ff').value  = prog.full_fr || '';
+    document.getElementById('pc-fe').value  = prog.full_en || '';
+    document.getElementById('pc-fes').value = prog.full_es || '';
+    document.getElementById('pc-fp').value  = prog.full_pt || '';
+    document.getElementById('pc-img').value = prog.image_url || '';
+  }
+  // Load day data
+  _dayData = {};
+  jours?.forEach(j => {
+    const k = 'day' + j.jour;
+    _dayData[k] = {
+      transport: j.cout_transport, vehicle: j.cout_vehicle, vol: j.cout_vol,
+      activite: j.cout_activite, parcs: j.cout_parcs, equip: j.cout_equip_jour,
+      lodge: j.cout_lodge, lodgevar: j.cout_lodge_var,
+      breakfast: j.cout_breakfast, lunch: j.cout_lunch, dinner: j.cout_dinner,
+      guidesal: j.cout_guide_sal, guidelodge: j.cout_guide_lodge, guidemeals: j.cout_guide_meals,
+      notes: j.notes_jour,
+      prest_lodging: j.prest_lodging, prest_transport: j.prest_transport,
+      prest_activity: j.prest_activity,
+    };
+  });
+  // Load fixed
+  if(fixes){
+    const fmap = {g1:'pf-g1',g2:'pf-g2',guide_lodge:'pf-gl',guide_transp:'pf-gt',vehicle:'pf-v1',fuel:'pf-fuel',vehicle2:'pf-v2',flights:'pf-fly',insurance:'pf-ins',equip:'pf-eq',misc:'pf-misc',extra1:'pf-x1',extra1_label:'pf-x1l',extra2:'pf-x2',extra2_label:'pf-x2l'};
+    Object.entries(fmap).forEach(([k,id])=>{ const el=document.getElementById(id); if(el && fixes[k]!=null) el.value=fixes[k]; });
+  }
+  buildCostTable();
+  document.getElementById('pricing-title').textContent = prog?.nom || 'Éditer programme';
+  showPage('pricing');
+  switchPricingTab('info');
+}
+
+async function saveCurrentProg(publish){
+  const nom = document.getElementById('pp-nom').value.trim();
+  if(!nom){ notify('Donnez un nom au programme'); return; }
+  
+  const pax    = parseFloat(document.getElementById('pp-pax').value) || 4;
+  const marge  = parseFloat(document.getElementById('pp-marge').value) || 30;
+  const ccfee  = parseFloat(document.getElementById('pp-ccfee').value) || 3.5;
+  const usdR   = parseFloat(document.getElementById('pp-usd').value) || 920;
+  const eurR   = parseFloat(document.getElementById('pp-eur').value) || 1020;
+  const brlR   = parseFloat(document.getElementById('pp-brl').value) || 180;
+  const tocomm = parseFloat(document.getElementById('pp-tocomm').value) || 15;
+
+  const varCosts = getVarCosts();
+  const fixedCosts = getFixedCosts();
+  const total = varCosts + fixedCosts;
+  const costPP = total / pax;
+  const pricePP = costPP / (1 - marge/100) * (1 + ccfee/100);
+
+  const progData = {
+    nom, duree_jours: parseInt(document.getElementById('pp-jours').value)||7,
+    categorie: document.getElementById('pp-cat').value,
+    pax_min: pax, marche: document.getElementById('pp-marche').value,
+    badge: document.getElementById('pp-badge').value,
+    statut: publish ? 'actif' : document.getElementById('pp-statut').value,
+    publie: publish,
+    marge, ccfee, commission_to: tocomm,
+    prix_usd: Math.round(pricePP / usdR),
+    prix_eur: Math.round(pricePP / eurR),
+    prix_brl: Math.round(pricePP / brlR),
+    desc_fr: document.getElementById('pc-df').value,
+    desc_en: document.getElementById('pc-de').value,
+    desc_es: document.getElementById('pc-des').value,
+    desc_pt: document.getElementById('pc-dp').value,
+    full_fr: document.getElementById('pc-ff').value,
+    full_en: document.getElementById('pc-fe').value,
+    full_es: document.getElementById('pc-fes').value,
+    full_pt: document.getElementById('pc-fp').value,
+    image_url: document.getElementById('pc-img').value,
+    updated_at: new Date().toISOString(),
+  };
+
+  let progId = _currentProgId;
+  if(progId){
+    await sb.from('pp_programmes').update(progData).eq('id', progId);
+  } else {
+    const { data } = await sb.from('pp_programmes').insert(progData).select().single();
+    progId = data?.id;
+    _currentProgId = progId;
+  }
+
+  if(!progId){ notify('Erreur lors de la sauvegarde'); return; }
+
+  // Save day costs
+  const days = parseInt(document.getElementById('pp-jours').value) || 7;
+  for(let d = 1; d <= days; d++){
+    const k = 'day' + d;
+    const dd = _dayData[k] || {};
+    const jourData = {
+      programme_id: progId, jour: d,
+      prest_lodging: dd.prest_lodging || null,
+      prest_transport: dd.prest_transport || null,
+      prest_activity: dd.prest_activity || null,
+      cout_transport: dd.transport||0, cout_vehicle: dd.vehicle||0, cout_vol: dd.vol||0,
+      cout_activite: dd.activite||0, cout_parcs: dd.parcs||0, cout_equip_jour: dd.equip||0,
+      cout_lodge: dd.lodge||0, cout_lodge_var: dd.lodgevar||0,
+      cout_breakfast: dd.breakfast||0, cout_lunch: dd.lunch||0, cout_dinner: dd.dinner||0,
+      cout_guide_sal: dd.guidesal||0, cout_guide_lodge: dd.guidelodge||0, cout_guide_meals: dd.guidemeals||0,
+      notes_jour: dd.notes||null,
+    };
+    await sb.from('pp_programme_jours').upsert(jourData, {onConflict:'programme_id,jour'});
+  }
+
+  // Save fixed costs
+  const fixData = {
+    programme_id: progId,
+    guide1: pf('pf-g1'), guide2: pf('pf-g2'), guide_lodge: pf('pf-gl'), guide_transp: pf('pf-gt'),
+    vehicle: pf('pf-v1'), fuel: pf('pf-fuel'), vehicle2: pf('pf-v2'), flights: pf('pf-fly'),
+    insurance: pf('pf-ins'), equip: pf('pf-eq'), misc: pf('pf-misc'),
+    extra1: pf('pf-x1'), extra1_label: document.getElementById('pf-x1l').value,
+    extra2: pf('pf-x2'), extra2_label: document.getElementById('pf-x2l').value,
+  };
+  await sb.from('pp_programme_fixes').upsert(fixData, {onConflict:'programme_id'});
+
+  await loadProgrammes();
+  await loadDashboard();
+  notify(publish ? '✅ Programme publié sur le site !' : 'Programme sauvegardé');
+}
+
+async function deleteProg(id){
+  if(!confirm('Supprimer ce programme ?')) return;
+  await sb.from('pp_programmes').delete().eq('id', id);
+  await loadProgrammes();
+  notify('Programme supprimé');
+}
+
+function clearPricingForm(){
+  ['pp-nom','pp-usd','pp-eur','pp-brl','pp-marge','pp-ccfee','pp-tocomm',
+   'pc-df','pc-de','pc-des','pc-dp','pc-ff','pc-fe','pc-fes','pc-fp','pc-img',
+   'pf-g1','pf-g2','pf-gl','pf-gt','pf-v1','pf-fuel','pf-v2','pf-fly',
+   'pf-ins','pf-eq','pf-misc','pf-x1','pf-x1l','pf-x2','pf-x2l'].forEach(id => {
+    const el = document.getElementById(id);
+    if(el) el.value = '';
+  });
+  document.getElementById('pp-jours').value = 7;
+  document.getElementById('pp-pax').value = 4;
+  document.getElementById('pp-marge').value = window._params?.marge_defaut || 30;
+  document.getElementById('pp-ccfee').value = window._params?.ccfee_defaut || 3.5;
+  document.getElementById('pp-usd').value = window._params?.taux_usd || 920;
+  document.getElementById('pp-eur').value = window._params?.taux_eur || 1020;
+  document.getElementById('pp-brl').value = window._params?.taux_brl || 180;
+  document.getElementById('pp-tocomm').value = window._params?.commission_to || 15;
+  document.getElementById('pp-statut').value = 'brouillon';
+  document.getElementById('pp-badge').value = '';
+  _dayData = {};
+}
+
+// ── COST TABLE ───────────────────────────────────────────
+const DCOLS = ['transport','vehicle','vol','activite','parcs','equip','lodge','lodgevar','breakfast','lunch','dinner','guidesal','guidelodge','guidemeals'];
+
+function buildCostTable(){
+  const days = parseInt(document.getElementById('pp-jours').value) || 7;
+  const tbody = document.getElementById('cost-tbody');
+  tbody.innerHTML = '';
+  for(let d = 1; d <= days; d++){
+    const k = 'day' + d;
+    if(!_dayData[k]) _dayData[k] = {};
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td class="day-lbl">J${d}</td>` +
+      DCOLS.map((col,i) => {
+        const hasPrest = (col==='lodge'||col==='transport'||col==='activite');
+        return `<td>${hasPrest ? `<select class="prest-sel" onchange="onPrestSelect(${d},'${col}',this)" id="sel-${d}-${col}"><option value="">—</option></select>` : ''}
+          <input class="cost-in" type="number" placeholder="0"
+            value="${_dayData[k][col]||''}"
+            onchange="_dayData['${k}']['${col}']=parseFloat(this.value)||0;updateTotals()"
+            onfocus="this.select()" id="in-${d}-${col}" /></td>`;
+      }).join('') +
+      `<td class="col-tot" id="rt-${d}">0</td>`;
+    tbody.appendChild(tr);
+    // Notes row
+    const nr = document.createElement('tr');
+    nr.className = 'note-row';
+    nr.innerHTML = `<td style="padding-left:12px;font-size:11px;color:var(--muted)">note</td>
+      <td colspan="${DCOLS.length}" style="padding:3px 6px">
+        <input style="width:100%;border:none;background:transparent;font-size:11px;color:var(--muted);font-family:var(--fb)"
+          placeholder="Notes du jour ${d}..."
+          value="${_dayData[k].notes||''}"
+          onchange="_dayData['${k}'].notes=this.value" /></td>
+      <td></td>`;
+    tbody.appendChild(nr);
+  }
+  populatePrestSelectors();
+  updateTotals();
+}
+
+function onPrestSelect(day, col, sel){
+  const id = sel.value;
+  const p = _prestataires.find(x => x.id === id);
+  if(!p) return;
+  const k = 'day' + day;
+  const colKey = col === 'lodge' ? 'lodge' : col === 'transport' ? 'transport' : 'activite';
+  const prix = p.par_pax ? p.prix_clp * (parseFloat(document.getElementById('pp-pax').value)||4) : p.prix_clp;
+  _dayData[k][colKey] = prix;
+  _dayData[k]['prest_' + (col==='lodge'?'lodging':col==='transport'?'transport':'activity')] = id;
+  const inp = document.getElementById(`in-${day}-${col}`);
+  if(inp){ inp.value = prix; }
+  updateTotals();
+  notify(`${p.nom} → ${Math.round(prix).toLocaleString()} CLP`);
+}
+
+function populatePrestSelectors(){
+  const byCat = { lodge: 'lodging', transport: 'transport', activite: 'activity' };
+  const days = parseInt(document.getElementById('pp-jours').value)||7;
+  for(let d=1; d<=days; d++){
+    const k = 'day'+d;
+    Object.entries(byCat).forEach(([col, cat]) => {
+      const sel = document.getElementById(`sel-${d}-${col}`);
+      if(!sel) return;
+      const prests = _prestataires.filter(p => p.categorie===cat && p.actif);
+      sel.innerHTML = '<option value="">— Choisir —</option>' + prests.map(p =>
+        `<option value="${p.id}" ${_dayData[k]?.['prest_'+(cat==='lodging'?'lodging':cat)] === p.id ? 'selected':''}>
+          ${p.nom} (${Math.round(p.prix_clp).toLocaleString()}/${p.prix_type})</option>`
+      ).join('');
+    });
+  }
+}
+
+function updateTotals(){
+  const days = parseInt(document.getElementById('pp-jours').value)||7;
+  let grand = 0;
+  for(let d=1; d<=days; d++){
+    const k = 'day'+d;
+    let dt = 0;
+    DCOLS.forEach(col => { dt += _dayData[k]?.[col]||0; });
+    const rt = document.getElementById('rt-'+d);
+    if(rt) rt.textContent = Math.round(dt).toLocaleString();
+    grand += dt;
+  }
+  const gt = document.getElementById('gtotal');
+  if(gt) gt.textContent = Math.round(grand).toLocaleString();
+}
+
+function getVarCosts(){
+  const days = parseInt(document.getElementById('pp-jours').value)||7;
+  let t=0;
+  for(let d=1; d<=days; d++){
+    const k='day'+d;
+    DCOLS.forEach(col=>{ t += _dayData[k]?.[col]||0; });
+  }
+  return t;
+}
+
+function getFixedCosts(){
+  return ['pf-g1','pf-g2','pf-gl','pf-gt','pf-v1','pf-fuel','pf-v2','pf-fly','pf-ins','pf-eq','pf-misc','pf-x1','pf-x2']
+    .reduce((s,id) => s + pf(id), 0);
+}
+
+function pf(id){ return parseFloat(document.getElementById(id)?.value)||0; }
+
+// ── RECAP ────────────────────────────────────────────────
+function recalc(){
+  if(document.getElementById('pp-recap').style.display!=='none') buildRecap();
+}
+
+function buildRecap(){
+  const pax   = pf('pp-pax')||4;
+  const marge = pf('pp-marge')/100;
+  const ccfee = pf('pp-ccfee')/100;
+  const usdR  = pf('pp-usd')||920;
+  const eurR  = pf('pp-eur')||1020;
+  const brlR  = pf('pp-brl')||180;
+  const toC   = pf('pp-tocomm')/100;
+  const varC  = getVarCosts();
+  const fixC  = getFixedCosts();
+  const total = varC + fixC;
+  const cpp   = total / pax;
+  const priceWM = cpp / (1-marge);
+  const priceFinal = priceWM * (1+ccfee);
+  const benef = (priceFinal - cpp) * pax;
+
+  const paxRows = [];
+  for(let p = Math.max(1,pax-2); p <= pax+5; p++){
+    const c = total/p;
+    const pr = c/(1-marge)*(1+ccfee);
+    const net = pr*(1-toC);
+    paxRows.push(`<tr class="${p===pax?'hl':''}">
+      <td>${p} pax</td>
+      <td>${Math.round(pr/usdR).toLocaleString()} USD</td>
+      <td>${Math.round(pr/eurR).toLocaleString()} EUR</td>
+      <td>${Math.round(pr/brlR).toLocaleString()} BRL</td>
+      <td style="color:var(--muted)">${Math.round(net/usdR).toLocaleString()} USD</td>
+      <td style="color:var(--success)">${Math.round((pr-c)*p).toLocaleString()} CLP</td>
+    </tr>`);
+  }
+
+  const commRows = [5,10,15,20,25].map(r => {
+    const net = priceFinal*(1-r/100);
+    const ben = (net-cpp)*pax;
+    return `<tr>
+      <td>${r}%</td>
+      <td>${Math.round(net/usdR).toLocaleString()} USD</td>
+      <td>${Math.round(net/eurR).toLocaleString()} EUR</td>
+      <td style="color:${ben>0?'var(--success)':'var(--danger)'}">
+        ${Math.round(ben).toLocaleString()} CLP</td>
+    </tr>`;
+  }).join('');
+
+  document.getElementById('recap-content').innerHTML = `
+    <div class="summary-box" style="display:grid;grid-template-columns:repeat(4,1fr);gap:1rem">
+      <div class="metric"><div class="metric-lbl">Coût total</div><div class="metric-val">${Math.round(total).toLocaleString()}</div><div class="metric-sub">CLP · ${pax} pax</div></div>
+      <div class="metric"><div class="metric-lbl">Coût / pax</div><div class="metric-val">${Math.round(cpp).toLocaleString()}</div><div class="metric-sub">CLP</div></div>
+      <div class="metric"><div class="metric-lbl">Prix vente / pax</div><div class="metric-val blue">${Math.round(priceFinal/usdR).toLocaleString()} USD</div><div class="metric-sub">${Math.round(priceFinal/eurR).toLocaleString()} EUR</div></div>
+      <div class="metric"><div class="metric-lbl">Bénéfice estimé</div><div class="metric-val green">${Math.round(benef).toLocaleString()}</div><div class="metric-sub">CLP total</div></div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:1.5rem">
+      <div class="card">
+        <div class="card-title"><div class="card-title-left">Répartition coûts</div></div>
+        <table style="width:100%;font-size:13px">
+          <tr><td style="padding:5px 0;color:var(--muted)">Coûts variables</td><td style="text-align:right;font-weight:600">${Math.round(varC).toLocaleString()} CLP</td></tr>
+          <tr><td style="padding:5px 0;color:var(--muted)">Coûts fixes</td><td style="text-align:right;font-weight:600">${Math.round(fixC).toLocaleString()} CLP</td></tr>
+          <tr style="border-top:1px solid var(--border)"><td style="padding:7px 0;font-weight:700;color:var(--navy)">Total</td><td style="text-align:right;font-weight:700;color:var(--navy)">${Math.round(total).toLocaleString()} CLP</td></tr>
+        </table>
+      </div>
+      <div class="card">
+        <div class="card-title"><div class="card-title-left">Prix public (${pax} pax)</div></div>
+        <table style="width:100%;font-size:13px">
+          <tr><td style="padding:5px 0;color:var(--muted)">Sans marge</td><td style="text-align:right">${Math.round(cpp/usdR).toLocaleString()} USD</td></tr>
+          <tr><td style="padding:5px 0;color:var(--muted)">Avec marge ${pf('pp-marge')}%</td><td style="text-align:right">${Math.round(priceWM/usdR).toLocaleString()} USD</td></tr>
+          <tr style="border-top:1px solid var(--border)"><td style="padding:7px 0;font-weight:700;color:var(--blue)">Prix final (+CB)</td>
+            <td style="text-align:right;font-weight:700;color:var(--blue)">${Math.round(priceFinal/usdR).toLocaleString()} USD<br>${Math.round(priceFinal/eurR).toLocaleString()} EUR<br>${Math.round(priceFinal/brlR).toLocaleString()} BRL</td></tr>
+        </table>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title"><div class="card-title-left">Tarif dégressif</div></div>
+      <div style="overflow-x:auto"><table class="price-tbl">
+        <thead><tr><th>Groupe</th><th>USD/pax</th><th>EUR/pax</th><th>BRL/pax</th><th>Net TO (${(toC*100).toFixed(0)}%)</th><th>Bénéfice CLP</th></tr></thead>
+        <tbody>${paxRows.join('')}</tbody>
+      </table></div>
+    </div>
+    <div class="card">
+      <div class="card-title"><div class="card-title-left">Commissions Tour Opérateurs</div></div>
+      <table class="price-tbl">
+        <thead><tr><th>Commission</th><th>Net TO (USD)</th><th>Net TO (EUR)</th><th>Bénéfice Pristine</th></tr></thead>
+        <tbody>${commRows}</tbody>
+      </table>
+    </div>
+    <div style="display:flex;justify-content:flex-end;gap:8px">
+      <button class="btn btn-outline" onclick="switchPricingTab('fixes')">← Coûts fixes</button>
+      <button class="btn btn-success" onclick="saveCurrentProg(true)">✓ Publier sur le site</button>
+    </div>`;
+}
+
+// ── PRICING TABS ─────────────────────────────────────────
+function switchPricingTab(tab){
+  document.querySelectorAll('.pp-panel').forEach(p => p.style.display='none');
+  document.querySelectorAll('.tab-sm').forEach(t => t.classList.remove('active'));
+  document.getElementById('pp-'+tab).style.display = 'block';
+  document.getElementById('ptab-'+tab).classList.add('active');
+  if(tab==='recap') buildRecap();
+}
+
+// ── PRESTATAIRES ─────────────────────────────────────────
+let _prestFilter = '';
+
+async function loadPrestataires(){
+  const { data } = await sb.from('prestataires').select('*').order('categorie').order('nom');
+  _prestataires = data || [];
+  document.getElementById('cnt-prest').textContent = _prestataires.filter(p=>p.actif).length;
+  renderPrestTable();
+  populatePrestSelectors();
+}
+
+function filterPrest(cat){
+  _prestFilter = cat;
+  document.querySelectorAll('[data-cat]').forEach(b => b.classList.remove('active-filter'));
+  document.querySelector(`[data-cat="${cat}"]`)?.classList.add('active-filter');
+  renderPrestTable();
+}
+
+function renderPrestTable(){
+  const list = _prestFilter ? _prestataires.filter(p=>p.categorie===_prestFilter) : _prestataires;
+  const catLabel = {lodging:'🏨 Logement',transport:'🚐 Transport',activity:'🧗 Activité',meals:'🍽 Repas',guide:'👤 Guide',autre:'Autre'};
+  const tbody = document.getElementById('prest-tbody');
+  if(!list.length){ tbody.innerHTML='<tr><td colspan="8" class="empty">Aucun prestataire</td></tr>'; return; }
+  tbody.innerHTML = list.map(p => `<tr>
+    <td><strong>${p.nom}</strong>${p.sous_cat?`<br><span style="font-size:11px;color:var(--muted)">${p.sous_cat}</span>`:''}</td>
+    <td>${catLabel[p.categorie]||p.categorie}</td>
+    <td>${p.localisation||'—'}</td>
+    <td style="font-weight:600">${Math.round(p.prix_clp).toLocaleString()} CLP</td>
+    <td style="font-size:12px;color:var(--muted)">${p.prix_type}</td>
+    <td style="text-align:center">${p.par_pax?'✓ / pax':'—'}</td>
+    <td>${p.actif?'<span class="badge badge-active">Actif</span>':'<span class="badge badge-draft">Inactif</span>'}</td>
+    <td class="actions">
+      <button class="btn btn-outline btn-xs" onclick="editPrestataire('${p.id}')">Éditer</button>
+      <button class="btn btn-danger btn-xs" onclick="deletePrest('${p.id}')">×</button>
+    </td>
+  </tr>`).join('');
+}
+
+function openNewPrestataire(){
+  document.getElementById('mp-id').value = '';
+  document.getElementById('modal-prest-title').textContent = 'Nouveau prestataire';
+  ['mp-nom','mp-scat','mp-loc','mp-contact','mp-notes'].forEach(id => document.getElementById(id).value='');
+  document.getElementById('mp-prix').value = '';
+  document.getElementById('mp-cat').value = 'lodging';
+  document.getElementById('mp-type').value = 'nuit';
+  document.getElementById('mp-parpax').value = 'false';
+  openModal('modal-prest');
+}
+
+function editPrestataire(id){
+  const p = _prestataires.find(x=>x.id===id);
+  if(!p) return;
+  document.getElementById('mp-id').value = p.id;
+  document.getElementById('modal-prest-title').textContent = 'Éditer prestataire';
+  document.getElementById('mp-nom').value = p.nom || '';
+  document.getElementById('mp-cat').value = p.categorie || 'lodging';
+  document.getElementById('mp-scat').value = p.sous_cat || '';
+  document.getElementById('mp-loc').value = p.localisation || '';
+  document.getElementById('mp-contact').value = p.contact || '';
+  document.getElementById('mp-prix').value = p.prix_clp || '';
+  document.getElementById('mp-type').value = p.prix_type || 'nuit';
+  document.getElementById('mp-parpax').value = String(p.par_pax);
+  document.getElementById('mp-notes').value = p.notes || '';
+  openModal('modal-prest');
+}
+
+async function savePrestataire(){
+  const nom = document.getElementById('mp-nom').value.trim();
+  if(!nom){ notify('Donnez un nom'); return; }
+  const id = document.getElementById('mp-id').value;
+  const data = {
+    nom, categorie: document.getElementById('mp-cat').value,
+    sous_cat: document.getElementById('mp-scat').value,
+    localisation: document.getElementById('mp-loc').value,
+    contact: document.getElementById('mp-contact').value,
+    prix_clp: parseFloat(document.getElementById('mp-prix').value)||0,
+    prix_type: document.getElementById('mp-type').value,
+    par_pax: document.getElementById('mp-parpax').value === 'true',
+    notes: document.getElementById('mp-notes').value,
+    actif: true, updated_at: new Date().toISOString(),
+  };
+  if(id){ await sb.from('prestataires').update(data).eq('id',id); }
+  else { await sb.from('prestataires').insert(data); }
+  await loadPrestataires();
+  closeModal('modal-prest');
+  notify(id ? 'Prestataire mis à jour' : 'Prestataire ajouté');
+}
+
+async function deletePrest(id){
+  if(!confirm('Supprimer ce prestataire ?')) return;
+  await sb.from('prestataires').delete().eq('id',id);
+  await loadPrestataires();
+  notify('Prestataire supprimé');
+}
+
+// ── MODAL ─────────────────────────────────────────────────
+function openModal(id){ document.getElementById(id).classList.add('open'); }
+function closeModal(id){ document.getElementById(id).classList.remove('open'); }
+document.addEventListener('click', e => {
+  document.querySelectorAll('.modal-overlay.open').forEach(m => {
+    if(e.target === m) m.classList.remove('open');
+  });
+});
+
+// ── NOTIFY ───────────────────────────────────────────────
+function notify(msg){
+  const el = document.getElementById('notif');
+  el.textContent = msg; el.classList.add('show');
+  setTimeout(()=>el.classList.remove('show'), 2500);
+}
+</script>
+</body>
+</html>
