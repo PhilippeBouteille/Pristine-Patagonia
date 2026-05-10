@@ -1,0 +1,134 @@
+# ============================================================
+# DECAP CMS — config.yml
+# Pristine Patagonia
+# ============================================================
+#
+# SETUP REQUIS :
+# 1. Créer une GitHub OAuth App sur https://github.com/settings/developers
+#    - Homepage URL: https://pristinepatagonia.cl
+#    - Callback URL: https://pristinepatagonia.cl/admin/
+# 2. Remplacer YOUR_GITHUB_OAUTH_CLIENT_ID ci-dessous
+# 3. Déployer sur Vercel avec la variable d'env GITHUB_CLIENT_SECRET
+#
+# ============================================================
+
+backend:
+  name: github
+  repo: PhilippeBouteille/Pristine-Patagonia
+  branch: main
+  auth_type: pkce
+  app_id: YOUR_GITHUB_OAUTH_CLIENT_ID
+
+media_folder: assets/images/programmes
+public_folder: /assets/images/programmes
+
+locale: fr
+
+collections:
+
+  # ── PROGRAMMES ─────────────────────────────────────────
+  - name: programmes
+    label: Programmes
+    label_singular: Programme
+    folder: content/programmes
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - label: "ID / Slug"
+        name: slug
+        widget: string
+        hint: "Identifiant unique, ex: parc-patagonia (sans espaces ni accents)"
+
+      - label: "Mis en avant"
+        name: featured
+        widget: boolean
+        default: false
+
+      - label: "Badge"
+        name: badge
+        widget: string
+        required: false
+        hint: "Ex: Bestseller, Exclusif, Nouveau (optionnel)"
+
+      - label: "Durée (jours)"
+        name: duration
+        widget: number
+
+      - label: "Prix à partir de (USD)"
+        name: price_usd
+        widget: number
+
+      - label: "Image principale"
+        name: image
+        widget: image
+        required: false
+
+      # Titres multilingues
+      - label: "Titre — Français"
+        name: title_fr
+        widget: string
+      - label: "Titre — English"
+        name: title_en
+        widget: string
+      - label: "Título — Español"
+        name: title_es
+        widget: string
+      - label: "Título — Português"
+        name: title_pt
+        widget: string
+
+      # Descriptions courtes
+      - label: "Description courte — Français"
+        name: desc_fr
+        widget: text
+      - label: "Short description — English"
+        name: desc_en
+        widget: text
+      - label: "Descripción corta — Español"
+        name: desc_es
+        widget: text
+      - label: "Descrição curta — Português"
+        name: desc_pt
+        widget: text
+
+      # Descriptions longues
+      - label: "Description complète — Français"
+        name: full_desc_fr
+        widget: markdown
+        required: false
+      - label: "Full description — English"
+        name: full_desc_en
+        widget: markdown
+        required: false
+      - label: "Descripción completa — Español"
+        name: full_desc_es
+        widget: markdown
+        required: false
+      - label: "Descrição completa — Português"
+        name: full_desc_pt
+        widget: markdown
+        required: false
+
+  # ── SETTINGS ─────────────────────────────────────────
+  - name: settings
+    label: Paramètres du site
+    files:
+      - label: "Contact & Réseaux"
+        name: contact
+        file: content/settings/contact.md
+        fields:
+          - label: "Email de contact"
+            name: email
+            widget: string
+          - label: "Téléphone"
+            name: phone
+            widget: string
+            required: false
+          - label: "Instagram URL"
+            name: instagram
+            widget: string
+            required: false
+          - label: "Facebook URL"
+            name: facebook
+            widget: string
+            required: false
