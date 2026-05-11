@@ -231,9 +231,18 @@ a { color: inherit; text-decoration: none; }
 .why-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 2.5rem; margin-top: 3rem; }
 .why-item { position: relative; padding-top: 0.5rem; }
 .why-item::before { content: ''; position: absolute; top: 0; left: 0; width: 28px; height: 1px; background: var(--sky); }
-.why-num { font-family: var(--fd); font-size: 3.5rem; font-weight: 300; color: rgba(75,189,232,0.14); line-height: 1; margin-bottom: 0.4rem; }
+.why-num { font-family: var(--fb); font-size: 3rem; font-weight: 700; color: rgba(75,189,232,0.40); line-height: 1; margin-bottom: 0.4rem; }
 .why-item h3 { font-family: var(--fb); font-size: 1rem; font-weight: 600; color: var(--white); margin-bottom: 0.7rem; letter-spacing: 0.04em; text-transform: uppercase; }
 .why-item p { font-size: 1rem; color: rgba(255,255,255,0.80); line-height: 1.8; }
+.why-cta {
+  margin-top: 1.2rem; display: inline-flex; align-items: center;
+  background: none; border: 1px solid rgba(255,255,255,0.35);
+  color: rgba(255,255,255,0.85); font-family: var(--fb); font-size: 0.78rem;
+  font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase;
+  padding: 0.5rem 1.1rem; border-radius: 3px; cursor: pointer;
+  transition: all 0.3s;
+}
+.why-cta:hover { border-color: var(--sky); color: var(--sky); }
 
 /* ── PROG PAGE ────────────────────────────────────────── */
 .prog-page-bg { background: var(--cream); }
@@ -297,9 +306,9 @@ textarea.form-control { resize: vertical; min-height: 130px; }
   display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 4rem;
   padding-bottom: 3rem; border-bottom: 1px solid rgba(255,255,255,0.09);
 }
-.footer-brand img { height: 48px; width: auto; margin-bottom: 1rem; filter: brightness(0) invert(1); }
-.footer-tagline { font-family: var(--fd); font-size: 1.05rem; color: rgba(255,255,255,0.55); margin-bottom: 0.4rem; }
-.footer-sub { font-size: 0.82rem; color: rgba(255,255,255,0.35); }
+.footer-brand img { height: 90px; width: auto; margin-bottom: 1.2rem; }
+.footer-tagline { font-family: var(--fd); font-size: 1.2rem; color: rgba(255,255,255,0.85); margin-bottom: 0.4rem; }
+.footer-sub { font-size: 0.95rem; color: rgba(255,255,255,0.60); }
 .footer-col h4 { font-size: 0.70rem; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: var(--sky); margin-bottom: 1.1rem; }
 .footer-links { list-style: none; display: flex; flex-direction: column; gap: 0.55rem; }
 .footer-links a { font-size: 1rem; color: rgba(255,255,255,0.75); transition: color var(--tr); cursor: pointer; }
@@ -350,7 +359,7 @@ textarea.form-control { resize: vertical; min-height: 130px; }
 <nav class="navbar over-hero" id="navbar">
   <a class="nav-logo" onclick="showPage('home')" style="cursor:pointer;display:flex;align-items:center;gap:0.7rem">
     <img src="Logos/favicon.png" alt="Pristine Patagonia" style="height:40px;width:auto" />
-    <span class="navbar.over-hero" style="font-family:'Raleway',sans-serif;font-weight:900;font-size:0.95rem;letter-spacing:0.08em;text-transform:uppercase;color:white;transition:color 0.3s" id="nav-brand">Pristine Patagonia</span>
+    <span style="font-family:'Raleway',sans-serif;font-weight:500;font-size:0.78rem;letter-spacing:0.14em;text-transform:uppercase;color:white;transition:color 0.3s" id="nav-brand">Pristine Patagonia</span>
   </a>
   <ul class="nav-links" id="nav-links">
     <li><button class="nav-link active" onclick="showPage('home')" id="nav-home" data-i18n="nav_home">Accueil</button></li>
@@ -439,10 +448,10 @@ textarea.form-control { resize: vertical; min-height: 130px; }
       <p class="section-eyebrow fade-in" data-i18n="why_title">Pourquoi Pristine Patagonia</p>
       <h2 class="section-title fade-in" data-i18n="why_title">Pourquoi Pristine Patagonia</h2>
       <div class="why-grid">
-        <div class="why-item fade-in"><div class="why-num">01</div><h3 data-i18n="why_1_title">Guides Experts</h3><p data-i18n="why_1_text">Guides francophones, anglophones et hispanophones, natifs de la région.</p></div>
-        <div class="why-item fade-in d1"><div class="why-num">02</div><h3 data-i18n="why_2_title">Circuits Exclusifs</h3><p data-i18n="why_2_text">Groupes restreints, accès à des sites hors sentiers, partenariats avec les meilleures lodges.</p></div>
-        <div class="why-item fade-in d2"><div class="why-num">03</div><h3 data-i18n="why_3_title">Sur Mesure</h3><p data-i18n="why_3_text">Chaque voyage est adapté à vos envies, votre rythme et vos centres d'intérêt.</p></div>
-        <div class="why-item fade-in d3"><div class="why-num">04</div><h3 data-i18n="why_4_title">Incoming &amp; Agences</h3><p data-i18n="why_4_text">Partenaire privilégié pour les agences réceptives. Prise en charge complète de vos groupes.</p></div>
+        <div class="why-item fade-in"><div class="why-num">01</div><h3 data-i18n="why_1_title">Guides Experts</h3><p data-i18n="why_1_text">Guides francophones, anglophones et hispanophones, natifs de la région.</p><button onclick="showPage('programmes')" class="why-cta" data-i18n="feat_cta">Voir nos programmes</button></div>
+        <div class="why-item fade-in d1"><div class="why-num">02</div><h3 data-i18n="why_2_title">Circuits Exclusifs</h3><p data-i18n="why_2_text">Groupes restreints, accès à des sites hors sentiers, partenariats avec les meilleures lodges.</p><button onclick="showPage('programmes')" class="why-cta" data-i18n="feat_cta">Voir nos programmes</button></div>
+        <div class="why-item fade-in d2"><div class="why-num">03</div><h3 data-i18n="why_3_title">Sur Mesure</h3><p data-i18n="why_3_text">Chaque voyage est adapté à vos envies, votre rythme et vos centres d'intérêt.</p><button onclick="showPage('contact')" class="why-cta" data-i18n="hero_cta2">Nous contacter</button></div>
+        <div class="why-item fade-in d3"><div class="why-num">04</div><h3 data-i18n="why_4_title">Incoming &amp; Agences</h3><p data-i18n="why_4_text">Partenaire privilégié pour les agences réceptives. Prise en charge complète de vos groupes.</p><button onclick="showPage('contact')" class="why-cta" data-i18n="hero_cta2">Nous contacter</button></div>
       </div>
     </div>
   </section>
@@ -450,7 +459,7 @@ textarea.form-control { resize: vertical; min-height: 130px; }
   <footer class="footer">
     <div class="footer-inner">
       <div class="footer-brand">
-        <img src="Logos/logofond clair.png" alt="Pristine Patagonia" />
+        <img src="Logos/logo fond oscur.png" alt="Pristine Patagonia" />
         <p class="footer-tagline" data-i18n="footer_tagline">Exclusive Adventures in Chilean Patagonia</p>
         <p class="footer-sub">Coyhaique, Aysén, Chile</p>
       </div>
@@ -503,7 +512,7 @@ textarea.form-control { resize: vertical; min-height: 130px; }
   <footer class="footer">
     <div class="footer-inner">
       <div class="footer-brand">
-        <img src="Logos/logofond clair.png" alt="Pristine Patagonia" />
+        <img src="Logos/logo fond oscur.png" alt="Pristine Patagonia" />
         <p class="footer-tagline" data-i18n="footer_tagline">Exclusive Adventures in Chilean Patagonia</p>
         <p class="footer-sub">Coyhaique, Aysén, Chile</p>
       </div>
@@ -588,7 +597,7 @@ textarea.form-control { resize: vertical; min-height: 130px; }
   <footer class="footer">
     <div class="footer-inner">
       <div class="footer-brand">
-        <img src="Logos/logofond clair.png" alt="Pristine Patagonia" />
+        <img src="Logos/logo fond oscur.png" alt="Pristine Patagonia" />
         <p class="footer-tagline" data-i18n="footer_tagline">Exclusive Adventures in Chilean Patagonia</p>
         <p class="footer-sub">Coyhaique, Aysén, Chile</p>
       </div>
