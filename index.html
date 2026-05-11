@@ -34,7 +34,7 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; }
 body {
-  font-family: var(--fb); font-weight: 300;
+  font-family: var(--fb); font-weight: 300; font-size: 18px;
   color: var(--text); background: var(--white);
   line-height: 1.7; -webkit-font-smoothing: antialiased;
 }
@@ -221,7 +221,7 @@ a { color: inherit; text-decoration: none; }
 .prog-card-title { font-family: var(--fb); font-size: 1.15rem; font-weight: 600; color: var(--navy); margin-bottom: 0.5rem; line-height: 1.2; letter-spacing: 0.01em; }
 .prog-card-desc { font-size: 0.87rem; color: var(--muted); line-height: 1.7; margin-bottom: 1.1rem; }
 .prog-card-footer { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border); padding-top: 0.9rem; }
-.prog-price { font-family: var(--fd); font-size: 1.15rem; color: var(--navy); }
+.prog-price { font-family: var(--fb); font-size: 1.15rem; font-weight: 600; color: var(--navy); }
 .prog-price span { font-size: 0.72rem; font-family: var(--fb); font-weight: 300; color: var(--muted); display: block; }
 
 /* ── WHY US ───────────────────────────────────────────── */
@@ -348,8 +348,9 @@ textarea.form-control { resize: vertical; min-height: 130px; }
 
 <!-- ═══════════════════════════ NAVBAR ═══════════════════ -->
 <nav class="navbar over-hero" id="navbar">
-  <a class="nav-logo" onclick="showPage('home')" style="cursor:pointer">
+  <a class="nav-logo" onclick="showPage('home')" style="cursor:pointer;display:flex;align-items:center;gap:0.7rem">
     <img src="Logos/favicon.png" alt="Pristine Patagonia" style="height:40px;width:auto" />
+    <span class="navbar.over-hero" style="font-family:'Raleway',sans-serif;font-weight:900;font-size:0.95rem;letter-spacing:0.08em;text-transform:uppercase;color:white;transition:color 0.3s" id="nav-brand">Pristine Patagonia</span>
   </a>
   <ul class="nav-links" id="nav-links">
     <li><button class="nav-link active" onclick="showPage('home')" id="nav-home" data-i18n="nav_home">Accueil</button></li>
@@ -654,6 +655,8 @@ function showPage(id){
   const nb=document.getElementById('navbar');
   if(id==='home'){nb.classList.add('over-hero');nb.classList.remove('solid');}
   else{nb.classList.remove('over-hero');nb.classList.add('solid');}
+  const brand = document.getElementById('nav-brand');
+  if(brand) brand.style.color = id==='home' ? 'white' : 'var(--navy)';
   document.getElementById('nav-links').classList.remove('open');
   window.scrollTo({top:0,behavior:'instant'});
   setTimeout(()=>{
@@ -665,8 +668,9 @@ function showPage(id){
 window.addEventListener('scroll',()=>{
   if(document.getElementById('page-home').classList.contains('active')){
     const nb=document.getElementById('navbar');
-    if(window.scrollY>60){nb.classList.add('solid');nb.classList.remove('over-hero');}
-    else{nb.classList.remove('solid');nb.classList.add('over-hero');}
+    const b=document.getElementById('nav-brand');
+    if(window.scrollY>60){nb.classList.add('solid');nb.classList.remove('over-hero');if(b)b.style.color='var(--navy)';}
+    else{nb.classList.remove('solid');nb.classList.add('over-hero');if(b)b.style.color='white';}
   }
 });
 
