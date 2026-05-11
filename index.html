@@ -114,6 +114,7 @@ a { color: inherit; text-decoration: none; }
 .hero-content {
   position: relative; z-index: 2;
   max-width: 1200px; margin: 0 auto; padding: 0 2.5rem; width: 100%;
+  text-align: center; display: flex; flex-direction: column; align-items: center;
 }
 .hero-eyebrow {
   font-size: 0.72rem; font-weight: 500; letter-spacing: 0.28em; text-transform: uppercase;
@@ -371,7 +372,7 @@ textarea.form-control { resize: vertical; min-height: 130px; }
     </div>
     <div class="hero-content">
       <div style="margin-bottom:2rem">
-        <img src="Logos/logofond clair.png" alt="Pristine Patagonia" style="height:110px;width:auto;filter:brightness(0) invert(1)" />
+        <img src="Logos/logofond clair.png" alt="Pristine Patagonia" style="height:165px;width:auto;filter:brightness(0) invert(1);display:block;margin:0 auto" />
       </div>
       <p class="hero-eyebrow">Pristine Patagonia</p>
       <h1 class="hero-title" data-i18n="hero_tagline">L'Aventure Exclusive au Bout du Monde</h1>
@@ -394,8 +395,7 @@ textarea.form-control { resize: vertical; min-height: 130px; }
       </div>
       <div class="intro-image fade-in d2">
         <div class="img-frame">
-          <!-- <img src="assets/images/intro.jpg" alt="" /> -->
-          <span>Photo à ajouter</span>
+          <img src="assets/images/intro.jpeg" alt="" />
         </div>
       </div>
     </div>
@@ -619,7 +619,7 @@ const PROGRAMMES=[
    title:{fr:"Cœur du Parc Patagonia",en:"Heart of Patagonia Park",es:"Corazón del Parque Patagonia",pt:"Coração do Parque Patagônia"},
    desc:{fr:"Explorez les pampas, les lagunes turquoise et les condors du Parc Patagonia, joyau de la conservation chilienne.",en:"Explore the pampas, turquoise lagoons and condors of Patagonia Park, a jewel of Chilean conservation.",es:"Explora las pampas, las lagunas turquesa y los cóndores del Parque Patagonia.",pt:"Explore as pampas, as lagoas turquesas e os condores do Parque Patagônia."},
    full:{fr:"Un circuit de 7 jours au cœur du Parc Patagonia, un des plus beaux parcs nationaux du Chili. Randonnées guidées, observations de condors, nuits en lodge premium, cuisine locale et rencontres avec les rangers de conservation.",en:"A 7-day tour at the heart of Patagonia Park. Guided hikes, condor spotting, premium lodge nights, local cuisine and meetings with conservation rangers.",es:"Un circuito de 7 días en el corazón del Parque Patagonia. Senderismo guiado, avistamiento de cóndores, noches en lodge premium y encuentros con rangers de conservación.",pt:"Um circuito de 7 dias no coração do Parque Patagônia. Caminhadas guiadas, observação de condores, noites em lodge premium e encontros com guardas de conservação."}},
-  {id:"fjords-aysen",featured:true,badge:"Exclusif",duration:10,price_usd:3800,image:"assets/images/programmes/fjords-aysen.jpg",
+  {id:"fjords-aysen",featured:true,badge:"Exclusif",duration:10,price_usd:3800,image:"assets/images/programmes/fjords-aysen.jpeg",
    title:{fr:"Fjords & Glaciers d'Aysén",en:"Fjords & Glaciers of Aysén",es:"Fiordos y Glaciares de Aysén",pt:"Fiordes e Glaciares do Aysén"},
    desc:{fr:"Navigation privée dans les fjords de l'Aysén, trekking sur glaciers et lodges au bout du monde.",en:"Private sailing through the fjords of Aysén, glacier trekking and lodges at the end of the world.",es:"Navegación privada por los fiordos de Aysén, trekking en glaciares y lodges en el fin del mundo.",pt:"Navegação privada pelos fiordes do Aysén, trekking em geleiras e lodges no fim do mundo."},
    full:{fr:"10 jours d'exploration des fjords et glaciers de la région d'Aysén en bateau privé. Le circuit le plus exclusif de notre catalogue — groupes de 4 à 8 personnes maximum.",en:"10 days exploring the fjords and glaciers of the Aysén region by private boat. The most exclusive tour in our catalogue — groups of 4 to 8 maximum.",es:"10 días explorando los fiordos y glaciares de Aysén en barco privado. El circuito más exclusivo de nuestro catálogo — grupos de 4 a 8 personas máximo.",pt:"10 dias explorando os fiordes e geleiras do Aysén em barco privado. O circuito mais exclusivo do catálogo — grupos de 4 a 8 pessoas."}},
