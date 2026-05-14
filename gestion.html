@@ -226,6 +226,9 @@ textarea.form-control{resize:vertical;min-height:80px}
         <button class="nav-item" onclick="showPage('parametres')" id="nav-parametres">
           <span class="nav-icon">⚙️</span> Paramètres
         </button>
+        <button class="nav-item" onclick="showPage('medias')" id="nav-medias">
+          <span class="nav-icon">🖼️</span> Médias du site
+        </button>
       </div>
       <div class="sidebar-section">
         <div class="sidebar-label">Raccourcis</div>
@@ -489,14 +492,85 @@ textarea.form-control{resize:vertical;min-height:80px}
             </div>
           </div>
           <div class="card">
-            <div class="card-title"><div class="card-title-left">Image</div></div>
-            <div class="form-group"><label class="form-label">URL de l'image</label><input class="form-control" id="pc-img" placeholder="assets/images/programmes/nom-programme.jpg" /></div>
-            <div style="font-size:12px;color:var(--muted);margin-top:8px">Uploader l'image dans GitHub sous assets/images/programmes/ puis coller l'URL ici.</div>
+            <div class="card-title"><div class="card-title-left">Image du programme</div></div>
+            <input type="hidden" id="pc-img" />
+            <div style="display:flex;gap:1.5rem;align-items:flex-start;flex-wrap:wrap;">
+              <div id="pc-img-preview" style="width:200px;height:130px;border:2px dashed var(--border);border-radius:8px;display:flex;align-items:center;justify-content:center;overflow:hidden;background:#F5F7FA;flex-shrink:0;">
+                <span style="font-size:11px;color:var(--muted);text-align:center;padding:8px;">Aucune image</span>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:10px;justify-content:center;">
+                <label class="btn btn-outline" style="cursor:pointer;margin:0;">
+                  📁 Choisir une photo
+                  <input type="file" id="pc-img-file" accept="image/*" style="display:none" onchange="handleProgImageUpload(this)" />
+                </label>
+                <div id="pc-img-status" style="font-size:12px;color:var(--muted);">JPG, PNG, WebP — max 5 MB</div>
+              </div>
+            </div>
           </div>
           <div style="display:flex;justify-content:flex-end;gap:8px">
             <button class="btn btn-outline btn-sm" onclick="saveCurrentProg(false)">Sauvegarder (brouillon)</button>
             <button class="btn btn-success btn-sm" onclick="saveCurrentProg(true)">✓ Publier sur le site</button>
           </div>
+        </div>
+      </div>
+
+      <!-- MÉDIAS DU SITE -->
+      <div class="page" id="page-medias">
+        <div class="page-title">Médias du site</div>
+        <div class="page-sub">Photos affichées sur pristinepatagonia.cl — stockées dans Supabase Storage</div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1.5rem;margin-top:1rem">
+
+          <!-- Hero -->
+          <div class="card">
+            <div class="card-title"><div class="card-title-left">🏔️ Photo Hero</div></div>
+            <div style="font-size:12px;color:var(--muted);margin-bottom:1rem">Grande photo en plein écran sur la page d'accueil</div>
+            <div id="media-preview-hero" style="width:100%;height:150px;border:2px dashed var(--border);border-radius:8px;overflow:hidden;background:#F5F7FA;display:flex;align-items:center;justify-content:center;margin-bottom:1rem;">
+              <span style="font-size:11px;color:var(--muted)">Chargement…</span>
+            </div>
+            <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+              <label class="btn btn-outline btn-sm" style="cursor:pointer;margin:0;">
+                📁 Changer la photo
+                <input type="file" accept="image/*" style="display:none" onchange="handleSiteMediaUpload(this,'photo_hero','media-preview-hero','media-status-hero')" />
+              </label>
+              <span id="media-status-hero" style="font-size:11px;color:var(--muted);">JPG/PNG — max 5 MB</span>
+            </div>
+          </div>
+
+          <!-- Intro -->
+          <div class="card">
+            <div class="card-title"><div class="card-title-left">🌊 Photo Introduction</div></div>
+            <div style="font-size:12px;color:var(--muted);margin-bottom:1rem">Photo de la section d'introduction (iceberg, paysage)</div>
+            <div id="media-preview-intro" style="width:100%;height:150px;border:2px dashed var(--border);border-radius:8px;overflow:hidden;background:#F5F7FA;display:flex;align-items:center;justify-content:center;margin-bottom:1rem;">
+              <span style="font-size:11px;color:var(--muted)">Chargement…</span>
+            </div>
+            <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+              <label class="btn btn-outline btn-sm" style="cursor:pointer;margin:0;">
+                📁 Changer la photo
+                <input type="file" accept="image/*" style="display:none" onchange="handleSiteMediaUpload(this,'photo_intro','media-preview-intro','media-status-intro')" />
+              </label>
+              <span id="media-status-intro" style="font-size:11px;color:var(--muted);">JPG/PNG — max 5 MB</span>
+            </div>
+          </div>
+
+          <!-- Pampa -->
+          <div class="card">
+            <div class="card-title"><div class="card-title-left">🌿 Photo Pampa Banner</div></div>
+            <div style="font-size:12px;color:var(--muted);margin-bottom:1rem">Bandeau panoramique en milieu de page</div>
+            <div id="media-preview-pampa" style="width:100%;height:150px;border:2px dashed var(--border);border-radius:8px;overflow:hidden;background:#F5F7FA;display:flex;align-items:center;justify-content:center;margin-bottom:1rem;">
+              <span style="font-size:11px;color:var(--muted)">Chargement…</span>
+            </div>
+            <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+              <label class="btn btn-outline btn-sm" style="cursor:pointer;margin:0;">
+                📁 Changer la photo
+                <input type="file" accept="image/*" style="display:none" onchange="handleSiteMediaUpload(this,'photo_pampa','media-preview-pampa','media-status-pampa')" />
+              </label>
+              <span id="media-status-pampa" style="font-size:11px;color:var(--muted);">JPG/PNG — max 5 MB</span>
+            </div>
+          </div>
+
+        </div>
+        <div class="alert alert-info" style="margin-top:1.5rem">
+          Les photos sont mises à jour instantanément sur le site après upload. Aucune action supplémentaire requise.
         </div>
       </div>
 
@@ -667,6 +741,7 @@ async function initApp(){
   await loadDashboard();
   await loadProgrammes();
   await loadPrestataires();
+  await loadMedias();
 }
 
 // ── NAVIGATION ───────────────────────────────────────────
@@ -817,6 +892,15 @@ async function editProg(id){
     document.getElementById('pc-fes').value = prog.full_es || '';
     document.getElementById('pc-fp').value  = prog.full_pt || '';
     document.getElementById('pc-img').value = prog.image_url || '';
+    // Mettre à jour la prévisualisation
+    const prev = document.getElementById('pc-img-preview');
+    if(prog.image_url){
+      prev.innerHTML = `<img src="${prog.image_url}" style="width:100%;height:100%;object-fit:cover;" />`;
+    } else {
+      prev.innerHTML = `<span style="font-size:11px;color:var(--muted);text-align:center;padding:8px;">Aucune image</span>`;
+    }
+    document.getElementById('pc-img-status').textContent = 'JPG, PNG, WebP — max 5 MB';
+    document.getElementById('pc-img-status').style.color = 'var(--muted)';
   }
   // Load day data
   _dayData = {};
@@ -948,6 +1032,11 @@ function clearPricingForm(){
     if(el) el.value = '';
   });
   document.getElementById('pp-jours').value = 7;
+  // Reset image preview
+  const prev = document.getElementById('pc-img-preview');
+  if(prev) prev.innerHTML = `<span style="font-size:11px;color:var(--muted);text-align:center;padding:8px;">Aucune image</span>`;
+  const st = document.getElementById('pc-img-status');
+  if(st){ st.textContent = 'JPG, PNG, WebP — max 5 MB'; st.style.color = 'var(--muted)'; }
   document.getElementById('pp-pax').value = 4;
   document.getElementById('pp-marge').value = window._params?.marge_defaut || 30;
   document.getElementById('pp-ccfee').value = window._params?.ccfee_defaut || 3.5;
@@ -1258,6 +1347,85 @@ async function deletePrest(id){
   await sb.from('prestataires').delete().eq('id',id);
   await loadPrestataires();
   notify('Prestataire supprimé');
+}
+
+// ── MÉDIAS — UPLOAD SUPABASE STORAGE ─────────────────────
+
+async function uploadToStorage(file, path){
+  const { data, error } = await sb.storage.from('pristine-media').upload(path, file, {
+    upsert: true,
+    contentType: file.type,
+  });
+  if(error) throw error;
+  const { data: urlData } = sb.storage.from('pristine-media').getPublicUrl(path);
+  return urlData.publicUrl;
+}
+
+// Upload photo programme (onglet Contenu site)
+async function handleProgImageUpload(input){
+  const file = input.files[0];
+  if(!file) return;
+  if(file.size > 5 * 1024 * 1024){ notify('Fichier trop lourd — max 5 MB'); return; }
+  const status = document.getElementById('pc-img-status');
+  const preview = document.getElementById('pc-img-preview');
+  status.textContent = 'Upload en cours…';
+  status.style.color = 'var(--blue)';
+  try {
+    const ext = file.name.split('.').pop();
+    const filename = 'programmes/' + Date.now() + '.' + ext;
+    const url = await uploadToStorage(file, filename);
+    document.getElementById('pc-img').value = url;
+    preview.innerHTML = `<img src="${url}" style="width:100%;height:100%;object-fit:cover;" />`;
+    status.textContent = '✓ Image uploadée';
+    status.style.color = 'var(--success)';
+  } catch(e){
+    status.textContent = 'Erreur : ' + (e.message || 'upload échoué');
+    status.style.color = 'var(--danger)';
+  }
+}
+
+// Charger les médias du site depuis pp_parametres
+async function loadMedias(){
+  const keys = ['photo_hero','photo_intro','photo_pampa'];
+  const { data } = await sb.from('pp_parametres').select('cle,valeur').in('cle', keys);
+  if(!data) return;
+  const map = { photo_hero:'media-preview-hero', photo_intro:'media-preview-intro', photo_pampa:'media-preview-pampa' };
+  data.forEach(row => {
+    const pid = map[row.cle];
+    if(!pid) return;
+    const el = document.getElementById(pid);
+    if(!el) return;
+    if(row.valeur){
+      el.innerHTML = `<img src="${row.valeur}" style="width:100%;height:100%;object-fit:cover;" />`;
+    } else {
+      el.innerHTML = `<span style="font-size:11px;color:var(--muted)">Aucune photo</span>`;
+    }
+  });
+}
+
+// Upload photo du site (hero / intro / pampa)
+async function handleSiteMediaUpload(input, paramKey, previewId, statusId){
+  const file = input.files[0];
+  if(!file) return;
+  if(file.size > 5 * 1024 * 1024){ notify('Fichier trop lourd — max 5 MB'); return; }
+  const status = document.getElementById(statusId);
+  const preview = document.getElementById(previewId);
+  status.textContent = 'Upload en cours…';
+  status.style.color = 'var(--blue)';
+  try {
+    const ext = file.name.split('.').pop();
+    const filename = 'site/' + paramKey + '.' + ext;
+    const url = await uploadToStorage(file, filename);
+    // Sauvegarder l'URL dans pp_parametres
+    await sb.from('pp_parametres').upsert({ cle: paramKey, valeur: url, label: paramKey, updated_at: new Date().toISOString() }, { onConflict: 'cle' });
+    preview.innerHTML = `<img src="${url}" style="width:100%;height:100%;object-fit:cover;" />`;
+    status.textContent = '✓ Photo mise à jour sur le site';
+    status.style.color = 'var(--success)';
+    notify('✅ Photo mise à jour');
+  } catch(e){
+    status.textContent = 'Erreur : ' + (e.message || 'upload échoué');
+    status.style.color = 'var(--danger)';
+  }
 }
 
 // ── MODAL ─────────────────────────────────────────────────

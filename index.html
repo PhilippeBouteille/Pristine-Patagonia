@@ -6,6 +6,7 @@
   <title>Pristine Patagonia — Exclusive Adventures</title>
   <meta name="description" content="Tour opérateur exclusif en Patagonie chilienne. Circuits accompagnés, fjords d'Aysén, Parc Patagonia. FR / EN / ES / PT." />
   <link rel="icon" type="image/png" href="Logos/favicon.png" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&display=swap" rel="stylesheet" />
 <style>
@@ -106,7 +107,7 @@ a { color: inherit; text-decoration: none; }
 
 /* ── HERO ─────────────────────────────────────────────── */
 .hero {
-  position: relative; height: 100vh; min-height: 620px;
+  position: relative; height: 100vh; min-height: 780px;
   display: flex; align-items: flex-end; padding-bottom: 8rem; overflow: hidden;
 }
 .hero-bg {
@@ -394,7 +395,7 @@ textarea.form-control { resize: vertical; min-height: 130px; }
 
   <section class="hero">
     <div class="hero-bg">
-      <img src="assets/images/hero.jpeg" alt="" />
+      <img id="img-hero" src="assets/images/hero.jpeg" alt="" />
     </div>
     <div class="hero-content">
       <div style="text-align:center;margin-bottom:2.5rem">
@@ -425,7 +426,7 @@ textarea.form-control { resize: vertical; min-height: 130px; }
       </div>
       <div class="intro-image fade-in d2">
         <div class="img-frame">
-          <img src="assets/images/intro.jpeg" alt="" />
+          <img id="img-intro" src="assets/images/intro.jpeg" alt="" />
         </div>
       </div>
     </div>
@@ -433,7 +434,7 @@ textarea.form-control { resize: vertical; min-height: 130px; }
 
   <!-- PAMPA BANNER -->
   <section style="position:relative;height:420px;overflow:hidden;display:flex;align-items:center;justify-content:center">
-    <img src="assets/images/pampa.jpeg" alt="Pampas, Parc Patagonia" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center" />
+    <img id="img-pampa" src="assets/images/pampa.jpeg" alt="Pampas, Parc Patagonia" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center" />
     <div style="position:absolute;inset:0;background:rgba(10,20,40,0.20)"></div>
     <div style="position:relative;z-index:2;text-align:center;padding:0 2rem;max-width:800px">
       <!-- Quote à ajouter -->
@@ -643,8 +644,13 @@ function applyLang(){
 function setLang(l){lang=l;localStorage.setItem('pp_lang',l);applyLang();renderFeatured();renderAll();populateSelect();}
 document.querySelectorAll('.lang-btn').forEach(btn=>btn.addEventListener('click',()=>setLang(btn.dataset.lang)));
 
-/* ── PROGRAMMES DATA ─────────────────────────────────── */
-const PROGRAMMES=[
+/* ── SUPABASE ────────────────────────────────────────── */
+const SUPABASE_URL = 'https://rdepvqaojrkjsayzfcal.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJkZXB2cWFvanJranNheXpmY2FsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg0NDg3MzIsImV4cCI6MjA5NDAyNDczMn0.MTm3lEGCz_oTUPv1J1N6H7nsmjMGiY46X6xYBMxow9U';
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+/* ── PROGRAMMES DATA (fallback statique) ─────────────── */
+const PROGRAMMES_STATIC=[
   {id:"parc-patagonia",featured:true,badge:"Bestseller",duration:7,price_usd:2400,image:"assets/images/programmes/parc-patagonia.jpeg",
    title:{fr:"Cœur du Parc Patagonia",en:"Heart of Patagonia Park",es:"Corazón del Parque Patagonia",pt:"Coração do Parque Patagônia"},
    desc:{fr:"Explorez les pampas, les lagunes turquoise et les condors du Parc Patagonia, joyau de la conservation chilienne.",en:"Explore the pampas, turquoise lagoons and condors of Patagonia Park, a jewel of Chilean conservation.",es:"Explora las pampas, las lagunas turquesa y los cóndores del Parque Patagonia.",pt:"Explore as pampas, as lagoas turquesas e os condores do Parque Patagônia."},
@@ -662,6 +668,23 @@ const PROGRAMMES=[
    desc:{fr:"Le plus grand lac de Patagonie et ses célèbres grottes de marbre — une merveille géologique unique au monde.",en:"Patagonia's largest lake and its famous marble caves — a geological wonder unique in the world.",es:"El lago más grande de la Patagonia y sus famosas cuevas de mármol.",pt:"O maior lago da Patagônia e suas famosas cavernas de mármore."},
    full:{fr:"5 jours autour du Lac General Carrera pour découvrir les grottes de marbre en kayak et les villages de Puerto Guadal et Chile Chico.",en:"5 days around Lake General Carrera to discover the marble caves by kayak and the villages of Puerto Guadal and Chile Chico.",es:"5 días alrededor del Lago General Carrera para descubrir las cuevas de mármol en kayak y los pueblos de Puerto Guadal y Chile Chico.",pt:"5 dias ao redor do Lago General Carrera para descobrir as cavernas de mármore de caiaque e as vilas de Puerto Guadal e Chile Chico."}}
 ];
+
+let PROGRAMMES = [...PROGRAMMES_STATIC];
+
+// Convertir un programme Supabase vers le format JS du site
+function mapSupaProg(p, idx){
+  return {
+    id: p.id,
+    featured: idx < 3,   // les 3 premiers publiés sont mis en avant
+    badge: p.badge || '',
+    duration: p.duree_jours || 0,
+    price_usd: p.prix_usd || 0,
+    image: p.image_url || '',
+    title: { fr: p.nom, en: p.nom, es: p.nom, pt: p.nom },
+    desc: { fr: p.desc_fr||'', en: p.desc_en||'', es: p.desc_es||'', pt: p.desc_pt||'' },
+    full: { fr: p.full_fr||'', en: p.full_en||'', es: p.full_es||'', pt: p.full_pt||'' },
+  };
+}
 
 /* ── SPA NAVIGATION ─────────────────────────────────── */
 function showPage(id){
@@ -753,8 +776,38 @@ document.getElementById('contact-form').addEventListener('submit',async(e)=>{
 /* ── YEAR ───────────────────────────────────────────── */
 document.querySelectorAll('.year').forEach(el=>el.textContent=new Date().getFullYear());
 
-/* ── INIT ───────────────────────────────────────────── */
-applyLang();renderFeatured();renderAll();populateSelect();
+/* ── INIT ASYNC (Supabase) ──────────────────────────── */
+async function initSite(){
+  applyLang();
+
+  // 1. Photos du site depuis pp_parametres
+  try {
+    const { data: params } = await sb.from('pp_parametres')
+      .select('cle,valeur')
+      .in('cle', ['photo_hero','photo_intro','photo_pampa']);
+    if(params){
+      const map = { photo_hero:'img-hero', photo_intro:'img-intro', photo_pampa:'img-pampa' };
+      params.forEach(r => {
+        if(r.valeur){ const el = document.getElementById(map[r.cle]); if(el) el.src = r.valeur; }
+      });
+    }
+  } catch(e){ /* fallback images statiques déjà en place */ }
+
+  // 2. Programmes publiés depuis Supabase
+  try {
+    const { data: progs } = await sb.from('pp_programmes')
+      .select('id,nom,badge,duree_jours,prix_usd,image_url,desc_fr,desc_en,desc_es,desc_pt,full_fr,full_en,full_es,full_pt')
+      .eq('publie', true)
+      .order('updated_at', { ascending: false });
+    if(progs && progs.length > 0){
+      PROGRAMMES = progs.map((p, idx) => mapSupaProg(p, idx));
+    }
+  } catch(e){ /* fallback données statiques déjà dans PROGRAMMES */ }
+
+  renderFeatured(); renderAll(); populateSelect();
+}
+
+initSite();
 </script>
 
 </body>
