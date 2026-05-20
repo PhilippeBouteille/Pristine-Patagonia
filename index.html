@@ -12,410 +12,243 @@
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
-      --navy: #1B3A6B; --sky: #0057A8; --sky-lt: #4D8FCC;
-      --cream: #F6F2EC; --dark: #080f1a; --white: #FFFFFF;
-      --fb: 'Raleway', sans-serif; --fd: 'Dancing Script', cursive;
-      --ease: cubic-bezier(0.4, 0, 0.2, 1);
+      --navy:#1B3A6B; --sky:#0057A8; --sky-lt:#4D8FCC;
+      --cream:#F6F2EC; --dark:#080f1a; --white:#FFFFFF;
+      --fb:'Raleway',sans-serif; --fd:'Dancing Script',cursive;
+      --ease:cubic-bezier(0.4,0,0.2,1);
+      --nav-h:64px;
     }
-    @font-face {
-      font-family: 'ReklameScript';
-      src: url('assets/fonts/ReklameScript-Regular.otf') format('opentype');
-      font-display: swap;
-    }
+    @font-face { font-family:'ReklameScript'; src:url('assets/fonts/ReklameScript-Regular.otf') format('opentype'); font-display:swap; }
+    html,body { width:100%; height:100%; overflow:hidden; font-family:var(--fb); background:var(--dark); color:var(--white); }
 
-    html, body {
-      width: 100%; height: 100%;
-      overflow: hidden;
-      font-family: var(--fb);
-      background: var(--dark);
-      color: var(--white);
-    }
+    /* ── HERO ── */
+    #hero { position:fixed; inset:0; z-index:1; overflow:hidden; }
+    #hero-bg { position:absolute; inset:-8%; background:url('assets/images/hero.jpeg') center/cover no-repeat; animation:kB 22s ease-in-out infinite alternate; }
+    @keyframes kB { 0%{transform:scale(1.08) translate(0%,0%)} 33%{transform:scale(1.13) translate(-1.5%,1%)} 66%{transform:scale(1.10) translate(1%,-1%)} 100%{transform:scale(1.08) translate(.5%,.5%)} }
+    .hero-ov { position:absolute; inset:0; background:rgba(8,15,26,.35); transition:background .6s var(--ease); }
+    #hero.dimmed .hero-ov { background:rgba(8,15,26,.68); }
 
-    /* ── HERO — full viewport ───────────────────── */
-    #hero {
-      position: fixed;
-      inset: 0;
-      z-index: 1;
-      overflow: hidden;
+    /* ── HERO LOGO (visible only on hero) ── */
+    #hero-logo {
+      position:fixed; top:28px; left:36px; z-index:300;
+      display:flex; align-items:center; gap:11px; text-decoration:none; cursor:pointer;
+      transition:opacity .4s;
     }
-    #hero-bg {
-      position: absolute;
-      inset: -8%;
-      background: url('assets/images/hero.jpeg') center / cover no-repeat;
-      animation: kenBurns 22s ease-in-out infinite alternate;
-    }
-    @keyframes kenBurns {
-      0%   { transform: scale(1.08) translate(0%, 0%); }
-      33%  { transform: scale(1.13) translate(-1.5%, 1%); }
-      66%  { transform: scale(1.10) translate(1%, -1%); }
-      100% { transform: scale(1.08) translate(0.5%, 0.5%); }
-    }
-    .hero-overlay {
-      position: absolute; inset: 0;
-      background: linear-gradient(
-        to bottom,
-        rgba(8,15,26,.40) 0%,
-        rgba(8,15,26,.10) 40%,
-        rgba(8,15,26,.55) 100%
-      );
-    }
+    #hero-logo img { height:32px; width:auto; filter:brightness(0) invert(1); opacity:.88; }
+    .logo-text { display:flex; flex-direction:column; line-height:1; gap:3px; }
+    .logo-pristine { font-family:'ReklameScript',var(--fd); font-size:20px; color:var(--white); }
+    .logo-patagonia { font-size:8px; font-weight:400; letter-spacing:.28em; text-transform:uppercase; color:rgba(255,255,255,.5); }
 
-    /* ── LOGO ──────────────────────────────────── */
-    #logo {
-      position: fixed;
-      top: 28px; left: 36px;
-      z-index: 300;
-      display: flex;
-      align-items: center;
-      gap: 11px;
-      text-decoration: none;
-      cursor: pointer;
+    /* ── HERO LANG ── */
+    #hero-lang {
+      position:fixed; top:34px; right:36px; z-index:300;
+      display:flex; gap:10px; transition:opacity .4s;
     }
-    #logo img {
-      height: 32px; width: auto;
-      filter: brightness(0) invert(1);
-      opacity: .88;
-    }
-    .logo-text {
-      display: flex; flex-direction: column;
-      line-height: 1; gap: 3px;
-    }
-    .logo-pristine {
-      font-family: 'ReklameScript', var(--fd);
-      font-size: 20px; color: var(--white);
-    }
-    .logo-patagonia {
-      font-family: var(--fb);
-      font-size: 8px; font-weight: 400;
-      letter-spacing: .28em; text-transform: uppercase;
-      color: rgba(255,255,255,.5);
-    }
+    .lang-btn { font-family:var(--fb); font-size:9px; font-weight:400; letter-spacing:.2em; text-transform:uppercase; color:rgba(255,255,255,.3); background:none; border:none; cursor:pointer; padding:4px 0; transition:color .2s; }
+    .lang-btn.active,.lang-btn:hover { color:rgba(255,255,255,.9); }
 
-    /* ── LANG ──────────────────────────────────── */
-    #lang-switcher {
-      position: fixed;
-      top: 34px; right: 36px;
-      z-index: 300;
-      display: flex; gap: 10px;
-    }
-    .lang-btn {
-      font-family: var(--fb);
-      font-size: 9px; font-weight: 400;
-      letter-spacing: .2em; text-transform: uppercase;
-      color: rgba(255,255,255,.3);
-      background: none; border: none; cursor: pointer;
-      padding: 4px 0; transition: color .2s;
-    }
-    .lang-btn.active, .lang-btn:hover { color: rgba(255,255,255,.9); }
-
-    /* ── CROSS ─────────────────────────────────── */
+    /* ── CROSS ── */
     #cross-btn {
-      position: fixed;
-      top: 50%; left: 50%;
-      transform: translate(-50%, -50%);
-      z-index: 300;
-      width: 64px; height: 64px;
-      cursor: pointer;
-      display: flex; align-items: center; justify-content: center;
+      position:fixed; top:50%; left:50%; transform:translate(-50%,-50%);
+      z-index:300; width:64px; height:64px; cursor:pointer;
     }
-    #cross-btn::before, #cross-btn::after {
-      content: ''; position: absolute;
-      background: rgba(255,255,255,.8);
-      transition: transform .5s var(--ease), background .3s;
+    #cross-btn::before,#cross-btn::after {
+      content:''; position:absolute; background:rgba(255,255,255,.75);
+      left:50%; top:50%; transform:translate(-50%,-50%);
+      transition:width .55s var(--ease),height .55s var(--ease),background .3s;
     }
-    #cross-btn::before { width: 1px; height: 44px; }
-    #cross-btn::after  { width: 44px; height: 1px; }
-    #cross-btn:hover::before,
-    #cross-btn:hover::after { background: var(--white); }
-    #cross-btn.open {
-      transition: transform .5s var(--ease);
-      transform: translate(-50%, -50%) rotate(45deg);
-    }
+    #cross-btn::before { width:1px; height:44px; }
+    #cross-btn::after  { width:44px; height:1px; }
+    #cross-btn:hover::before,#cross-btn:hover::after { background:var(--white); }
+    #cross-btn.open::before { height:100vh; background:rgba(255,255,255,.15); }
+    #cross-btn.open::after  { width:100vw;  background:rgba(255,255,255,.15); }
 
     #cross-hint {
-      position: fixed;
-      top: calc(50% + 46px); left: 50%;
-      transform: translateX(-50%);
-      z-index: 300;
-      font-size: 9px; font-weight: 300;
-      letter-spacing: .3em; text-transform: uppercase;
-      color: rgba(255,255,255,.3);
-      white-space: nowrap;
-      transition: opacity .3s;
-      pointer-events: none;
-      animation: fadeHint 3s ease-in-out infinite alternate;
+      position:fixed; top:calc(50% + 46px); left:50%; transform:translateX(-50%);
+      z-index:300; font-size:9px; font-weight:300; letter-spacing:.3em; text-transform:uppercase;
+      color:rgba(255,255,255,.35); white-space:nowrap; pointer-events:none;
+      animation:fH 3s ease-in-out infinite alternate;
     }
-    @keyframes fadeHint {
-      0%   { opacity: .3; }
-      100% { opacity: .65; }
-    }
-    #cross-hint.hidden { opacity: 0 !important; animation: none; }
+    @keyframes fH { 0%{opacity:.3} 100%{opacity:.7} }
+    #cross-hint.hidden { opacity:0!important; animation:none; }
 
-    /* ── QUADRANTS ─────────────────────────────── */
+    /* ── QUADRANTS ── */
     #quadrants {
-      position: fixed;
-      inset: 0;
-      z-index: 200;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      grid-template-rows: 1fr 1fr;
-      pointer-events: none;
-      opacity: 0;
-      transition: opacity .5s var(--ease);
+      position:fixed; inset:0; z-index:200;
+      display:grid; grid-template-columns:1fr 1fr; grid-template-rows:1fr 1fr;
+      pointer-events:none;
     }
-    #quadrants.open {
-      pointer-events: all;
-      opacity: 1;
-    }
-
     .quad {
-      position: relative;
-      overflow: hidden;
-      cursor: pointer;
-      display: flex;
-      align-items: flex-end;
-      padding: 40px 44px;
+      display:flex; align-items:center; justify-content:center;
+      text-align:center; padding:20px;
+      cursor:pointer; opacity:0; transform:translateY(10px);
+      transition:opacity .45s var(--ease),transform .45s var(--ease),background .3s;
     }
-
-    /* Photo de fond par quadrant */
-    .quad-bg {
-      position: absolute; inset: 0;
-      background-size: cover;
-      background-position: center;
-      transition: transform .7s var(--ease), filter .5s;
-    }
-    .quad::before {
-      content: '';
-      position: absolute; inset: 0;
-      background: rgba(8,15,26,.62);
-      transition: background .4s;
-      z-index: 1;
-    }
-    .quad:hover::before { background: rgba(8,15,26,.38); }
-    .quad:hover .quad-bg { transform: scale(1.05); filter: brightness(.9); }
-
-    /* Borders entre quadrants */
-    .quad:nth-child(1) { border-right: 1px solid rgba(255,255,255,.12); border-bottom: 1px solid rgba(255,255,255,.12); }
-    .quad:nth-child(2) { border-bottom: 1px solid rgba(255,255,255,.12); }
-    .quad:nth-child(3) { border-right: 1px solid rgba(255,255,255,.12); }
-
-    .quad-content {
-      position: relative; z-index: 2;
-      transform: translateY(8px);
-      transition: transform .35s var(--ease);
-    }
-    .quad:hover .quad-content { transform: translateY(0); }
-
-    .quad-num {
-      font-size: 9px; font-weight: 300;
-      letter-spacing: .25em; text-transform: uppercase;
-      color: rgba(255,255,255,.35);
-      margin-bottom: 8px;
-    }
+    .quad:hover { background:rgba(255,255,255,.05); }
+    #quadrants.open .quad { pointer-events:all; opacity:1; transform:translateY(0); }
+    #quadrants.open .quad:nth-child(1){transition-delay:.15s}
+    #quadrants.open .quad:nth-child(2){transition-delay:.20s}
+    #quadrants.open .quad:nth-child(3){transition-delay:.25s}
+    #quadrants.open .quad:nth-child(4){transition-delay:.30s}
+    .quad-content { display:flex; flex-direction:column; align-items:center; }
     .quad-title {
-      font-family: 'ReklameScript', var(--fd);
-      font-size: clamp(28px, 3.5vw, 46px);
-      color: var(--white);
-      line-height: 1.05;
-      margin-bottom: 10px;
+      font-family:'ReklameScript',var(--fd);
+      font-size:clamp(32px,4vw,58px);
+      color:rgba(255,255,255,.82);
+      line-height:1.05;
+      transition:color .25s, transform .25s;
     }
-    .quad-sub {
-      font-size: 11px; font-weight: 300;
-      letter-spacing: .12em;
-      color: rgba(255,255,255,.5);
-      line-height: 1.5;
-    }
-    .quad-arrow {
-      display: inline-block;
-      margin-top: 16px;
-      font-size: 10px; font-weight: 300;
-      letter-spacing: .22em; text-transform: uppercase;
-      color: rgba(255,255,255,.4);
-      transition: color .25s, letter-spacing .25s;
-    }
-    .quad:hover .quad-arrow {
-      color: var(--white);
-      letter-spacing: .32em;
-    }
+    .quad:hover .quad-title { color:var(--white); transform:scale(1.04); }
 
-    /* Quadrant slide-in animation */
-    .quad { opacity: 0; }
-    #quadrants.open .quad { opacity: 1; }
-    #quadrants.open .quad:nth-child(1) { transition: opacity .4s var(--ease) .05s; }
-    #quadrants.open .quad:nth-child(2) { transition: opacity .4s var(--ease) .10s; }
-    #quadrants.open .quad:nth-child(3) { transition: opacity .4s var(--ease) .15s; }
-    #quadrants.open .quad:nth-child(4) { transition: opacity .4s var(--ease) .20s; }
+    /* ── SITE NAV (visible inside sections) ── */
+    #site-nav {
+      position:fixed; top:0; left:0; right:0; z-index:500;
+      height:var(--nav-h);
+      display:flex; align-items:center; justify-content:space-between;
+      padding:0 36px;
+      background:rgba(8,15,26,.92);
+      backdrop-filter:blur(12px);
+      border-bottom:1px solid rgba(255,255,255,.06);
+      transform:translateY(-100%);
+      transition:transform .45s var(--ease);
+      pointer-events:none;
+    }
+    #site-nav.visible { transform:translateY(0); pointer-events:all; }
 
-    /* ── SECTION PANELS (full screen, slide over hero) ── */
+    .nav-logo {
+      display:flex; align-items:center; gap:10px;
+      text-decoration:none; cursor:pointer; flex-shrink:0;
+    }
+    .nav-logo img { height:26px; width:auto; filter:brightness(0) invert(1); opacity:.85; }
+    .nav-logo .logo-text { align-items:center; }
+    .nav-logo-pristine { font-family:'ReklameScript',var(--fd); font-size:26px; color:var(--white); line-height:1; }
+    .nav-logo-patagonia { font-size:7px; font-weight:400; letter-spacing:.32em; text-transform:uppercase; color:rgba(255,255,255,.4); margin-top:2px; }
+
+    .nav-links {
+      display:flex; align-items:center; gap:0;
+    }
+    .nav-link {
+      font-size:9px; font-weight:400; letter-spacing:.22em; text-transform:uppercase;
+      color:rgba(255,255,255,.45); cursor:pointer; padding:8px 18px;
+      border-left:1px solid rgba(255,255,255,.07);
+      transition:color .2s,background .2s;
+      white-space:nowrap;
+    }
+    .nav-link:last-child { border-right:1px solid rgba(255,255,255,.07); }
+    .nav-link:hover { color:var(--white); background:rgba(255,255,255,.04); }
+    .nav-link.active { color:var(--white); }
+
+    .nav-right { display:flex; align-items:center; gap:0; flex-shrink:0; margin-left:20px; }
+    .nav-lang-btn { font-family:var(--fb); font-size:9px; font-weight:400; letter-spacing:.18em; text-transform:uppercase; color:rgba(255,255,255,.28); background:none; border:none; cursor:pointer; padding:6px 8px; transition:color .2s; }
+    .nav-lang-btn.active,.nav-lang-btn:hover { color:rgba(255,255,255,.85); }
+
+    /* ── PANELS ── */
     .panel {
-      position: fixed;
-      inset: 0;
-      z-index: 400;
-      overflow-y: auto;
-      background: var(--dark);
-      transform: translateY(100%);
-      transition: transform .6s var(--ease);
+      position:fixed; inset:0; z-index:400;
+      overflow-y:auto; background:var(--dark);
+      transform:translateY(100%);
+      transition:transform .6s var(--ease);
+      padding-top:var(--nav-h);
     }
-    .panel.active { transform: translateY(0); }
+    .panel.active { transform:translateY(0); }
 
-    /* Back button */
-    .panel-back {
-      position: fixed;
-      top: 30px; left: 36px;
-      z-index: 500;
-      display: flex; align-items: center; gap: 10px;
-      font-size: 9px; font-weight: 400;
-      letter-spacing: .25em; text-transform: uppercase;
-      color: rgba(255,255,255,.5);
-      cursor: pointer;
-      opacity: 0;
-      pointer-events: none;
-      transition: color .2s, opacity .3s;
-    }
-    .panel-back.visible { opacity: 1; pointer-events: all; }
-    .panel-back:hover { color: var(--white); }
-    .panel-back::before {
-      content: '←';
-      font-size: 14px;
-    }
+    /* ── PANEL: EXPÉRIENCES ── */
+    #panel-experiences { background:var(--dark); }
+    .exp-header { padding:64px 60px 40px; border-bottom:1px solid rgba(255,255,255,.06); }
+    .sec-label { font-size:9px; font-weight:400; letter-spacing:.35em; text-transform:uppercase; color:var(--sky-lt); display:flex; align-items:center; gap:14px; margin-bottom:14px; }
+    .sec-label::before { content:''; display:block; width:22px; height:1px; background:var(--sky-lt); }
+    .sec-title { font-family:'ReklameScript',var(--fd); font-size:clamp(36px,5vw,62px); color:var(--white); line-height:1.05; }
+    .exp-grid { display:grid; grid-template-columns:1fr 1fr; }
+    .exp-card { position:relative; overflow:hidden; aspect-ratio:4/3; cursor:pointer; border:.5px solid rgba(255,255,255,.04); }
+    .exp-card-bg { position:absolute; inset:0; background-size:cover; background-position:center; transition:transform .7s var(--ease),filter .5s; }
+    .exp-card:hover .exp-card-bg,.exp-card.open .exp-card-bg { transform:scale(1.06); filter:brightness(.65); }
+    .exp-card-base { position:absolute; inset:0; background:linear-gradient(to top,rgba(8,15,26,.88) 0%,rgba(8,15,26,.06) 55%,transparent 100%); }
+    .exp-card-name { position:absolute; bottom:24px; left:28px; right:28px; font-size:10px; font-weight:400; letter-spacing:.28em; text-transform:uppercase; color:rgba(255,255,255,.68); transition:opacity .3s; }
+    .exp-card.open .exp-card-name { opacity:0; }
+    .exp-xcross { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%) scale(.5); width:30px; height:30px; opacity:0; transition:opacity .3s,transform .35s var(--ease); }
+    .exp-xcross::before,.exp-xcross::after { content:''; position:absolute; background:rgba(255,255,255,.85); left:50%; top:50%; transform:translate(-50%,-50%); }
+    .exp-xcross::before { width:1px; height:22px; } .exp-xcross::after { width:22px; height:1px; }
+    .exp-card:hover .exp-xcross { opacity:1; transform:translate(-50%,-50%) scale(1); }
+    .exp-card.open .exp-xcross { opacity:1; transform:translate(-50%,-50%) scale(1) rotate(45deg); }
+    .exp-overlay { position:absolute; inset:0; padding:36px 30px; background:rgba(8,15,26,.87); display:flex; flex-direction:column; justify-content:center; opacity:0; pointer-events:none; transition:opacity .4s; }
+    .exp-card.open .exp-overlay { opacity:1; pointer-events:all; }
+    .exp-ov-loc { font-size:9px; letter-spacing:.3em; text-transform:uppercase; color:var(--sky-lt); margin-bottom:10px; }
+    .exp-ov-name { font-family:'ReklameScript',var(--fd); font-size:30px; color:var(--white); line-height:1.1; margin-bottom:10px; }
+    .exp-ov-desc { font-size:13px; font-weight:300; line-height:1.8; color:rgba(255,255,255,.56); margin-bottom:20px; }
+    .exp-ov-meta { display:flex; gap:22px; margin-bottom:20px; }
+    .exp-mi { display:flex; flex-direction:column; gap:3px; }
+    .exp-ml { font-size:8px; letter-spacing:.28em; text-transform:uppercase; color:rgba(255,255,255,.28); }
+    .exp-mv { font-size:12px; font-weight:400; color:rgba(255,255,255,.78); }
+    .exp-ov-cta { display:inline-flex; align-items:center; gap:8px; font-size:10px; font-weight:400; letter-spacing:.22em; text-transform:uppercase; color:var(--white); border:1px solid rgba(255,255,255,.32); padding:9px 18px; width:fit-content; cursor:pointer; background:none; font-family:var(--fb); transition:background .25s,border-color .25s; }
+    .exp-ov-cta:hover { background:rgba(255,255,255,.1); border-color:rgba(255,255,255,.65); }
 
-    /* ── PANEL: EXPÉRIENCES ────────────────────── */
-    #panel-experiences { background: var(--dark); }
-    .exp-header {
-      padding: 100px 60px 48px;
-      border-bottom: 1px solid rgba(255,255,255,.06);
-    }
-    .exp-label {
-      font-size: 9px; font-weight: 400;
-      letter-spacing: .35em; text-transform: uppercase;
-      color: var(--sky-lt);
-      display: flex; align-items: center; gap: 14px;
-      margin-bottom: 14px;
-    }
-    .exp-label::before { content: ''; display: block; width: 22px; height: 1px; background: var(--sky-lt); }
-    .exp-title {
-      font-family: 'ReklameScript', var(--fd);
-      font-size: clamp(38px, 5vw, 64px);
-      color: var(--white); line-height: 1.05;
-    }
-    .exp-grid { display: grid; grid-template-columns: 1fr 1fr; }
-    .exp-card { position: relative; overflow: hidden; aspect-ratio: 4/3; cursor: pointer; border: .5px solid rgba(255,255,255,.04); }
-    .exp-card-bg { position: absolute; inset: 0; background-size: cover; background-position: center; transition: transform .7s var(--ease), filter .5s; }
-    .exp-card:hover .exp-card-bg, .exp-card.open .exp-card-bg { transform: scale(1.06); filter: brightness(.65); }
-    .exp-card-base { position: absolute; inset: 0; background: linear-gradient(to top, rgba(8,15,26,.88) 0%, rgba(8,15,26,.06) 55%, transparent 100%); }
-    .exp-card-name { position: absolute; bottom: 24px; left: 28px; right: 28px; font-size: 10px; font-weight: 400; letter-spacing: .28em; text-transform: uppercase; color: rgba(255,255,255,.68); transition: opacity .3s; }
-    .exp-card.open .exp-card-name { opacity: 0; }
-    .exp-xcross { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%) scale(.5); width: 32px; height: 32px; opacity: 0; transition: opacity .3s, transform .35s var(--ease); }
-    .exp-xcross::before, .exp-xcross::after { content: ''; position: absolute; background: rgba(255,255,255,.85); left: 50%; top: 50%; transform: translate(-50%,-50%); }
-    .exp-xcross::before { width: 1px; height: 24px; }
-    .exp-xcross::after  { width: 24px; height: 1px; }
-    .exp-card:hover .exp-xcross { opacity: 1; transform: translate(-50%,-50%) scale(1); }
-    .exp-card.open .exp-xcross { opacity: 1; transform: translate(-50%,-50%) scale(1) rotate(45deg); }
-    .exp-overlay { position: absolute; inset: 0; padding: 36px 30px; background: rgba(8,15,26,.87); display: flex; flex-direction: column; justify-content: center; opacity: 0; pointer-events: none; transition: opacity .4s; }
-    .exp-card.open .exp-overlay { opacity: 1; pointer-events: all; }
-    .exp-ov-loc { font-size: 9px; letter-spacing: .3em; text-transform: uppercase; color: var(--sky-lt); margin-bottom: 10px; }
-    .exp-ov-name { font-family: 'ReklameScript', var(--fd); font-size: 30px; color: var(--white); line-height: 1.1; margin-bottom: 10px; }
-    .exp-ov-desc { font-size: 13px; font-weight: 300; line-height: 1.8; color: rgba(255,255,255,.56); margin-bottom: 20px; }
-    .exp-ov-meta { display: flex; gap: 22px; margin-bottom: 20px; }
-    .exp-meta-i { display: flex; flex-direction: column; gap: 3px; }
-    .exp-meta-l { font-size: 8px; letter-spacing: .28em; text-transform: uppercase; color: rgba(255,255,255,.28); }
-    .exp-meta-v { font-size: 12px; font-weight: 400; color: rgba(255,255,255,.78); }
-    .exp-ov-cta { display: inline-flex; align-items: center; gap: 8px; font-size: 10px; font-weight: 400; letter-spacing: .22em; text-transform: uppercase; color: var(--white); border: 1px solid rgba(255,255,255,.32); padding: 9px 18px; width: fit-content; cursor: pointer; background: none; font-family: var(--fb); transition: background .25s, border-color .25s; }
-    .exp-ov-cta:hover { background: rgba(255,255,255,.1); border-color: rgba(255,255,255,.65); }
+    /* ── PANEL: TERRITOIRE ── */
+    #panel-territoire { display:grid; grid-template-columns:1fr 1fr; }
+    .terr-photo { overflow:hidden; min-height:calc(100vh - var(--nav-h)); }
+    .terr-photo img { width:100%; height:100%; object-fit:cover; }
+    .terr-text { background:var(--navy); padding:72px 64px; display:flex; flex-direction:column; justify-content:center; overflow-y:auto; }
+    .terr-body { font-size:15px; font-weight:300; line-height:1.9; color:rgba(255,255,255,.58); margin-top:24px; margin-bottom:40px; }
+    .terr-stats { display:flex; gap:36px; padding-top:28px; border-top:1px solid rgba(255,255,255,.1); }
+    .terr-stat { display:flex; flex-direction:column; gap:5px; }
+    .terr-stat-v { font-family:'ReklameScript',var(--fd); font-size:34px; color:var(--white); }
+    .terr-stat-l { font-size:9px; font-weight:400; letter-spacing:.2em; text-transform:uppercase; color:rgba(255,255,255,.3); }
 
-    /* ── PANEL: TERRITOIRE ─────────────────────── */
-    #panel-territoire {
-      display: grid; grid-template-columns: 1fr 1fr;
-      background: var(--navy);
-    }
-    .terr-photo { overflow: hidden; }
-    .terr-photo img { width: 100%; height: 100%; object-fit: cover; }
-    .terr-text {
-      padding: 100px 64px;
-      display: flex; flex-direction: column; justify-content: center;
-      overflow-y: auto;
-    }
-    .terr-label { font-size: 9px; font-weight: 400; letter-spacing: .35em; text-transform: uppercase; color: var(--sky-lt); display: flex; align-items: center; gap: 14px; margin-bottom: 14px; }
-    .terr-label::before { content: ''; display: block; width: 22px; height: 1px; background: var(--sky-lt); }
-    .terr-ttl { font-family: 'ReklameScript', var(--fd); font-size: clamp(36px, 4.5vw, 58px); color: var(--white); line-height: 1.08; }
-    .terr-body { font-size: 15px; font-weight: 300; line-height: 1.9; color: rgba(255,255,255,.58); margin-top: 24px; margin-bottom: 40px; }
-    .terr-stats { display: flex; gap: 36px; padding-top: 28px; border-top: 1px solid rgba(255,255,255,.1); }
-    .terr-stat { display: flex; flex-direction: column; gap: 5px; }
-    .terr-stat-v { font-family: 'ReklameScript', var(--fd); font-size: 34px; color: var(--white); }
-    .terr-stat-l { font-size: 9px; font-weight: 400; letter-spacing: .2em; text-transform: uppercase; color: rgba(255,255,255,.3); }
+    /* ── PANEL: SUR MESURE ── */
+    #panel-surlesure { display:grid; grid-template-columns:1fr 1fr; min-height:calc(100vh - var(--nav-h)); }
+    .surm-left { background:var(--cream); padding:72px 64px; display:flex; flex-direction:column; justify-content:center; overflow-y:auto; }
+    .surm-left .sec-label { color:var(--sky); } .surm-left .sec-label::before { background:var(--sky); }
+    .surm-left .sec-title { color:var(--navy); }
+    .surm-body { font-size:15px; font-weight:300; line-height:1.9; color:#555; margin-top:22px; margin-bottom:34px; }
+    .surm-info { display:flex; flex-direction:column; gap:12px; }
+    .surm-info-item { display:flex; gap:12px; font-size:13px; font-weight:300; color:#444; }
+    .surm-info-item strong { font-weight:500; color:var(--navy); min-width:56px; }
+    .surm-right { background:var(--navy); padding:72px 64px; display:flex; flex-direction:column; justify-content:center; overflow-y:auto; }
+    .form-group { margin-bottom:18px; }
+    .form-label { display:block; font-size:9px; font-weight:400; letter-spacing:.28em; text-transform:uppercase; color:rgba(255,255,255,.35); margin-bottom:7px; }
+    .form-input,.form-textarea,.form-select { width:100%; background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.1); color:var(--white); font-family:var(--fb); font-size:14px; font-weight:300; padding:11px 13px; outline:none; transition:border-color .25s; appearance:none; border-radius:0; }
+    .form-input::placeholder,.form-textarea::placeholder { color:rgba(255,255,255,.2); }
+    .form-input:focus,.form-textarea:focus,.form-select:focus { border-color:var(--sky-lt); }
+    .form-textarea { resize:vertical; min-height:80px; }
+    .form-row { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+    .form-submit { width:100%; background:transparent; border:1px solid rgba(255,255,255,.3); color:var(--white); font-family:var(--fb); font-size:10px; font-weight:400; letter-spacing:.25em; text-transform:uppercase; padding:13px; cursor:pointer; transition:background .25s,border-color .25s; margin-top:4px; }
+    .form-submit:hover { background:rgba(255,255,255,.1); border-color:rgba(255,255,255,.6); }
+    .form-note { font-size:11px; font-weight:300; color:rgba(255,255,255,.2); margin-top:10px; text-align:center; }
 
-    /* ── PANEL: SUR MESURE ─────────────────────── */
-    #panel-surlesure {
-      display: grid; grid-template-columns: 1fr 1fr;
-    }
-    .surm-left { background: var(--cream); padding: 100px 64px; display: flex; flex-direction: column; justify-content: center; overflow-y: auto; }
-    .surm-label { font-size: 9px; font-weight: 400; letter-spacing: .35em; text-transform: uppercase; color: var(--sky); display: flex; align-items: center; gap: 14px; margin-bottom: 14px; }
-    .surm-label::before { content: ''; display: block; width: 22px; height: 1px; background: var(--sky); }
-    .surm-ttl { font-family: 'ReklameScript', var(--fd); font-size: clamp(34px, 4vw, 54px); color: var(--navy); line-height: 1.08; }
-    .surm-body { font-size: 15px; font-weight: 300; line-height: 1.9; color: #555; margin-top: 22px; margin-bottom: 34px; }
-    .surm-info { display: flex; flex-direction: column; gap: 12px; }
-    .surm-info-item { display: flex; gap: 12px; font-size: 13px; font-weight: 300; color: #444; }
-    .surm-info-item strong { font-weight: 500; color: var(--navy); min-width: 56px; }
-    .surm-right { background: var(--navy); padding: 100px 64px; display: flex; flex-direction: column; justify-content: center; overflow-y: auto; }
-    .form-group { margin-bottom: 18px; }
-    .form-label { display: block; font-size: 9px; font-weight: 400; letter-spacing: .28em; text-transform: uppercase; color: rgba(255,255,255,.35); margin-bottom: 7px; }
-    .form-input, .form-textarea, .form-select { width: 100%; background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.1); color: var(--white); font-family: var(--fb); font-size: 14px; font-weight: 300; padding: 11px 13px; outline: none; transition: border-color .25s; appearance: none; border-radius: 0; }
-    .form-input::placeholder, .form-textarea::placeholder { color: rgba(255,255,255,.2); }
-    .form-input:focus, .form-textarea:focus, .form-select:focus { border-color: var(--sky-lt); }
-    .form-textarea { resize: vertical; min-height: 80px; }
-    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-    .form-submit { width: 100%; background: transparent; border: 1px solid rgba(255,255,255,.3); color: var(--white); font-family: var(--fb); font-size: 10px; font-weight: 400; letter-spacing: .25em; text-transform: uppercase; padding: 13px; cursor: pointer; transition: background .25s, border-color .25s; margin-top: 4px; }
-    .form-submit:hover { background: rgba(255,255,255,.1); border-color: rgba(255,255,255,.6); }
-    .form-note { font-size: 11px; font-weight: 300; color: rgba(255,255,255,.2); margin-top: 10px; text-align: center; }
+    /* ── PANEL: ABOUT ── */
+    #panel-about { display:grid; grid-template-columns:1fr 1fr; min-height:calc(100vh - var(--nav-h)); }
+    .about-photo { overflow:hidden; }
+    .about-photo img { width:100%; height:100%; object-fit:cover; }
+    .about-text { background:var(--dark); padding:72px 64px; display:flex; flex-direction:column; justify-content:center; overflow-y:auto; }
+    .about-body { font-size:15px; font-weight:300; line-height:1.9; color:rgba(255,255,255,.56); margin-top:22px; margin-bottom:40px; }
+    .about-values { display:flex; flex-direction:column; gap:22px; }
+    .about-value { display:flex; gap:18px; align-items:flex-start; }
+    .about-val-num { font-family:'ReklameScript',var(--fd); font-size:24px; color:rgba(255,255,255,.13); line-height:1; min-width:28px; }
+    .about-val-text h4 { font-size:11px; font-weight:500; letter-spacing:.12em; text-transform:uppercase; color:var(--white); margin-bottom:4px; }
+    .about-val-text p { font-size:13px; font-weight:300; line-height:1.7; color:rgba(255,255,255,.45); }
 
-    /* ── PANEL: ABOUT ──────────────────────────── */
-    #panel-about {
-      display: grid; grid-template-columns: 1fr 1fr;
-      background: var(--dark);
-    }
-    .about-photo { overflow: hidden; }
-    .about-photo img { width: 100%; height: 100%; object-fit: cover; }
-    .about-text { padding: 100px 64px; display: flex; flex-direction: column; justify-content: center; overflow-y: auto; }
-    .about-label { font-size: 9px; font-weight: 400; letter-spacing: .35em; text-transform: uppercase; color: var(--sky-lt); display: flex; align-items: center; gap: 14px; margin-bottom: 14px; }
-    .about-label::before { content: ''; display: block; width: 22px; height: 1px; background: var(--sky-lt); }
-    .about-ttl { font-family: 'ReklameScript', var(--fd); font-size: clamp(36px, 4.5vw, 58px); color: var(--white); line-height: 1.08; }
-    .about-body { font-size: 15px; font-weight: 300; line-height: 1.9; color: rgba(255,255,255,.56); margin-top: 22px; margin-bottom: 40px; }
-    .about-values { display: flex; flex-direction: column; gap: 22px; }
-    .about-value { display: flex; gap: 18px; align-items: flex-start; }
-    .about-val-num { font-family: 'ReklameScript', var(--fd); font-size: 24px; color: rgba(255,255,255,.13); line-height: 1; min-width: 28px; }
-    .about-val-text h4 { font-size: 11px; font-weight: 500; letter-spacing: .12em; text-transform: uppercase; color: var(--white); margin-bottom: 4px; }
-    .about-val-text p { font-size: 13px; font-weight: 300; line-height: 1.7; color: rgba(255,255,255,.45); }
-
-    /* ── MOBILE ────────────────────────────────── */
-    @media (max-width: 768px) {
-      #logo { top: 20px; left: 20px; }
-      #lang-switcher { top: 24px; right: 20px; }
-      .panel-back { top: 22px; left: 20px; }
-      #quadrants { grid-template-columns: 1fr; grid-template-rows: repeat(4, 1fr); }
-      .quad:nth-child(1) { border-right: none; border-bottom: 1px solid rgba(255,255,255,.12); }
-      .quad:nth-child(2) { border-bottom: 1px solid rgba(255,255,255,.12); }
-      .quad:nth-child(3) { border-right: none; border-bottom: 1px solid rgba(255,255,255,.12); }
-      .quad { padding: 24px 28px; }
-      .quad-title { font-size: 28px; }
-      #panel-territoire, #panel-surlesure, #panel-about { grid-template-columns: 1fr; }
-      .terr-photo, .about-photo { height: 45vw; }
-      .terr-text, .surm-left, .surm-right, .about-text { padding: 56px 24px; }
-      .exp-grid { grid-template-columns: 1fr; }
-      .exp-header { padding: 80px 24px 36px; }
-      .form-row { grid-template-columns: 1fr; }
+    /* ── MOBILE ── */
+    @media(max-width:768px) {
+      #hero-logo{top:20px;left:20px;} #hero-lang{top:24px;right:20px;}
+      .nav-links{display:none;} #site-nav{padding:0 20px;}
+      #quadrants{grid-template-columns:1fr;grid-template-rows:repeat(4,1fr);}
+      .quad:nth-child(2),.quad:nth-child(4){justify-content:flex-start;text-align:left;}
+      .quad:nth-child(3),.quad:nth-child(4){align-items:flex-end;padding-top:0;padding-bottom:28px;}
+      .quad{padding:24px 28px;} .quad-title{font-size:26px;}
+      #panel-territoire,#panel-surlesure,#panel-about{grid-template-columns:1fr;}
+      .terr-photo,.about-photo{min-height:45vw;} 
+      .terr-text,.surm-left,.surm-right,.about-text{padding:48px 24px;}
+      .exp-grid{grid-template-columns:1fr;} .exp-header{padding:48px 24px 32px;}
+      .form-row{grid-template-columns:1fr;}
     }
   </style>
 </head>
 <body>
 
   <!-- HERO -->
-  <div id="hero">
-    <div id="hero-bg"></div>
-    <div class="hero-overlay"></div>
-  </div>
+  <div id="hero"><div id="hero-bg"></div><div class="hero-ov"></div></div>
 
-  <!-- LOGO -->
-  <a id="logo" href="#" onclick="closePanel(event)">
+  <!-- HERO LOGO -->
+  <a id="hero-logo" href="#">
     <img src="Logos/favicon.png" alt="Pristine" onerror="this.style.display='none'" />
     <div class="logo-text">
       <span class="logo-pristine">Pristine</span>
@@ -423,8 +256,8 @@
     </div>
   </a>
 
-  <!-- LANG -->
-  <div id="lang-switcher">
+  <!-- HERO LANG -->
+  <div id="hero-lang">
     <button class="lang-btn" onclick="setLang('fr')">FR</button>
     <button class="lang-btn" onclick="setLang('en')">EN</button>
     <button class="lang-btn" onclick="setLang('es')">ES</button>
@@ -432,69 +265,63 @@
   </div>
 
   <!-- CROSS -->
-  <div id="cross-btn" onclick="toggleQuadrants()" aria-label="Menu"></div>
+  <div id="cross-btn" onclick="toggleMenu()"></div>
   <div id="cross-hint" data-i18n="hint">Explorer</div>
 
   <!-- QUADRANTS -->
   <div id="quadrants">
     <div class="quad" onclick="openPanel('experiences')">
-      <div class="quad-bg" style="background-image:url('assets/images/programmes/parc-patagonia.jpeg')"></div>
-      <div class="quad-content">
-        <div class="quad-num">01</div>
-        <div class="quad-title" data-i18n="q_exp">Expériences</div>
-        <div class="quad-sub" data-i18n="q_exp_sub">04 circuits exclusifs en Aysén</div>
-        <span class="quad-arrow" data-i18n="q_arrow">Découvrir →</span>
-      </div>
+      <div class="quad-content"><div class="quad-title" data-i18n="q_exp">Expériences</div></div>
     </div>
     <div class="quad" onclick="openPanel('territoire')">
-      <div class="quad-bg" style="background-image:url('assets/images/intro.jpeg')"></div>
-      <div class="quad-content">
-        <div class="quad-num">02</div>
-        <div class="quad-title" data-i18n="q_terr">Notre Territoire</div>
-        <div class="quad-sub" data-i18n="q_terr_sub">Aysén · Patagonie chilienne</div>
-        <span class="quad-arrow" data-i18n="q_arrow">Découvrir →</span>
-      </div>
+      <div class="quad-content"><div class="quad-title" data-i18n="q_terr">Notre Territoire</div></div>
     </div>
     <div class="quad" onclick="openPanel('surlesure')">
-      <div class="quad-bg" style="background-image:url('assets/images/pampa.jpeg')"></div>
-      <div class="quad-content">
-        <div class="quad-num">03</div>
-        <div class="quad-title" data-i18n="q_surm">Sur Mesure</div>
-        <div class="quad-sub" data-i18n="q_surm_sub">Planifiez votre voyage</div>
-        <span class="quad-arrow" data-i18n="q_arrow">Découvrir →</span>
-      </div>
+      <div class="quad-content"><div class="quad-title" data-i18n="q_surm">Sur Mesure</div></div>
     </div>
     <div class="quad" onclick="openPanel('about')">
-      <div class="quad-bg" style="background-image:url('assets/images/hero.jpeg')"></div>
-      <div class="quad-content">
-        <div class="quad-num">04</div>
-        <div class="quad-title" data-i18n="q_about">About Us</div>
-        <div class="quad-sub" data-i18n="q_about_sub">Qui sommes-nous</div>
-        <span class="quad-arrow" data-i18n="q_arrow">Découvrir →</span>
-      </div>
+      <div class="quad-content"><div class="quad-title" data-i18n="q_about">About Us</div></div>
     </div>
   </div>
 
-  <!-- BACK BUTTON -->
-  <div id="panel-back" class="panel-back" onclick="closePanel()" data-i18n="back">Retour</div>
+  <!-- SITE NAV (appears inside sections) -->
+  <nav id="site-nav">
+    <a class="nav-logo" onclick="goHome()">
+      <img src="Logos/favicon.png" alt="Pristine" onerror="this.style.display='none'" />
+      <div class="logo-text">
+        <span class="nav-logo-pristine">Pristine</span>
+        <span class="nav-logo-patagonia">Patagonia</span>
+      </div>
+    </a>
+    <div class="nav-links">
+      <span class="nav-link" data-i18n="q_exp" onclick="openPanel('experiences')">Expériences</span>
+      <span class="nav-link" data-i18n="q_terr" onclick="openPanel('territoire')">Notre Territoire</span>
+      <span class="nav-link" data-i18n="q_surm" onclick="openPanel('surlesure')">Sur Mesure</span>
+      <span class="nav-link" data-i18n="q_about" onclick="openPanel('about')">About Us</span>
+    </div>
+    <div class="nav-right">
+      <button class="nav-lang-btn" onclick="setLang('fr')">FR</button>
+      <button class="nav-lang-btn" onclick="setLang('en')">EN</button>
+      <button class="nav-lang-btn" onclick="setLang('es')">ES</button>
+      <button class="nav-lang-btn" onclick="setLang('pt')">PT</button>
+    </div>
+  </nav>
 
   <!-- PANEL: EXPÉRIENCES -->
   <div id="panel-experiences" class="panel">
     <div class="exp-header">
-      <div class="exp-label" data-i18n="exp_lbl">Nos Expériences</div>
-      <h2 class="exp-title" data-i18n="exp_ttl">Expériences</h2>
+      <div class="sec-label" data-i18n="exp_lbl">Nos Expériences</div>
+      <h2 class="sec-title" data-i18n="exp_ttl">Expériences</h2>
     </div>
     <div class="exp-grid" id="exp-grid"></div>
   </div>
 
   <!-- PANEL: TERRITOIRE -->
   <div id="panel-territoire" class="panel">
-    <div class="terr-photo">
-      <img src="assets/images/intro.jpeg" alt="Aysén" />
-    </div>
+    <div class="terr-photo"><img src="assets/images/intro.jpeg" alt="Aysén" /></div>
     <div class="terr-text">
-      <div class="terr-label" data-i18n="terr_lbl">Notre Territoire</div>
-      <h2 class="terr-ttl" data-i18n="terr_ttl">La Patagonie<br>comme nulle part ailleurs</h2>
+      <div class="sec-label" data-i18n="terr_lbl">Notre Territoire</div>
+      <h2 class="sec-title" data-i18n="terr_ttl">La Patagonie<br>comme nulle part ailleurs</h2>
       <p class="terr-body" data-i18n="terr_body">La région d'Aysén concentre certains des paysages les plus préservés de la planète — fjords profonds, glaciers millénaires, condors, pampas sauvages. Moins de 100 000 habitants pour un territoire grand comme la Belgique.<br><br>Nous vivons ici. Nous connaissons chaque sentier, chaque río, chaque lodge.</p>
       <div class="terr-stats">
         <div class="terr-stat"><span class="terr-stat-v">67k</span><span class="terr-stat-l" data-i18n="st_a">km²</span></div>
@@ -507,8 +334,8 @@
   <!-- PANEL: SUR MESURE -->
   <div id="panel-surlesure" class="panel">
     <div class="surm-left">
-      <div class="surm-label" data-i18n="surm_lbl">Sur Mesure</div>
-      <h2 class="surm-ttl" data-i18n="surm_ttl">Une expérience<br>sur mesure</h2>
+      <div class="sec-label" data-i18n="surm_lbl">Sur Mesure</div>
+      <h2 class="sec-title" data-i18n="surm_ttl">Une expérience<br>sur mesure</h2>
       <p class="surm-body" data-i18n="surm_body">Chaque voyage est unique. Partagez-nous votre projet — dates, groupe, envies — et nous construisons ensemble votre séjour en Patagonie chilienne.<br><br>Nous répondons dans les 48 heures.</p>
       <div class="surm-info">
         <div class="surm-info-item"><strong>Email</strong><span>info@pristinepatagonia.cl</span></div>
@@ -545,12 +372,10 @@
 
   <!-- PANEL: ABOUT -->
   <div id="panel-about" class="panel">
-    <div class="about-photo">
-      <img src="assets/images/intro.jpeg" alt="Pristine Patagonia" />
-    </div>
+    <div class="about-photo"><img src="assets/images/intro.jpeg" alt="Pristine Patagonia" /></div>
     <div class="about-text">
-      <div class="about-label" data-i18n="about_lbl">About Us</div>
-      <h2 class="about-ttl" data-i18n="about_ttl">Qui sommes-nous</h2>
+      <div class="sec-label" data-i18n="about_lbl">About Us</div>
+      <h2 class="sec-title" data-i18n="about_ttl">Qui sommes-nous</h2>
       <p class="about-body" data-i18n="about_body">Pristine est né d'une conviction simple : la Patagonie chilienne mérite mieux que le tourisme de masse. Nous sommes une équipe de guides et de passionnés basés à Coyhaique, au cœur de la région d'Aysén.<br><br>Chaque circuit est conçu avec soin — petits groupes, accès exclusifs, lodges partenaires, cuisine locale.</p>
       <div class="about-values">
         <div class="about-value"><span class="about-val-num">01</span><div class="about-val-text"><h4 data-i18n="v1t">Guides Experts</h4><p data-i18n="v1b">Natifs de la région, francophones, anglophones et hispanophones.</p></div></div>
@@ -562,148 +387,33 @@
 
   <script>
   const T={
-    fr:{
-      hint:'Explorer', back:'← Retour',
-      q_exp:'Expériences', q_exp_sub:'04 circuits exclusifs en Aysén',
-      q_terr:'Notre Territoire', q_terr_sub:'Aysén · Patagonie chilienne',
-      q_surm:'Sur Mesure', q_surm_sub:'Planifiez votre voyage',
-      q_about:'About Us', q_about_sub:'Qui sommes-nous',
-      q_arrow:'Découvrir →',
-      exp_lbl:'Nos Expériences', exp_ttl:'Expériences',
-      terr_lbl:'Notre Territoire', terr_ttl:'La Patagonie\ncomme nulle part ailleurs',
-      terr_body:'La région d\'Aysén concentre certains des paysages les plus préservés de la planète — fjords profonds, glaciers millénaires, condors, pampas sauvages. Moins de 100 000 habitants pour un territoire grand comme la Belgique.<br><br>Nous vivons ici. Nous connaissons chaque sentier, chaque río, chaque lodge.',
-      st_a:'km² de wilderness', st_b:'Wilderness absolu', st_c:'Une seule route',
-      surm_lbl:'Sur Mesure', surm_ttl:'Une expérience\nsur mesure', surm_base:'Basé à',
-      surm_body:'Chaque voyage est unique. Partagez-nous votre projet — dates, groupe, envies — et nous construisons ensemble votre séjour en Patagonie chilienne.<br><br>Nous répondons dans les 48 heures.',
-      f_name:'Nom complet', f_email:'Email', f_country:'Pays', f_dates:'Dates envisagées',
-      f_exp:'Expérience', f_exp_ph:'Choisir...', f_custom:'Voyage sur mesure',
-      f_msg:'Votre projet', f_submit:'Envoyer ma demande', f_note:'Réponse garantie sous 48h · Aucun engagement',
-      about_lbl:'About Us', about_ttl:'Qui sommes-nous',
-      about_body:'Pristine est né d\'une conviction simple : la Patagonie chilienne mérite mieux que le tourisme de masse. Nous sommes une équipe de guides et de passionnés basés à Coyhaique, au cœur de la région d\'Aysén.<br><br>Chaque circuit est conçu avec soin — petits groupes, accès exclusifs, lodges partenaires, cuisine locale.',
-      v1t:'Guides Experts', v1b:'Natifs de la région, francophones, anglophones et hispanophones.',
-      v2t:'Accès Exclusifs', v2b:'Sites hors sentiers, partenariats lodges, groupes de 8 personnes max.',
-      v3t:'Incoming & Agences', v3b:'Partenaire réceptif pour agences. Prise en charge complète de vos groupes.',
-      p1:'Cœur du Parc Patagonia', p2:'La Carretera Austral', p3:'Fjords & Glaciers d\'Aysén', p4:'Lago General Carrera',
-      pd1:'Explorez les pampas, les lagunes turquoise et les condors du Parc Patagonia.',
-      pd2:'La route la plus épique du monde : 1 240 km entre volcans, glaciers et fjords.',
-      pd3:'Navigations à l\'aube, kayak en eaux glacées, glaciers millénaires.',
-      pd4:'Le deuxième plus grand lac d\'Amérique du Sud et ses marbres sculptés par les vagues.',
-      dur1:'7 jours', dur2:'10 jours', dur3:'12 jours', dur4:'5 jours',
-      pg:'Petit groupe', pcta:'Nous écrire',
-    },
-    en:{
-      hint:'Explore', back:'← Back',
-      q_exp:'Experiences', q_exp_sub:'04 exclusive circuits in Aysén',
-      q_terr:'Our Territory', q_terr_sub:'Aysén · Chilean Patagonia',
-      q_surm:'Bespoke', q_surm_sub:'Plan your journey',
-      q_about:'About Us', q_about_sub:'Who we are',
-      q_arrow:'Discover →',
-      exp_lbl:'Our Experiences', exp_ttl:'Experiences',
-      terr_lbl:'Our Territory', terr_ttl:'Patagonia\nlike nowhere else',
-      terr_body:'The Aysén region holds some of the most pristine landscapes on Earth — deep fjords, ancient glaciers, condors, wild pampas. Fewer than 100,000 inhabitants in a territory the size of Belgium.<br><br>We live here. We know every trail, every río, every lodge.',
-      st_a:'km² of wilderness', st_b:'Absolute wilderness', st_c:'One road',
-      surm_lbl:'Bespoke', surm_ttl:'A bespoke\nexperience awaits', surm_base:'Based in',
-      surm_body:'Every journey is unique. Share your project — dates, group size, desires — and we\'ll design your Patagonian adventure together.<br><br>We respond within 48 hours.',
-      f_name:'Full Name', f_email:'Email', f_country:'Country', f_dates:'Planned dates',
-      f_exp:'Experience', f_exp_ph:'Choose...', f_custom:'Custom journey',
-      f_msg:'Your project', f_submit:'Send my request', f_note:'Response within 48h · No commitment',
-      about_lbl:'About Us', about_ttl:'Who we are',
-      about_body:'Pristine was born from a simple conviction: Chilean Patagonia deserves better than mass tourism. We are a team of guides and enthusiasts based in Coyhaique, in the heart of the Aysén region.<br><br>Every circuit is crafted with care — small groups, exclusive access, partner lodges, local cuisine.',
-      v1t:'Expert Guides', v1b:'Region natives, fluent in French, English and Spanish.',
-      v2t:'Exclusive Access', v2b:'Off-trail sites, lodge partnerships, max 8 people per group.',
-      v3t:'Incoming & Agencies', v3b:'Receptive partner for agencies. Full management of your groups.',
-      p1:'Heart of Patagonia Park', p2:'The Carretera Austral', p3:'Fjords & Glaciers of Aysén', p4:'Lake General Carrera',
-      pd1:'Explore the pampas, turquoise lagoons and condors of Patagonia Park.',
-      pd2:'The world\'s most epic road: 1,240 km through volcanoes, glaciers and fjords.',
-      pd3:'Dawn navigations, kayaking in glacial waters, ancient glaciers.',
-      pd4:'South America\'s second largest lake with its famous marble caves.',
-      dur1:'7 days', dur2:'10 days', dur3:'12 days', dur4:'5 days',
-      pg:'Small group', pcta:'Write to us',
-    },
-    es:{
-      hint:'Explorar', back:'← Volver',
-      q_exp:'Experiencias', q_exp_sub:'04 circuitos exclusivos en Aysén',
-      q_terr:'Nuestro Territorio', q_terr_sub:'Aysén · Patagonia chilena',
-      q_surm:'A Medida', q_surm_sub:'Planifica tu viaje',
-      q_about:'About Us', q_about_sub:'Quiénes somos',
-      q_arrow:'Descubrir →',
-      exp_lbl:'Nuestras Experiencias', exp_ttl:'Experiencias',
-      terr_lbl:'Nuestro Territorio', terr_ttl:'La Patagonia\ncomo en ningún otro lugar',
-      terr_body:'La región de Aysén concentra algunos de los paisajes más preservados del planeta — fiordos profundos, glaciares milenarios, cóndores, pampas salvajes. Menos de 100.000 habitantes en un territorio tan grande como Bélgica.<br><br>Vivimos aquí. Conocemos cada sendero, cada río, cada lodge.',
-      st_a:'km² de wilderness', st_b:'Wilderness absoluto', st_c:'Una sola ruta',
-      surm_lbl:'A Medida', surm_ttl:'Una experiencia\na tu medida', surm_base:'Con base en',
-      surm_body:'Cada viaje es único. Cuéntanos tu proyecto — fechas, grupo, deseos — y construimos juntos tu experiencia en la Patagonia chilena.<br><br>Respondemos en 48 horas.',
-      f_name:'Nombre completo', f_email:'Email', f_country:'País', f_dates:'Fechas previstas',
-      f_exp:'Experiencia', f_exp_ph:'Elegir...', f_custom:'Viaje a medida',
-      f_msg:'Tu proyecto', f_submit:'Enviar mi solicitud', f_note:'Respuesta en 48h · Sin compromiso',
-      about_lbl:'About Us', about_ttl:'Quiénes somos',
-      about_body:'Pristine nació de una convicción simple: la Patagonia chilena merece algo mejor que el turismo masivo. Somos un equipo de guías y apasionados con base en Coyhaique, en el corazón de la región de Aysén.<br><br>Cada circuito está diseñado con cuidado — grupos pequeños, accesos exclusivos, lodges asociados, gastronomía local.',
-      v1t:'Guías Expertos', v1b:'Nativos de la región, francófonos, anglófonos e hispanohablantes.',
-      v2t:'Accesos Exclusivos', v2b:'Sitios fuera de ruta, alianzas con lodges, grupos de máx. 8 personas.',
-      v3t:'Incoming & Agencias', v3b:'Socio receptivo para agencias. Gestión completa de tus grupos.',
-      p1:'Corazón del Parque Patagonia', p2:'La Carretera Austral', p3:'Fiordos y Glaciares de Aysén', p4:'Lago General Carrera',
-      pd1:'Explora las pampas, las lagunas turquesa y los cóndores del Parque Patagonia.',
-      pd2:'La ruta más épica del mundo: 1.240 km entre volcanes, glaciares y fiordos.',
-      pd3:'Navegaciones al amanecer, kayak en aguas glaciales, glaciares milenarios.',
-      pd4:'El segundo lago más grande de Sudamérica con sus famosas cuevas de mármol.',
-      dur1:'7 días', dur2:'10 días', dur3:'12 días', dur4:'5 días',
-      pg:'Grupo pequeño', pcta:'Escribirnos',
-    },
-    pt:{
-      hint:'Explorar', back:'← Voltar',
-      q_exp:'Experiências', q_exp_sub:'04 circuitos exclusivos em Aysén',
-      q_terr:'Nosso Território', q_terr_sub:'Aysén · Patagônia chilena',
-      q_surm:'Sob Medida', q_surm_sub:'Planeje sua viagem',
-      q_about:'About Us', q_about_sub:'Quem somos',
-      q_arrow:'Descobrir →',
-      exp_lbl:'Nossas Experiências', exp_ttl:'Experiências',
-      terr_lbl:'Nosso Território', terr_ttl:'A Patagônia\ncomo em nenhum outro lugar',
-      terr_body:'A região de Aysén concentra algumas das paisagens mais preservadas do planeta — fiordes profundos, geleiras milenares, condores, pampas selvagens. Menos de 100.000 habitantes em um território do tamanho da Bélgica.<br><br>Vivemos aqui. Conhecemos cada trilha, cada río, cada lodge.',
-      st_a:'km² de wilderness', st_b:'Wilderness absoluto', st_c:'Uma só estrada',
-      surm_lbl:'Sob Medida', surm_ttl:'Uma experiência\nsob medida', surm_base:'Sediado em',
-      surm_body:'Cada viagem é única. Compartilhe seu projeto — datas, grupo, desejos — e construímos juntos sua experiência na Patagônia chilena.<br><br>Respondemos em 48 horas.',
-      f_name:'Nome completo', f_email:'Email', f_country:'País', f_dates:'Datas previstas',
-      f_exp:'Experiência', f_exp_ph:'Escolher...', f_custom:'Viagem personalizada',
-      f_msg:'Seu projeto', f_submit:'Enviar minha solicitação', f_note:'Resposta em 48h · Sem compromisso',
-      about_lbl:'About Us', about_ttl:'Quem somos',
-      about_body:'Pristine nasceu de uma convicção simples: a Patagônia chilena merece algo melhor do que o turismo de massa. Somos uma equipe de guias e apaixonados baseados em Coyhaique, no coração da região de Aysén.<br><br>Cada circuito é criado com cuidado — grupos pequenos, acessos exclusivos, lodges parceiros, gastronomia local.',
-      v1t:'Guias Especializados', v1b:'Nativos da região, francófonos, anglófonos e hispanófonos.',
-      v2t:'Acessos Exclusivos', v2b:'Locais fora de trilha, parcerias com lodges, grupos de máx. 8 pessoas.',
-      v3t:'Incoming & Agências', v3b:'Parceiro receptivo para agências. Gestão completa dos seus grupos.',
-      p1:'Coração do Parque Patagônia', p2:'A Carretera Austral', p3:'Fiordes e Glaciares de Aysén', p4:'Lago General Carrera',
-      pd1:'Explore as pampas, as lagoas turquesas e os condores do Parque Patagônia.',
-      pd2:'A rota mais épica do mundo: 1.240 km entre vulcões, geleiras e fiordes.',
-      pd3:'Navegações ao amanhecer, caiaque em águas glaciais, geleiras milenares.',
-      pd4:'O segundo maior lago da América do Sul com suas famosas cavernas de mármore.',
-      dur1:'7 dias', dur2:'10 dias', dur3:'12 dias', dur4:'5 dias',
-      pg:'Pequeno grupo', pcta:'Escrever para nós',
-    }
+    fr:{hint:'Explorer',q_exp:'Expériences',q_exp_sub:'04 circuits exclusifs',q_terr:'Notre Territoire',q_terr_sub:'Aysén · Patagonie chilienne',q_surm:'Sur Mesure',q_surm_sub:'Planifiez votre voyage',q_about:'About Us',q_about_sub:'Qui sommes-nous',exp_lbl:'Nos Expériences',exp_ttl:'Expériences',terr_lbl:'Notre Territoire',terr_ttl:'La Patagonie<br>comme nulle part ailleurs',terr_body:'La région d\'Aysén concentre certains des paysages les plus préservés de la planète — fjords profonds, glaciers millénaires, condors, pampas sauvages. Moins de 100 000 habitants pour un territoire grand comme la Belgique.<br><br>Nous vivons ici. Nous connaissons chaque sentier, chaque río, chaque lodge.',st_a:'km² de wilderness',st_b:'Wilderness absolu',st_c:'Une seule route',surm_lbl:'Sur Mesure',surm_ttl:'Une expérience<br>sur mesure',surm_base:'Basé à',surm_body:'Chaque voyage est unique. Partagez-nous votre projet — dates, groupe, envies — et nous construisons ensemble votre séjour en Patagonie chilienne.<br><br>Nous répondons dans les 48 heures.',f_name:'Nom complet',f_email:'Email',f_country:'Pays',f_dates:'Dates envisagées',f_exp:'Expérience',f_exp_ph:'Choisir...',f_custom:'Voyage sur mesure',f_msg:'Votre projet',f_submit:'Envoyer ma demande',f_note:'Réponse garantie sous 48h · Aucun engagement',about_lbl:'About Us',about_ttl:'Qui sommes-nous',about_body:'Pristine est né d\'une conviction simple : la Patagonie chilienne mérite mieux que le tourisme de masse. Nous sommes une équipe de guides et de passionnés basés à Coyhaique, au cœur de la région d\'Aysén.<br><br>Chaque circuit est conçu avec soin — petits groupes, accès exclusifs, lodges partenaires, cuisine locale.',v1t:'Guides Experts',v1b:'Natifs de la région, francophones, anglophones et hispanophones.',v2t:'Accès Exclusifs',v2b:'Sites hors sentiers, partenariats lodges, groupes de 8 personnes max.',v3t:'Incoming & Agences',v3b:'Partenaire réceptif pour agences. Prise en charge complète de vos groupes.',p1:'Cœur du Parc Patagonia',p2:'La Carretera Austral',p3:'Fjords & Glaciers d\'Aysén',p4:'Lago General Carrera',pd1:'Explorez les pampas, les lagunes turquoise et les condors du Parc Patagonia.',pd2:'La route la plus épique du monde : 1 240 km entre volcans, glaciers et fjords.',pd3:'Navigations à l\'aube, kayak en eaux glacées, glaciers millénaires.',pd4:'Le deuxième plus grand lac d\'Amérique du Sud et ses marbres sculptés par les vagues.',dur1:'7 jours',dur2:'10 jours',dur3:'12 jours',dur4:'5 jours',pg:'Petit groupe',pcta:'Nous écrire'},
+    en:{hint:'Explore',q_exp:'Experiences',q_exp_sub:'04 exclusive circuits',q_terr:'Our Territory',q_terr_sub:'Aysén · Chilean Patagonia',q_surm:'Bespoke',q_surm_sub:'Plan your journey',q_about:'About Us',q_about_sub:'Who we are',exp_lbl:'Our Experiences',exp_ttl:'Experiences',terr_lbl:'Our Territory',terr_ttl:'Patagonia<br>like nowhere else',terr_body:'The Aysén region holds some of the most pristine landscapes on Earth — deep fjords, ancient glaciers, condors, wild pampas. Fewer than 100,000 inhabitants in a territory the size of Belgium.<br><br>We live here. We know every trail, every río, every lodge.',st_a:'km² of wilderness',st_b:'Absolute wilderness',st_c:'One road',surm_lbl:'Bespoke',surm_ttl:'A bespoke<br>experience awaits',surm_base:'Based in',surm_body:'Every journey is unique. Share your project — dates, group size, desires — and we\'ll design your Patagonian adventure together.<br><br>We respond within 48 hours.',f_name:'Full Name',f_email:'Email',f_country:'Country',f_dates:'Planned dates',f_exp:'Experience',f_exp_ph:'Choose...',f_custom:'Custom journey',f_msg:'Your project',f_submit:'Send my request',f_note:'Response within 48h · No commitment',about_lbl:'About Us',about_ttl:'Who we are',about_body:'Pristine was born from a simple conviction: Chilean Patagonia deserves better than mass tourism. We are a team of guides and enthusiasts based in Coyhaique, in the heart of the Aysén region.<br><br>Every circuit is crafted with care — small groups, exclusive access, partner lodges, local cuisine.',v1t:'Expert Guides',v1b:'Region natives, fluent in French, English and Spanish.',v2t:'Exclusive Access',v2b:'Off-trail sites, lodge partnerships, max 8 people per group.',v3t:'Incoming & Agencies',v3b:'Receptive partner for agencies. Full management of your groups.',p1:'Heart of Patagonia Park',p2:'The Carretera Austral',p3:'Fjords & Glaciers of Aysén',p4:'Lake General Carrera',pd1:'Explore the pampas, turquoise lagoons and condors of Patagonia Park.',pd2:'The world\'s most epic road: 1,240 km through volcanoes, glaciers and fjords.',pd3:'Dawn navigations, kayaking in glacial waters, ancient glaciers.',pd4:'South America\'s second largest lake with its famous marble caves.',dur1:'7 days',dur2:'10 days',dur3:'12 days',dur4:'5 days',pg:'Small group',pcta:'Write to us'},
+    es:{hint:'Explorar',q_exp:'Experiencias',q_exp_sub:'04 circuitos exclusivos',q_terr:'Nuestro Territorio',q_terr_sub:'Aysén · Patagonia chilena',q_surm:'A Medida',q_surm_sub:'Planifica tu viaje',q_about:'About Us',q_about_sub:'Quiénes somos',exp_lbl:'Nuestras Experiencias',exp_ttl:'Experiencias',terr_lbl:'Nuestro Territorio',terr_ttl:'La Patagonia<br>como en ningún otro lugar',terr_body:'La región de Aysén concentra algunos de los paisajes más preservados del planeta — fiordos profundos, glaciares milenarios, cóndores, pampas salvajes. Menos de 100.000 habitantes en un territorio tan grande como Bélgica.<br><br>Vivimos aquí. Conocemos cada sendero, cada río, cada lodge.',st_a:'km² de wilderness',st_b:'Wilderness absoluto',st_c:'Una sola ruta',surm_lbl:'A Medida',surm_ttl:'Una experiencia<br>a tu medida',surm_base:'Con base en',surm_body:'Cada viaje es único. Cuéntanos tu proyecto — fechas, grupo, deseos — y construimos juntos tu experiencia en la Patagonia chilena.<br><br>Respondemos en 48 horas.',f_name:'Nombre completo',f_email:'Email',f_country:'País',f_dates:'Fechas previstas',f_exp:'Experiencia',f_exp_ph:'Elegir...',f_custom:'Viaje a medida',f_msg:'Tu proyecto',f_submit:'Enviar mi solicitud',f_note:'Respuesta en 48h · Sin compromiso',about_lbl:'About Us',about_ttl:'Quiénes somos',about_body:'Pristine nació de una convicción simple: la Patagonia chilena merece algo mejor que el turismo masivo. Somos un equipo de guías y apasionados con base en Coyhaique, en el corazón de la región de Aysén.<br><br>Cada circuito está diseñado con cuidado — grupos pequeños, accesos exclusivos, lodges asociados, gastronomía local.',v1t:'Guías Expertos',v1b:'Nativos de la región, francófonos, anglófonos e hispanohablantes.',v2t:'Accesos Exclusivos',v2b:'Sitios fuera de ruta, alianzas con lodges, grupos de máx. 8 personas.',v3t:'Incoming & Agencias',v3b:'Socio receptivo para agencias. Gestión completa de tus grupos.',p1:'Corazón del Parque Patagonia',p2:'La Carretera Austral',p3:'Fiordos y Glaciares de Aysén',p4:'Lago General Carrera',pd1:'Explora las pampas, las lagunas turquesa y los cóndores del Parque Patagonia.',pd2:'La ruta más épica del mundo: 1.240 km entre volcanes, glaciares y fiordos.',pd3:'Navegaciones al amanecer, kayak en aguas glaciales, glaciares milenarios.',pd4:'El segundo lago más grande de Sudamérica con sus famosas cuevas de mármol.',dur1:'7 días',dur2:'10 días',dur3:'12 días',dur4:'5 días',pg:'Grupo pequeño',pcta:'Escribirnos'},
+    pt:{hint:'Explorar',q_exp:'Experiências',q_exp_sub:'04 circuitos exclusivos',q_terr:'Nosso Território',q_terr_sub:'Aysén · Patagônia chilena',q_surm:'Sob Medida',q_surm_sub:'Planeje sua viagem',q_about:'About Us',q_about_sub:'Quem somos',exp_lbl:'Nossas Experiências',exp_ttl:'Experiências',terr_lbl:'Nosso Território',terr_ttl:'A Patagônia<br>como em nenhum outro lugar',terr_body:'A região de Aysén concentra algumas das paisagens mais preservadas do planeta — fiordes profundos, geleiras milenares, condores, pampas selvagens. Menos de 100.000 habitantes em um território do tamanho da Bélgica.<br><br>Vivemos aqui. Conhecemos cada trilha, cada río, cada lodge.',st_a:'km² de wilderness',st_b:'Wilderness absoluto',st_c:'Uma só estrada',surm_lbl:'Sob Medida',surm_ttl:'Uma experiência<br>sob medida',surm_base:'Sediado em',surm_body:'Cada viagem é única. Compartilhe seu projeto — datas, grupo, desejos — e construímos juntos sua experiência na Patagônia chilena.<br><br>Respondemos em 48 horas.',f_name:'Nome completo',f_email:'Email',f_country:'País',f_dates:'Datas previstas',f_exp:'Experiência',f_exp_ph:'Escolher...',f_custom:'Viagem personalizada',f_msg:'Seu projeto',f_submit:'Enviar minha solicitação',f_note:'Resposta em 48h · Sem compromisso',about_lbl:'About Us',about_ttl:'Quem somos',about_body:'Pristine nasceu de uma convicção simples: a Patagônia chilena merece algo melhor do que o turismo de massa. Somos uma equipe de guias e apaixonados baseados em Coyhaique, no coração da região de Aysén.<br><br>Cada circuito é criado com cuidado — grupos pequenos, acessos exclusivos, lodges parceiros, gastronomia local.',v1t:'Guias Especializados',v1b:'Nativos da região, francófonos, anglófonos e hispanófonos.',v2t:'Acessos Exclusivos',v2b:'Locais fora de trilha, parcerias com lodges, grupos de máx. 8 pessoas.',v3t:'Incoming & Agências',v3b:'Parceiro receptivo para agências. Gestão completa dos seus grupos.',p1:'Coração do Parque Patagônia',p2:'A Carretera Austral',p3:'Fiordes e Glaciares de Aysén',p4:'Lago General Carrera',pd1:'Explore as pampas, as lagoas turquesas e os condores do Parque Patagônia.',pd2:'A rota mais épica do mundo: 1.240 km entre vulcões, geleiras e fiordes.',pd3:'Navegações ao amanhecer, caiaque em águas glaciais, geleiras milenares.',pd4:'O segundo maior lago da América do Sul com suas famosas cavernas de mármore.',dur1:'7 dias',dur2:'10 dias',dur3:'12 dias',dur4:'5 dias',pg:'Pequeno grupo',pcta:'Escrever para nós'}
   };
 
-  let lang = localStorage.getItem('pp_lang') || 'fr';
-  function t(k){ return (T[lang]&&T[lang][k]) || T.fr[k] || k; }
+  let lang=localStorage.getItem('pp_lang')||'fr';
+  function t(k){return(T[lang]&&T[lang][k])||T.fr[k]||k;}
   function applyLang(){
-    document.documentElement.lang = lang;
-    document.querySelectorAll('[data-i18n]').forEach(el => {
-      const v = t(el.getAttribute('data-i18n'));
-      if(v) el.innerHTML = v;
-    });
-    document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.textContent.toLowerCase()===lang));
+    document.documentElement.lang=lang;
+    document.querySelectorAll('[data-i18n]').forEach(el=>{const v=t(el.getAttribute('data-i18n'));if(v)el.innerHTML=v;});
+    document.querySelectorAll('.lang-btn,.nav-lang-btn').forEach(b=>b.classList.toggle('active',b.textContent.toLowerCase()===lang));
     buildExpCards();
   }
-  function setLang(l){ lang=l; localStorage.setItem('pp_lang',l); applyLang(); }
+  function setLang(l){lang=l;localStorage.setItem('pp_lang',l);applyLang();}
 
-  const PROGS = [
-    {id:'parc-patagonia',    img:'assets/images/programmes/parc-patagonia.jpeg',      n:'p1', d:'pd1', dur:'dur1', loc:'Aysén · Parc Patagonia'},
-    {id:'carretera-austral', img:'assets/images/programmes/carretera-austral.jpeg',   n:'p2', d:'pd2', dur:'dur2', loc:'Coyhaique → Villa O\'Higgins'},
-    {id:'fjords-aysen',      img:'assets/images/programmes/fjords-aysen.jpeg',        n:'p3', d:'pd3', dur:'dur3', loc:'Laguna San Rafael · Fiordos'},
-    {id:'lago-carrera',      img:'assets/images/programmes/lago-general-carrera.jpeg',n:'p4', d:'pd4', dur:'dur4', loc:'Puerto Río Tranquilo'},
+  const PROGS=[
+    {id:'parc-patagonia',img:'assets/images/programmes/parc-patagonia.jpeg',n:'p1',d:'pd1',dur:'dur1',loc:'Aysén · Parc Patagonia'},
+    {id:'carretera-austral',img:'assets/images/programmes/carretera-austral.jpeg',n:'p2',d:'pd2',dur:'dur2',loc:'Coyhaique → Villa O\'Higgins'},
+    {id:'fjords-aysen',img:'assets/images/programmes/fjords-aysen.jpeg',n:'p3',d:'pd3',dur:'dur3',loc:'Laguna San Rafael · Fiordos'},
+    {id:'lago-carrera',img:'assets/images/programmes/lago-general-carrera.jpeg',n:'p4',d:'pd4',dur:'dur4',loc:'Puerto Río Tranquilo'},
   ];
 
   function buildExpCards(){
-    const g = document.getElementById('exp-grid'); if(!g) return; g.innerHTML='';
-    PROGS.forEach((p,i) => {
-      const c = document.createElement('div'); c.className='exp-card';
+    const g=document.getElementById('exp-grid');if(!g)return;g.innerHTML='';
+    PROGS.forEach((p,i)=>{
+      const c=document.createElement('div');c.className='exp-card';
       c.innerHTML=`<div class="exp-card-bg" style="background-image:url('${p.img}')"></div>
         <div class="exp-card-base"></div><div class="exp-xcross"></div>
         <div class="exp-card-name">${String(i+1).padStart(2,'0')} — ${t(p.n)}</div>
@@ -712,72 +422,74 @@
           <div class="exp-ov-name">${t(p.n)}</div>
           <div class="exp-ov-desc">${t(p.d)}</div>
           <div class="exp-ov-meta">
-            <div class="exp-meta-i"><span class="exp-meta-l">Durée</span><span class="exp-meta-v">${t(p.dur)}</span></div>
-            <div class="exp-meta-i"><span class="exp-meta-l">Format</span><span class="exp-meta-v">${t('pg')}</span></div>
+            <div class="exp-mi"><span class="exp-ml">Durée</span><span class="exp-mv">${t(p.dur)}</span></div>
+            <div class="exp-mi"><span class="exp-ml">Format</span><span class="exp-mv">${t('pg')}</span></div>
           </div>
           <button class="exp-ov-cta" onclick="event.stopPropagation();contactExp('${p.id}')">${t('pcta')} →</button>
         </div>`;
-      c.addEventListener('click', () => {
-        document.querySelectorAll('.exp-card').forEach(x => { if(x!==c) x.classList.remove('open'); });
+      c.addEventListener('click',()=>{
+        document.querySelectorAll('.exp-card').forEach(x=>{if(x!==c)x.classList.remove('open');});
         c.classList.toggle('open');
       });
       g.appendChild(c);
     });
   }
 
-  function contactExp(id){
-    const s = document.querySelector('select[name="experience"]');
-    if(s) s.value = id;
-    openPanel('surlesure');
+  function contactExp(id){const s=document.querySelector('select[name="experience"]');if(s)s.value=id;openPanel('surlesure');}
+
+  let menuOpen=false;
+  function toggleMenu(){
+    menuOpen=!menuOpen;
+    document.getElementById('cross-btn').classList.toggle('open',menuOpen);
+    document.getElementById('quadrants').classList.toggle('open',menuOpen);
+    document.getElementById('cross-hint').classList.toggle('hidden',menuOpen);
+    document.getElementById('hero').classList.toggle('dimmed',menuOpen);
   }
 
-  /* ── QUADRANTS ── */
-  let quadOpen = false;
-  function toggleQuadrants(){
-    quadOpen = !quadOpen;
-    document.getElementById('cross-btn').classList.toggle('open', quadOpen);
-    document.getElementById('quadrants').classList.toggle('open', quadOpen);
-    document.getElementById('cross-hint').classList.toggle('hidden', quadOpen);
-  }
-
-  /* ── PANELS ── */
-  let currentPanel = null;
+  let currentPanel=null;
   function openPanel(id){
-    if(quadOpen) toggleQuadrants();
-    if(currentPanel) document.getElementById('panel-'+currentPanel).classList.remove('active');
-    currentPanel = id;
+    if(menuOpen)toggleMenu();
+    // Update active nav link
+    document.querySelectorAll('.nav-link').forEach(l=>l.classList.remove('active'));
+    const map={experiences:'q_exp',territoire:'q_terr',surlesure:'q_surm',about:'q_about'};
+    document.querySelectorAll('.nav-link').forEach(l=>{if(l.getAttribute('data-i18n')===map[id])l.classList.add('active');});
+    if(currentPanel&&currentPanel!==id) document.getElementById('panel-'+currentPanel).classList.remove('active');
+    currentPanel=id;
     document.getElementById('panel-'+id).classList.add('active');
-    document.getElementById('panel-back').classList.add('visible');
-    document.getElementById('cross-btn').style.display = 'none';
-    document.getElementById('cross-hint').style.display = 'none';
+    document.getElementById('site-nav').classList.add('visible');
+    document.getElementById('cross-btn').style.display='none';
+    document.getElementById('cross-hint').style.display='none';
+    document.getElementById('hero-logo').style.display='none';
+    document.getElementById('hero-lang').style.display='none';
   }
 
-  function closePanel(e){
-    if(e) e.preventDefault();
-    if(currentPanel){
-      document.getElementById('panel-'+currentPanel).classList.remove('active');
-      currentPanel = null;
-    }
-    document.getElementById('panel-back').classList.remove('visible');
-    document.getElementById('cross-btn').style.display = '';
-    document.getElementById('cross-hint').style.display = '';
+  function goHome(){
+    if(currentPanel){document.getElementById('panel-'+currentPanel).classList.remove('active');currentPanel=null;}
+    document.getElementById('site-nav').classList.remove('visible');
+    document.getElementById('cross-btn').style.display='';
+    document.getElementById('cross-hint').style.display='';
+    document.getElementById('hero-logo').style.display='';
+    document.getElementById('hero-lang').style.display='';
+    document.getElementById('hero').classList.remove('dimmed');
+    menuOpen=false;
+    document.getElementById('cross-btn').classList.remove('open');
+    document.getElementById('quadrants').classList.remove('open');
   }
 
-  /* ── FORM ── */
-  document.addEventListener('DOMContentLoaded', () => {
+  document.addEventListener('DOMContentLoaded',()=>{
     applyLang();
-    const form = document.getElementById('contact-form');
+    const form=document.getElementById('contact-form');
     if(form){
-      form.addEventListener('submit', async e => {
+      form.addEventListener('submit',async e=>{
         e.preventDefault();
-        const btn = form.querySelector('.form-submit'), orig = btn.textContent;
-        btn.textContent='...'; btn.disabled=true;
+        const btn=form.querySelector('.form-submit'),orig=btn.textContent;
+        btn.textContent='...';btn.disabled=true;
         try{
-          const res = await fetch(form.action,{method:'POST',body:new FormData(form),headers:{'Accept':'application/json'}});
-          btn.textContent = res.ok ? '✓ Envoyé' : 'Erreur — réessayer';
-          if(res.ok) form.reset(); else btn.disabled=false;
-        }catch{ btn.textContent='Erreur — réessayer'; btn.disabled=false; }
-        setTimeout(()=>{ btn.textContent=orig; btn.disabled=false; },4000);
+          const res=await fetch(form.action,{method:'POST',body:new FormData(form),headers:{'Accept':'application/json'}});
+          btn.textContent=res.ok?'✓ Envoyé':'Erreur — réessayer';
+          if(res.ok)form.reset();else btn.disabled=false;
+        }catch{btn.textContent='Erreur — réessayer';btn.disabled=false;}
+        setTimeout(()=>{btn.textContent=orig;btn.disabled=false;},4000);
       });
     }
   });
