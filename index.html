@@ -3,1533 +3,784 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Pristine Patagonia — Exclusive Adventures</title>
-  <meta name="description" content="Tour opérateur exclusif en Patagonie chilienne. Circuits accompagnés, fjords d'Aysén, Parc Patagonia. FR / EN / ES / PT." />
+  <title>Pristine — Exclusive Adventures in Patagonia</title>
+  <meta name="description" content="Tour opérateur exclusif en Patagonie chilienne." />
   <link rel="icon" href="Logos/favicon.png" />
-
-  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,200;0,300;0,400;0,500;1,300&family=Dancing+Script:wght@400;600&display=swap" rel="stylesheet" />
-
+  <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@200;300;400;500&family=Dancing+Script:wght@400;600&display=swap" rel="stylesheet" />
   <style>
-    /* ── RESET & BASE ─────────────────────────────────── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     :root {
-      --navy:   #1B3A6B;
-      --sky:    #0057A8;
-      --sky-lt: #4D8FCC;
-      --cream:  #F6F2EC;
-      --white:  #FFFFFF;
-      --dark:   #0a1420;
-      --text:   #2a2a2a;
-      --muted:  #8a8a8a;
-
-      --fb: 'Raleway', sans-serif;
-      --fd: 'Dancing Script', cursive; /* fallback — remplacer par ReklameScript */
-
-      --nav-h: 72px;
+      --navy: #1B3A6B; --sky: #0057A8; --sky-lt: #4D8FCC;
+      --cream: #F6F2EC; --dark: #080f1a; --white: #FFFFFF;
+      --fb: 'Raleway', sans-serif; --fd: 'Dancing Script', cursive;
       --ease: cubic-bezier(0.4, 0, 0.2, 1);
     }
-
-    html { scroll-behavior: smooth; }
-
-    body {
-      font-family: var(--fb);
-      background: var(--cream);
-      color: var(--text);
-      overflow-x: hidden;
-    }
-
-    img { display: block; max-width: 100%; }
-    a { text-decoration: none; color: inherit; }
-    button { cursor: pointer; border: none; background: none; font-family: var(--fb); }
-
-    /* ── FONT — ReklameScript si disponible ─────────── */
     @font-face {
       font-family: 'ReklameScript';
       src: url('assets/fonts/ReklameScript-Regular.otf') format('opentype');
       font-display: swap;
     }
-    .fd {
-      font-family: 'ReklameScript', var(--fd);
-    }
 
-    /* ── NAVIGATION ─────────────────────────────────── */
-    #nav {
-      position: fixed;
-      top: 0; left: 0; right: 0;
-      z-index: 100;
-      height: var(--nav-h);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 40px;
-      transition: background 0.5s var(--ease), backdrop-filter 0.5s var(--ease);
-    }
-    #nav.solid {
-      background: rgba(10, 20, 40, 0.92);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid rgba(255,255,255,0.06);
-    }
-
-    .nav-logo {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      cursor: pointer;
-    }
-    .nav-logo img { height: 28px; width: auto; }
-    .nav-logo-text {
-      font-family: 'ReklameScript', var(--fd);
-      font-size: 20px;
+    html, body {
+      width: 100%; height: 100%;
+      overflow: hidden;
+      font-family: var(--fb);
+      background: var(--dark);
       color: var(--white);
-      letter-spacing: 0.02em;
-      line-height: 1;
     }
 
-    .nav-links {
-      display: flex;
-      align-items: center;
-      gap: 36px;
-    }
-    .nav-links a {
-      font-size: 10px;
-      font-weight: 400;
-      letter-spacing: 0.22em;
-      text-transform: uppercase;
-      color: rgba(255,255,255,0.75);
-      transition: color 0.2s;
-      cursor: pointer;
-    }
-    .nav-links a:hover { color: var(--white); }
-
-    .nav-lang {
-      display: flex;
-      gap: 8px;
-      margin-left: 20px;
-      border-left: 1px solid rgba(255,255,255,0.2);
-      padding-left: 20px;
-    }
-    .lang-btn {
-      font-size: 10px;
-      font-weight: 400;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: rgba(255,255,255,0.45);
-      transition: color 0.2s;
-      padding: 2px 0;
-    }
-    .lang-btn.active,
-    .lang-btn:hover { color: var(--white); }
-
-    .nav-cta {
-      font-size: 10px;
-      font-weight: 400;
-      letter-spacing: 0.22em;
-      text-transform: uppercase;
-      color: var(--white);
-      border: 1px solid rgba(255,255,255,0.4);
-      padding: 9px 22px;
-      transition: background 0.25s, border-color 0.25s;
-    }
-    .nav-cta:hover {
-      background: rgba(255,255,255,0.12);
-      border-color: rgba(255,255,255,0.7);
-    }
-
-    /* Hamburger mobile */
-    .nav-burger {
-      display: none;
-      flex-direction: column;
-      gap: 5px;
-      cursor: pointer;
-      padding: 4px;
-    }
-    .nav-burger span {
-      display: block;
-      width: 24px; height: 1px;
-      background: var(--white);
-      transition: transform 0.3s;
-    }
-
-    /* ── HERO ────────────────────────────────────────── */
+    /* ── HERO — full viewport ───────────────────── */
     #hero {
-      position: relative;
-      height: 100vh;
-      min-height: 600px;
+      position: fixed;
+      inset: 0;
+      z-index: 1;
       overflow: hidden;
     }
-
     #hero-bg {
       position: absolute;
-      inset: 0;
-      background: url('assets/images/hero.jpeg') center center / cover no-repeat;
-      transform: scale(1.04);
-      transition: transform 8s var(--ease);
+      inset: -8%;
+      background: url('assets/images/hero.jpeg') center / cover no-repeat;
+      animation: kenBurns 22s ease-in-out infinite alternate;
     }
-    #hero-bg.loaded { transform: scale(1); }
-
+    @keyframes kenBurns {
+      0%   { transform: scale(1.08) translate(0%, 0%); }
+      33%  { transform: scale(1.13) translate(-1.5%, 1%); }
+      66%  { transform: scale(1.10) translate(1%, -1%); }
+      100% { transform: scale(1.08) translate(0.5%, 0.5%); }
+    }
     .hero-overlay {
-      position: absolute;
-      inset: 0;
+      position: absolute; inset: 0;
       background: linear-gradient(
         to bottom,
-        rgba(10,20,40,0.18) 0%,
-        rgba(10,20,40,0.08) 30%,
-        rgba(10,20,40,0.38) 70%,
-        rgba(10,20,40,0.72) 100%
+        rgba(8,15,26,.40) 0%,
+        rgba(8,15,26,.10) 40%,
+        rgba(8,15,26,.55) 100%
       );
     }
 
-    .hero-content {
-      position: absolute;
-      inset: 0;
+    /* ── LOGO ──────────────────────────────────── */
+    #logo {
+      position: fixed;
+      top: 28px; left: 36px;
+      z-index: 300;
       display: flex;
-      flex-direction: column;
       align-items: center;
-      justify-content: flex-end;
-      padding-bottom: 80px;
-      text-align: center;
-    }
-
-    .hero-eyebrow {
-      font-size: 10px;
-      font-weight: 400;
-      letter-spacing: 0.3em;
-      text-transform: uppercase;
-      color: rgba(255,255,255,0.6);
-      margin-bottom: 18px;
-      opacity: 0;
-      animation: fadeUp 1s var(--ease) 0.3s forwards;
-    }
-
-    .hero-title {
-      font-family: 'ReklameScript', var(--fd);
-      font-size: clamp(52px, 8vw, 96px);
-      font-weight: 400;
-      color: var(--white);
-      line-height: 1.0;
-      margin-bottom: 24px;
-      opacity: 0;
-      animation: fadeUp 1s var(--ease) 0.5s forwards;
-    }
-
-    .hero-sub {
-      font-size: 13px;
-      font-weight: 300;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: rgba(255,255,255,0.7);
-      margin-bottom: 48px;
-      opacity: 0;
-      animation: fadeUp 1s var(--ease) 0.7s forwards;
-    }
-
-    .hero-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 10px;
-      font-weight: 400;
-      letter-spacing: 0.25em;
-      text-transform: uppercase;
-      color: var(--white);
-      border: 1px solid rgba(255,255,255,0.5);
-      padding: 14px 32px;
-      transition: background 0.25s, border-color 0.25s;
-      opacity: 0;
-      animation: fadeUp 1s var(--ease) 0.9s forwards;
+      gap: 11px;
+      text-decoration: none;
       cursor: pointer;
     }
-    .hero-btn:hover {
-      background: rgba(255,255,255,0.12);
-      border-color: rgba(255,255,255,0.8);
-    }
-    .hero-btn .arrow {
-      width: 18px; height: 1px;
-      background: currentColor;
-      position: relative;
-      transition: width 0.25s;
-    }
-    .hero-btn .arrow::after {
-      content: '';
-      position: absolute;
-      right: 0; top: -3px;
-      width: 6px; height: 6px;
-      border-right: 1px solid currentColor;
-      border-top: 1px solid currentColor;
-      transform: rotate(45deg);
-    }
-    .hero-btn:hover .arrow { width: 28px; }
-
-    .hero-scroll-hint {
-      position: absolute;
-      bottom: 32px;
-      left: 50%;
-      transform: translateX(-50%);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 8px;
-      opacity: 0;
-      animation: fadeIn 1s var(--ease) 1.4s forwards;
-    }
-    .hero-scroll-hint span {
-      font-size: 9px;
-      letter-spacing: 0.25em;
-      text-transform: uppercase;
-      color: rgba(255,255,255,0.4);
-    }
-    .scroll-line {
-      width: 1px; height: 40px;
-      background: linear-gradient(to bottom, rgba(255,255,255,0.4), transparent);
-      animation: scrollDrop 2s ease-in-out infinite 1.5s;
-    }
-
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(24px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to   { opacity: 1; }
-    }
-    @keyframes scrollDrop {
-      0%   { transform: scaleY(0); transform-origin: top; }
-      50%  { transform: scaleY(1); transform-origin: top; }
-      51%  { transform: scaleY(1); transform-origin: bottom; }
-      100% { transform: scaleY(0); transform-origin: bottom; }
-    }
-
-    /* ── TERRITOIRE ──────────────────────────────────── */
-    #territoire {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      min-height: 80vh;
-    }
-
-    .territoire-photo {
-      position: relative;
-      overflow: hidden;
-    }
-    .territoire-photo img {
-      width: 100%; height: 100%;
-      object-fit: cover;
-      transition: transform 6s var(--ease);
-    }
-    .territoire-photo:hover img { transform: scale(1.04); }
-
-    .territoire-text {
-      background: var(--navy);
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      padding: 80px 72px;
-    }
-
-    .section-label {
-      font-size: 9px;
-      font-weight: 400;
-      letter-spacing: 0.35em;
-      text-transform: uppercase;
-      color: var(--sky-lt);
-      margin-bottom: 32px;
-      display: flex;
-      align-items: center;
-      gap: 14px;
-    }
-    .section-label::before {
-      content: '';
-      display: block;
-      width: 28px; height: 1px;
-      background: var(--sky-lt);
-    }
-
-    .territoire-title {
-      font-family: 'ReklameScript', var(--fd);
-      font-size: clamp(36px, 4vw, 56px);
-      font-weight: 400;
-      color: var(--white);
-      line-height: 1.1;
-      margin-bottom: 32px;
-    }
-
-    .territoire-body {
-      font-size: 15px;
-      font-weight: 300;
-      line-height: 1.9;
-      color: rgba(255,255,255,0.65);
-      margin-bottom: 48px;
-    }
-
-    .text-link {
-      font-size: 10px;
-      font-weight: 400;
-      letter-spacing: 0.25em;
-      text-transform: uppercase;
-      color: var(--sky-lt);
-      display: inline-flex;
-      align-items: center;
-      gap: 12px;
-      transition: gap 0.25s;
-      cursor: pointer;
-    }
-    .text-link::after {
-      content: '→';
-      font-size: 14px;
-      transition: transform 0.25s;
-    }
-    .text-link:hover { gap: 18px; }
-
-    /* ── EXPÉRIENCES ─────────────────────────────────── */
-    #experiences {
-      background: var(--dark);
-    }
-
-    .exp-header {
-      display: flex;
-      align-items: flex-end;
-      justify-content: space-between;
-      padding: 72px 60px 40px;
-      border-bottom: 1px solid rgba(255,255,255,0.07);
-    }
-
-    .exp-title {
-      font-family: 'ReklameScript', var(--fd);
-      font-size: clamp(32px, 4vw, 52px);
-      font-weight: 400;
-      color: var(--white);
-      line-height: 1.1;
-    }
-
-    .exp-count {
-      font-size: 11px;
-      font-weight: 300;
-      letter-spacing: 0.15em;
-      color: rgba(255,255,255,0.3);
-    }
-
-    /* Grid 2x2 */
-    .exp-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-    }
-
-    .exp-card {
-      position: relative;
-      overflow: hidden;
-      aspect-ratio: 4/3;
-      cursor: pointer;
-      border: 0.5px solid rgba(255,255,255,0.04);
-    }
-
-    .exp-card-bg {
-      position: absolute;
-      inset: 0;
-      background-size: cover;
-      background-position: center;
-      transition: transform 0.7s var(--ease), filter 0.5s;
-    }
-    .exp-card:hover .exp-card-bg,
-    .exp-card.open .exp-card-bg {
-      transform: scale(1.06);
-      filter: brightness(0.7);
-    }
-
-    /* Overlay permanent bas */
-    .exp-card-base {
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(
-        to top,
-        rgba(10,20,40,0.85) 0%,
-        rgba(10,20,40,0.1) 50%,
-        transparent 100%
-      );
-    }
-
-    /* Nom toujours visible */
-    .exp-card-name {
-      position: absolute;
-      bottom: 28px;
-      left: 32px;
-      right: 32px;
-      font-size: 10px;
-      font-weight: 400;
-      letter-spacing: 0.28em;
-      text-transform: uppercase;
-      color: rgba(255,255,255,0.75);
-      transition: opacity 0.35s;
-    }
-    .exp-card.open .exp-card-name { opacity: 0; }
-
-    /* Croix hover */
-    .exp-cross {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%) scale(0.6);
-      width: 40px; height: 40px;
-      opacity: 0;
-      transition: opacity 0.35s, transform 0.35s var(--ease);
-    }
-    .exp-cross::before,
-    .exp-cross::after {
-      content: '';
-      position: absolute;
-      background: rgba(255,255,255,0.9);
-      left: 50%; top: 50%;
-      transform: translate(-50%, -50%);
-    }
-    .exp-cross::before { width: 1px; height: 32px; }
-    .exp-cross::after  { width: 32px; height: 1px; }
-
-    .exp-card:hover .exp-cross {
-      opacity: 1;
-      transform: translate(-50%, -50%) scale(1);
-    }
-    .exp-card.open .exp-cross {
-      opacity: 1;
-      transform: translate(-50%, -50%) scale(1) rotate(45deg);
-    }
-
-    /* Overlay ouvert */
-    .exp-overlay {
-      position: absolute;
-      inset: 0;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      padding: 48px 40px;
-      background: rgba(10,20,40,0.82);
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.4s var(--ease);
-    }
-    .exp-card.open .exp-overlay {
-      opacity: 1;
-      pointer-events: all;
-    }
-
-    .exp-overlay-label {
-      font-size: 9px;
-      letter-spacing: 0.3em;
-      text-transform: uppercase;
-      color: var(--sky-lt);
-      margin-bottom: 16px;
-    }
-
-    .exp-overlay-title {
-      font-family: 'ReklameScript', var(--fd);
-      font-size: 36px;
-      font-weight: 400;
-      color: var(--white);
-      line-height: 1.1;
-      margin-bottom: 16px;
-    }
-
-    .exp-overlay-desc {
-      font-size: 13px;
-      font-weight: 300;
-      line-height: 1.8;
-      color: rgba(255,255,255,0.65);
-      margin-bottom: 32px;
-    }
-
-    .exp-overlay-meta {
-      display: flex;
-      gap: 24px;
-      margin-bottom: 32px;
-    }
-    .exp-meta-item {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-    .exp-meta-label {
-      font-size: 8px;
-      letter-spacing: 0.3em;
-      text-transform: uppercase;
-      color: rgba(255,255,255,0.35);
-    }
-    .exp-meta-value {
-      font-size: 12px;
-      font-weight: 400;
-      letter-spacing: 0.1em;
-      color: rgba(255,255,255,0.8);
-    }
-
-    .exp-overlay-cta {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 10px;
-      font-weight: 400;
-      letter-spacing: 0.22em;
-      text-transform: uppercase;
-      color: var(--white);
-      border: 1px solid rgba(255,255,255,0.4);
-      padding: 11px 24px;
-      transition: background 0.25s, border-color 0.25s;
-      width: fit-content;
-    }
-    .exp-overlay-cta:hover {
-      background: rgba(255,255,255,0.12);
-      border-color: rgba(255,255,255,0.75);
-    }
-
-    /* ── PAMPA BANNER ────────────────────────────────── */
-    #pampa {
-      position: relative;
-      height: 480px;
-      overflow: hidden;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-    }
-
-    #pampa-bg {
-      position: absolute;
-      inset: 0;
-      background: url('assets/images/pampa.jpeg') center center / cover no-repeat;
-    }
-    .pampa-overlay {
-      position: absolute;
-      inset: 0;
-      background: rgba(10,20,40,0.52);
-    }
-
-    .pampa-content {
-      position: relative;
-      z-index: 2;
-      max-width: 680px;
-      padding: 0 40px;
-    }
-
-    .pampa-quote {
-      font-family: 'ReklameScript', var(--fd);
-      font-size: clamp(28px, 4vw, 48px);
-      font-weight: 400;
-      color: var(--white);
-      line-height: 1.2;
-      margin-bottom: 20px;
-    }
-
-    .pampa-attribution {
-      font-size: 11px;
-      font-weight: 300;
-      letter-spacing: 0.22em;
-      text-transform: uppercase;
-      color: rgba(255,255,255,0.5);
-    }
-
-    /* ── CONTACT ─────────────────────────────────────── */
-    #contact-section {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      min-height: 70vh;
-    }
-
-    .contact-left {
-      background: var(--cream);
-      padding: 80px 72px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-    }
-
-    .contact-title {
-      font-family: 'ReklameScript', var(--fd);
-      font-size: clamp(32px, 3.5vw, 52px);
-      font-weight: 400;
-      color: var(--navy);
-      line-height: 1.1;
-      margin-bottom: 24px;
-    }
-
-    .contact-body {
-      font-size: 15px;
-      font-weight: 300;
-      line-height: 1.8;
-      color: #555;
-      margin-bottom: 40px;
-    }
-
-    .contact-info-items {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-    }
-    .contact-info-item {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      font-size: 13px;
-      font-weight: 300;
-      color: #444;
-    }
-    .contact-info-item strong {
-      font-weight: 500;
-      color: var(--navy);
-    }
-
-    .contact-right {
-      background: var(--navy);
-      padding: 80px 72px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-    }
-
-    .form-group {
-      margin-bottom: 24px;
-    }
-
-    .form-label {
-      display: block;
-      font-size: 9px;
-      font-weight: 400;
-      letter-spacing: 0.28em;
-      text-transform: uppercase;
-      color: rgba(255,255,255,0.45);
-      margin-bottom: 10px;
-    }
-
-    .form-input,
-    .form-textarea,
-    .form-select {
-      width: 100%;
-      background: rgba(255,255,255,0.06);
-      border: 1px solid rgba(255,255,255,0.12);
-      color: var(--white);
-      font-family: var(--fb);
-      font-size: 14px;
-      font-weight: 300;
-      padding: 13px 16px;
-      outline: none;
-      transition: border-color 0.25s;
-      appearance: none;
-      border-radius: 0;
-    }
-    .form-input::placeholder,
-    .form-textarea::placeholder { color: rgba(255,255,255,0.25); }
-    .form-input:focus,
-    .form-textarea:focus,
-    .form-select:focus { border-color: var(--sky-lt); }
-
-    .form-textarea { resize: vertical; min-height: 100px; }
-
-    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-
-    .form-submit {
-      width: 100%;
-      background: transparent;
-      border: 1px solid rgba(255,255,255,0.4);
-      color: var(--white);
-      font-family: var(--fb);
-      font-size: 10px;
-      font-weight: 400;
-      letter-spacing: 0.25em;
-      text-transform: uppercase;
-      padding: 16px;
-      cursor: pointer;
-      transition: background 0.25s, border-color 0.25s;
-      margin-top: 8px;
-    }
-    .form-submit:hover {
-      background: rgba(255,255,255,0.1);
-      border-color: rgba(255,255,255,0.7);
-    }
-
-    .form-note {
-      font-size: 11px;
-      font-weight: 300;
-      color: rgba(255,255,255,0.3);
-      margin-top: 12px;
-      text-align: center;
-      letter-spacing: 0.05em;
-    }
-
-    /* ── FOOTER ──────────────────────────────────────── */
-    #footer {
-      background: var(--dark);
-      padding: 56px 60px 40px;
-      border-top: 1px solid rgba(255,255,255,0.05);
-    }
-
-    .footer-top {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      margin-bottom: 48px;
-      padding-bottom: 40px;
-      border-bottom: 1px solid rgba(255,255,255,0.07);
-    }
-
-    .footer-brand {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-    .footer-logo-text {
-      font-family: 'ReklameScript', var(--fd);
-      font-size: 28px;
-      color: var(--white);
-    }
-    .footer-tagline {
-      font-size: 11px;
-      font-weight: 300;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: rgba(255,255,255,0.3);
-    }
-
-    .footer-cols {
-      display: flex;
-      gap: 64px;
-    }
-    .footer-col-title {
-      font-size: 9px;
-      font-weight: 400;
-      letter-spacing: 0.28em;
-      text-transform: uppercase;
-      color: rgba(255,255,255,0.35);
-      margin-bottom: 18px;
-    }
-    .footer-col a {
-      display: block;
-      font-size: 13px;
-      font-weight: 300;
-      color: rgba(255,255,255,0.55);
-      margin-bottom: 10px;
-      transition: color 0.2s;
-      cursor: pointer;
-    }
-    .footer-col a:hover { color: var(--white); }
-
-    .footer-bottom {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-    .footer-copy {
-      font-size: 11px;
-      font-weight: 300;
-      color: rgba(255,255,255,0.2);
-      letter-spacing: 0.05em;
-    }
-    .footer-muni img {
-      height: 44px;
-      width: auto;
-      opacity: 0.55;
+    #logo img {
+      height: 32px; width: auto;
       filter: brightness(0) invert(1);
-      transition: opacity 0.2s;
+      opacity: .88;
     }
-    .footer-muni img:hover { opacity: 0.8; }
+    .logo-text {
+      display: flex; flex-direction: column;
+      line-height: 1; gap: 3px;
+    }
+    .logo-pristine {
+      font-family: 'ReklameScript', var(--fd);
+      font-size: 20px; color: var(--white);
+    }
+    .logo-patagonia {
+      font-family: var(--fb);
+      font-size: 8px; font-weight: 400;
+      letter-spacing: .28em; text-transform: uppercase;
+      color: rgba(255,255,255,.5);
+    }
 
-    /* ── MOBILE NAV OVERLAY ──────────────────────────── */
-    #nav-mobile {
-      display: none;
+    /* ── LANG ──────────────────────────────────── */
+    #lang-switcher {
+      position: fixed;
+      top: 34px; right: 36px;
+      z-index: 300;
+      display: flex; gap: 10px;
+    }
+    .lang-btn {
+      font-family: var(--fb);
+      font-size: 9px; font-weight: 400;
+      letter-spacing: .2em; text-transform: uppercase;
+      color: rgba(255,255,255,.3);
+      background: none; border: none; cursor: pointer;
+      padding: 4px 0; transition: color .2s;
+    }
+    .lang-btn.active, .lang-btn:hover { color: rgba(255,255,255,.9); }
+
+    /* ── CROSS ─────────────────────────────────── */
+    #cross-btn {
+      position: fixed;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 300;
+      width: 64px; height: 64px;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+    }
+    #cross-btn::before, #cross-btn::after {
+      content: ''; position: absolute;
+      background: rgba(255,255,255,.8);
+      transition: transform .5s var(--ease), background .3s;
+    }
+    #cross-btn::before { width: 1px; height: 44px; }
+    #cross-btn::after  { width: 44px; height: 1px; }
+    #cross-btn:hover::before,
+    #cross-btn:hover::after { background: var(--white); }
+    #cross-btn.open {
+      transition: transform .5s var(--ease);
+      transform: translate(-50%, -50%) rotate(45deg);
+    }
+
+    #cross-hint {
+      position: fixed;
+      top: calc(50% + 46px); left: 50%;
+      transform: translateX(-50%);
+      z-index: 300;
+      font-size: 9px; font-weight: 300;
+      letter-spacing: .3em; text-transform: uppercase;
+      color: rgba(255,255,255,.3);
+      white-space: nowrap;
+      transition: opacity .3s;
+      pointer-events: none;
+      animation: fadeHint 3s ease-in-out infinite alternate;
+    }
+    @keyframes fadeHint {
+      0%   { opacity: .3; }
+      100% { opacity: .65; }
+    }
+    #cross-hint.hidden { opacity: 0 !important; animation: none; }
+
+    /* ── QUADRANTS ─────────────────────────────── */
+    #quadrants {
       position: fixed;
       inset: 0;
-      background: rgba(10,20,40,0.97);
-      z-index: 99;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 32px;
+      z-index: 200;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 1fr 1fr;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity .5s var(--ease);
     }
-    #nav-mobile.open { display: flex; }
-    #nav-mobile a {
-      font-size: 13px;
-      letter-spacing: 0.25em;
-      text-transform: uppercase;
-      color: rgba(255,255,255,0.7);
+    #quadrants.open {
+      pointer-events: all;
+      opacity: 1;
+    }
+
+    .quad {
+      position: relative;
+      overflow: hidden;
       cursor: pointer;
-      transition: color 0.2s;
-    }
-    #nav-mobile a:hover { color: var(--white); }
-    .mobile-close {
-      position: absolute;
-      top: 28px; right: 32px;
-      font-size: 24px;
-      color: rgba(255,255,255,0.5);
-      cursor: pointer;
-    }
-    .mobile-langs {
       display: flex;
-      gap: 16px;
+      align-items: flex-end;
+      padding: 40px 44px;
+    }
+
+    /* Photo de fond par quadrant */
+    .quad-bg {
+      position: absolute; inset: 0;
+      background-size: cover;
+      background-position: center;
+      transition: transform .7s var(--ease), filter .5s;
+    }
+    .quad::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: rgba(8,15,26,.62);
+      transition: background .4s;
+      z-index: 1;
+    }
+    .quad:hover::before { background: rgba(8,15,26,.38); }
+    .quad:hover .quad-bg { transform: scale(1.05); filter: brightness(.9); }
+
+    /* Borders entre quadrants */
+    .quad:nth-child(1) { border-right: 1px solid rgba(255,255,255,.12); border-bottom: 1px solid rgba(255,255,255,.12); }
+    .quad:nth-child(2) { border-bottom: 1px solid rgba(255,255,255,.12); }
+    .quad:nth-child(3) { border-right: 1px solid rgba(255,255,255,.12); }
+
+    .quad-content {
+      position: relative; z-index: 2;
+      transform: translateY(8px);
+      transition: transform .35s var(--ease);
+    }
+    .quad:hover .quad-content { transform: translateY(0); }
+
+    .quad-num {
+      font-size: 9px; font-weight: 300;
+      letter-spacing: .25em; text-transform: uppercase;
+      color: rgba(255,255,255,.35);
+      margin-bottom: 8px;
+    }
+    .quad-title {
+      font-family: 'ReklameScript', var(--fd);
+      font-size: clamp(28px, 3.5vw, 46px);
+      color: var(--white);
+      line-height: 1.05;
+      margin-bottom: 10px;
+    }
+    .quad-sub {
+      font-size: 11px; font-weight: 300;
+      letter-spacing: .12em;
+      color: rgba(255,255,255,.5);
+      line-height: 1.5;
+    }
+    .quad-arrow {
+      display: inline-block;
       margin-top: 16px;
+      font-size: 10px; font-weight: 300;
+      letter-spacing: .22em; text-transform: uppercase;
+      color: rgba(255,255,255,.4);
+      transition: color .25s, letter-spacing .25s;
     }
-    .mobile-langs button {
-      font-size: 11px;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: rgba(255,255,255,0.35);
-      transition: color 0.2s;
+    .quad:hover .quad-arrow {
+      color: var(--white);
+      letter-spacing: .32em;
     }
-    .mobile-langs button.active { color: var(--white); }
 
-    /* ── RESPONSIVE ──────────────────────────────────── */
-    @media (max-width: 900px) {
-      #nav { padding: 0 24px; }
-      .nav-links, .nav-lang, .nav-cta { display: none; }
-      .nav-burger { display: flex; }
+    /* Quadrant slide-in animation */
+    .quad { opacity: 0; }
+    #quadrants.open .quad { opacity: 1; }
+    #quadrants.open .quad:nth-child(1) { transition: opacity .4s var(--ease) .05s; }
+    #quadrants.open .quad:nth-child(2) { transition: opacity .4s var(--ease) .10s; }
+    #quadrants.open .quad:nth-child(3) { transition: opacity .4s var(--ease) .15s; }
+    #quadrants.open .quad:nth-child(4) { transition: opacity .4s var(--ease) .20s; }
 
-      #territoire { grid-template-columns: 1fr; }
-      .territoire-photo { height: 55vw; min-height: 280px; }
-      .territoire-text { padding: 56px 32px; }
+    /* ── SECTION PANELS (full screen, slide over hero) ── */
+    .panel {
+      position: fixed;
+      inset: 0;
+      z-index: 400;
+      overflow-y: auto;
+      background: var(--dark);
+      transform: translateY(100%);
+      transition: transform .6s var(--ease);
+    }
+    .panel.active { transform: translateY(0); }
 
+    /* Back button */
+    .panel-back {
+      position: fixed;
+      top: 30px; left: 36px;
+      z-index: 500;
+      display: flex; align-items: center; gap: 10px;
+      font-size: 9px; font-weight: 400;
+      letter-spacing: .25em; text-transform: uppercase;
+      color: rgba(255,255,255,.5);
+      cursor: pointer;
+      opacity: 0;
+      pointer-events: none;
+      transition: color .2s, opacity .3s;
+    }
+    .panel-back.visible { opacity: 1; pointer-events: all; }
+    .panel-back:hover { color: var(--white); }
+    .panel-back::before {
+      content: '←';
+      font-size: 14px;
+    }
+
+    /* ── PANEL: EXPÉRIENCES ────────────────────── */
+    #panel-experiences { background: var(--dark); }
+    .exp-header {
+      padding: 100px 60px 48px;
+      border-bottom: 1px solid rgba(255,255,255,.06);
+    }
+    .exp-label {
+      font-size: 9px; font-weight: 400;
+      letter-spacing: .35em; text-transform: uppercase;
+      color: var(--sky-lt);
+      display: flex; align-items: center; gap: 14px;
+      margin-bottom: 14px;
+    }
+    .exp-label::before { content: ''; display: block; width: 22px; height: 1px; background: var(--sky-lt); }
+    .exp-title {
+      font-family: 'ReklameScript', var(--fd);
+      font-size: clamp(38px, 5vw, 64px);
+      color: var(--white); line-height: 1.05;
+    }
+    .exp-grid { display: grid; grid-template-columns: 1fr 1fr; }
+    .exp-card { position: relative; overflow: hidden; aspect-ratio: 4/3; cursor: pointer; border: .5px solid rgba(255,255,255,.04); }
+    .exp-card-bg { position: absolute; inset: 0; background-size: cover; background-position: center; transition: transform .7s var(--ease), filter .5s; }
+    .exp-card:hover .exp-card-bg, .exp-card.open .exp-card-bg { transform: scale(1.06); filter: brightness(.65); }
+    .exp-card-base { position: absolute; inset: 0; background: linear-gradient(to top, rgba(8,15,26,.88) 0%, rgba(8,15,26,.06) 55%, transparent 100%); }
+    .exp-card-name { position: absolute; bottom: 24px; left: 28px; right: 28px; font-size: 10px; font-weight: 400; letter-spacing: .28em; text-transform: uppercase; color: rgba(255,255,255,.68); transition: opacity .3s; }
+    .exp-card.open .exp-card-name { opacity: 0; }
+    .exp-xcross { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%) scale(.5); width: 32px; height: 32px; opacity: 0; transition: opacity .3s, transform .35s var(--ease); }
+    .exp-xcross::before, .exp-xcross::after { content: ''; position: absolute; background: rgba(255,255,255,.85); left: 50%; top: 50%; transform: translate(-50%,-50%); }
+    .exp-xcross::before { width: 1px; height: 24px; }
+    .exp-xcross::after  { width: 24px; height: 1px; }
+    .exp-card:hover .exp-xcross { opacity: 1; transform: translate(-50%,-50%) scale(1); }
+    .exp-card.open .exp-xcross { opacity: 1; transform: translate(-50%,-50%) scale(1) rotate(45deg); }
+    .exp-overlay { position: absolute; inset: 0; padding: 36px 30px; background: rgba(8,15,26,.87); display: flex; flex-direction: column; justify-content: center; opacity: 0; pointer-events: none; transition: opacity .4s; }
+    .exp-card.open .exp-overlay { opacity: 1; pointer-events: all; }
+    .exp-ov-loc { font-size: 9px; letter-spacing: .3em; text-transform: uppercase; color: var(--sky-lt); margin-bottom: 10px; }
+    .exp-ov-name { font-family: 'ReklameScript', var(--fd); font-size: 30px; color: var(--white); line-height: 1.1; margin-bottom: 10px; }
+    .exp-ov-desc { font-size: 13px; font-weight: 300; line-height: 1.8; color: rgba(255,255,255,.56); margin-bottom: 20px; }
+    .exp-ov-meta { display: flex; gap: 22px; margin-bottom: 20px; }
+    .exp-meta-i { display: flex; flex-direction: column; gap: 3px; }
+    .exp-meta-l { font-size: 8px; letter-spacing: .28em; text-transform: uppercase; color: rgba(255,255,255,.28); }
+    .exp-meta-v { font-size: 12px; font-weight: 400; color: rgba(255,255,255,.78); }
+    .exp-ov-cta { display: inline-flex; align-items: center; gap: 8px; font-size: 10px; font-weight: 400; letter-spacing: .22em; text-transform: uppercase; color: var(--white); border: 1px solid rgba(255,255,255,.32); padding: 9px 18px; width: fit-content; cursor: pointer; background: none; font-family: var(--fb); transition: background .25s, border-color .25s; }
+    .exp-ov-cta:hover { background: rgba(255,255,255,.1); border-color: rgba(255,255,255,.65); }
+
+    /* ── PANEL: TERRITOIRE ─────────────────────── */
+    #panel-territoire {
+      display: grid; grid-template-columns: 1fr 1fr;
+      background: var(--navy);
+    }
+    .terr-photo { overflow: hidden; }
+    .terr-photo img { width: 100%; height: 100%; object-fit: cover; }
+    .terr-text {
+      padding: 100px 64px;
+      display: flex; flex-direction: column; justify-content: center;
+      overflow-y: auto;
+    }
+    .terr-label { font-size: 9px; font-weight: 400; letter-spacing: .35em; text-transform: uppercase; color: var(--sky-lt); display: flex; align-items: center; gap: 14px; margin-bottom: 14px; }
+    .terr-label::before { content: ''; display: block; width: 22px; height: 1px; background: var(--sky-lt); }
+    .terr-ttl { font-family: 'ReklameScript', var(--fd); font-size: clamp(36px, 4.5vw, 58px); color: var(--white); line-height: 1.08; }
+    .terr-body { font-size: 15px; font-weight: 300; line-height: 1.9; color: rgba(255,255,255,.58); margin-top: 24px; margin-bottom: 40px; }
+    .terr-stats { display: flex; gap: 36px; padding-top: 28px; border-top: 1px solid rgba(255,255,255,.1); }
+    .terr-stat { display: flex; flex-direction: column; gap: 5px; }
+    .terr-stat-v { font-family: 'ReklameScript', var(--fd); font-size: 34px; color: var(--white); }
+    .terr-stat-l { font-size: 9px; font-weight: 400; letter-spacing: .2em; text-transform: uppercase; color: rgba(255,255,255,.3); }
+
+    /* ── PANEL: SUR MESURE ─────────────────────── */
+    #panel-surlesure {
+      display: grid; grid-template-columns: 1fr 1fr;
+    }
+    .surm-left { background: var(--cream); padding: 100px 64px; display: flex; flex-direction: column; justify-content: center; overflow-y: auto; }
+    .surm-label { font-size: 9px; font-weight: 400; letter-spacing: .35em; text-transform: uppercase; color: var(--sky); display: flex; align-items: center; gap: 14px; margin-bottom: 14px; }
+    .surm-label::before { content: ''; display: block; width: 22px; height: 1px; background: var(--sky); }
+    .surm-ttl { font-family: 'ReklameScript', var(--fd); font-size: clamp(34px, 4vw, 54px); color: var(--navy); line-height: 1.08; }
+    .surm-body { font-size: 15px; font-weight: 300; line-height: 1.9; color: #555; margin-top: 22px; margin-bottom: 34px; }
+    .surm-info { display: flex; flex-direction: column; gap: 12px; }
+    .surm-info-item { display: flex; gap: 12px; font-size: 13px; font-weight: 300; color: #444; }
+    .surm-info-item strong { font-weight: 500; color: var(--navy); min-width: 56px; }
+    .surm-right { background: var(--navy); padding: 100px 64px; display: flex; flex-direction: column; justify-content: center; overflow-y: auto; }
+    .form-group { margin-bottom: 18px; }
+    .form-label { display: block; font-size: 9px; font-weight: 400; letter-spacing: .28em; text-transform: uppercase; color: rgba(255,255,255,.35); margin-bottom: 7px; }
+    .form-input, .form-textarea, .form-select { width: 100%; background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.1); color: var(--white); font-family: var(--fb); font-size: 14px; font-weight: 300; padding: 11px 13px; outline: none; transition: border-color .25s; appearance: none; border-radius: 0; }
+    .form-input::placeholder, .form-textarea::placeholder { color: rgba(255,255,255,.2); }
+    .form-input:focus, .form-textarea:focus, .form-select:focus { border-color: var(--sky-lt); }
+    .form-textarea { resize: vertical; min-height: 80px; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .form-submit { width: 100%; background: transparent; border: 1px solid rgba(255,255,255,.3); color: var(--white); font-family: var(--fb); font-size: 10px; font-weight: 400; letter-spacing: .25em; text-transform: uppercase; padding: 13px; cursor: pointer; transition: background .25s, border-color .25s; margin-top: 4px; }
+    .form-submit:hover { background: rgba(255,255,255,.1); border-color: rgba(255,255,255,.6); }
+    .form-note { font-size: 11px; font-weight: 300; color: rgba(255,255,255,.2); margin-top: 10px; text-align: center; }
+
+    /* ── PANEL: ABOUT ──────────────────────────── */
+    #panel-about {
+      display: grid; grid-template-columns: 1fr 1fr;
+      background: var(--dark);
+    }
+    .about-photo { overflow: hidden; }
+    .about-photo img { width: 100%; height: 100%; object-fit: cover; }
+    .about-text { padding: 100px 64px; display: flex; flex-direction: column; justify-content: center; overflow-y: auto; }
+    .about-label { font-size: 9px; font-weight: 400; letter-spacing: .35em; text-transform: uppercase; color: var(--sky-lt); display: flex; align-items: center; gap: 14px; margin-bottom: 14px; }
+    .about-label::before { content: ''; display: block; width: 22px; height: 1px; background: var(--sky-lt); }
+    .about-ttl { font-family: 'ReklameScript', var(--fd); font-size: clamp(36px, 4.5vw, 58px); color: var(--white); line-height: 1.08; }
+    .about-body { font-size: 15px; font-weight: 300; line-height: 1.9; color: rgba(255,255,255,.56); margin-top: 22px; margin-bottom: 40px; }
+    .about-values { display: flex; flex-direction: column; gap: 22px; }
+    .about-value { display: flex; gap: 18px; align-items: flex-start; }
+    .about-val-num { font-family: 'ReklameScript', var(--fd); font-size: 24px; color: rgba(255,255,255,.13); line-height: 1; min-width: 28px; }
+    .about-val-text h4 { font-size: 11px; font-weight: 500; letter-spacing: .12em; text-transform: uppercase; color: var(--white); margin-bottom: 4px; }
+    .about-val-text p { font-size: 13px; font-weight: 300; line-height: 1.7; color: rgba(255,255,255,.45); }
+
+    /* ── MOBILE ────────────────────────────────── */
+    @media (max-width: 768px) {
+      #logo { top: 20px; left: 20px; }
+      #lang-switcher { top: 24px; right: 20px; }
+      .panel-back { top: 22px; left: 20px; }
+      #quadrants { grid-template-columns: 1fr; grid-template-rows: repeat(4, 1fr); }
+      .quad:nth-child(1) { border-right: none; border-bottom: 1px solid rgba(255,255,255,.12); }
+      .quad:nth-child(2) { border-bottom: 1px solid rgba(255,255,255,.12); }
+      .quad:nth-child(3) { border-right: none; border-bottom: 1px solid rgba(255,255,255,.12); }
+      .quad { padding: 24px 28px; }
+      .quad-title { font-size: 28px; }
+      #panel-territoire, #panel-surlesure, #panel-about { grid-template-columns: 1fr; }
+      .terr-photo, .about-photo { height: 45vw; }
+      .terr-text, .surm-left, .surm-right, .about-text { padding: 56px 24px; }
       .exp-grid { grid-template-columns: 1fr; }
-      .exp-card { aspect-ratio: 3/2; }
-      .exp-header { padding: 48px 28px 28px; flex-direction: column; gap: 8px; align-items: flex-start; }
-
-      #pampa { height: 340px; }
-
-      #contact-section { grid-template-columns: 1fr; }
-      .contact-left,
-      .contact-right { padding: 56px 32px; }
-
-      .footer-top { flex-direction: column; gap: 40px; }
-      .footer-cols { flex-direction: column; gap: 28px; }
-      #footer { padding: 48px 28px 32px; }
-
+      .exp-header { padding: 80px 24px 36px; }
       .form-row { grid-template-columns: 1fr; }
-    }
-
-    @media (max-width: 640px) {
-      .hero-title { font-size: 44px; }
-      .exp-overlay { padding: 32px 24px; }
-      .exp-overlay-title { font-size: 28px; }
-      .exp-overlay-meta { flex-wrap: wrap; gap: 16px; }
     }
   </style>
 </head>
-
 <body>
 
-  <!-- ── NAV ──────────────────────────────────────────── -->
-  <nav id="nav">
-    <div class="nav-logo" onclick="scrollToTop()">
-      <img src="Logos/logo fond oscur.png" alt="Pristine Patagonia" onerror="this.style.display='none'" />
-      <span class="nav-logo-text fd" data-i18n="brand">Pristine Patagonia</span>
-    </div>
+  <!-- HERO -->
+  <div id="hero">
+    <div id="hero-bg"></div>
+    <div class="hero-overlay"></div>
+  </div>
 
-    <div class="nav-links">
-      <a onclick="scrollTo('#experiences')" data-i18n="nav_exp">Experiencias</a>
-      <a onclick="scrollTo('#territoire')" data-i18n="nav_about">Notre Territoire</a>
-      <a onclick="scrollTo('#contact-section')" data-i18n="nav_contact">Contact</a>
-      <div class="nav-lang">
-        <button class="lang-btn" onclick="setLang('fr')">FR</button>
-        <button class="lang-btn" onclick="setLang('en')">EN</button>
-        <button class="lang-btn" onclick="setLang('es')">ES</button>
-        <button class="lang-btn" onclick="setLang('pt')">PT</button>
+  <!-- LOGO -->
+  <a id="logo" href="#" onclick="closePanel(event)">
+    <img src="Logos/favicon.png" alt="Pristine" onerror="this.style.display='none'" />
+    <div class="logo-text">
+      <span class="logo-pristine">Pristine</span>
+      <span class="logo-patagonia">Patagonia</span>
+    </div>
+  </a>
+
+  <!-- LANG -->
+  <div id="lang-switcher">
+    <button class="lang-btn" onclick="setLang('fr')">FR</button>
+    <button class="lang-btn" onclick="setLang('en')">EN</button>
+    <button class="lang-btn" onclick="setLang('es')">ES</button>
+    <button class="lang-btn" onclick="setLang('pt')">PT</button>
+  </div>
+
+  <!-- CROSS -->
+  <div id="cross-btn" onclick="toggleQuadrants()" aria-label="Menu"></div>
+  <div id="cross-hint" data-i18n="hint">Explorer</div>
+
+  <!-- QUADRANTS -->
+  <div id="quadrants">
+    <div class="quad" onclick="openPanel('experiences')">
+      <div class="quad-bg" style="background-image:url('assets/images/programmes/parc-patagonia.jpeg')"></div>
+      <div class="quad-content">
+        <div class="quad-num">01</div>
+        <div class="quad-title" data-i18n="q_exp">Expériences</div>
+        <div class="quad-sub" data-i18n="q_exp_sub">04 circuits exclusifs en Aysén</div>
+        <span class="quad-arrow" data-i18n="q_arrow">Découvrir →</span>
       </div>
-      <a class="nav-cta" onclick="scrollTo('#contact-section')" data-i18n="nav_cta">Plan Your Trip</a>
     </div>
-
-    <div class="nav-burger" id="nav-burger" onclick="openMobileNav()">
-      <span></span><span></span><span></span>
+    <div class="quad" onclick="openPanel('territoire')">
+      <div class="quad-bg" style="background-image:url('assets/images/intro.jpeg')"></div>
+      <div class="quad-content">
+        <div class="quad-num">02</div>
+        <div class="quad-title" data-i18n="q_terr">Notre Territoire</div>
+        <div class="quad-sub" data-i18n="q_terr_sub">Aysén · Patagonie chilienne</div>
+        <span class="quad-arrow" data-i18n="q_arrow">Découvrir →</span>
+      </div>
     </div>
-  </nav>
-
-  <!-- ── MOBILE NAV ────────────────────────────────────── -->
-  <div id="nav-mobile">
-    <span class="mobile-close" onclick="closeMobileNav()">×</span>
-    <a onclick="scrollTo('#experiences'); closeMobileNav();" data-i18n="nav_exp">Experiencias</a>
-    <a onclick="scrollTo('#territoire'); closeMobileNav();" data-i18n="nav_about">Notre Territoire</a>
-    <a onclick="scrollTo('#contact-section'); closeMobileNav();" data-i18n="nav_contact">Contact</a>
-    <a onclick="scrollTo('#contact-section'); closeMobileNav();" data-i18n="nav_cta">Plan Your Trip</a>
-    <div class="mobile-langs">
-      <button onclick="setLang('fr')">FR</button>
-      <button onclick="setLang('en')">EN</button>
-      <button onclick="setLang('es')">ES</button>
-      <button onclick="setLang('pt')">PT</button>
+    <div class="quad" onclick="openPanel('surlesure')">
+      <div class="quad-bg" style="background-image:url('assets/images/pampa.jpeg')"></div>
+      <div class="quad-content">
+        <div class="quad-num">03</div>
+        <div class="quad-title" data-i18n="q_surm">Sur Mesure</div>
+        <div class="quad-sub" data-i18n="q_surm_sub">Planifiez votre voyage</div>
+        <span class="quad-arrow" data-i18n="q_arrow">Découvrir →</span>
+      </div>
+    </div>
+    <div class="quad" onclick="openPanel('about')">
+      <div class="quad-bg" style="background-image:url('assets/images/hero.jpeg')"></div>
+      <div class="quad-content">
+        <div class="quad-num">04</div>
+        <div class="quad-title" data-i18n="q_about">About Us</div>
+        <div class="quad-sub" data-i18n="q_about_sub">Qui sommes-nous</div>
+        <span class="quad-arrow" data-i18n="q_arrow">Découvrir →</span>
+      </div>
     </div>
   </div>
 
-  <!-- ── HERO ─────────────────────────────────────────── -->
-  <section id="hero">
-    <div id="hero-bg"></div>
-    <div class="hero-overlay"></div>
-    <div class="hero-content">
-      <div class="hero-eyebrow" data-i18n="hero_eyebrow">Coyhaique · Aysén · Chile</div>
-      <h1 class="hero-title fd" data-i18n="hero_title">Pristine Patagonia</h1>
-      <p class="hero-sub" data-i18n="hero_sub">Exclusive Adventures in Chilean Patagonia</p>
-      <button class="hero-btn" onclick="scrollTo('#experiences')">
-        <span data-i18n="hero_cta">Discover the Experiences</span>
-        <span class="arrow"></span>
-      </button>
-    </div>
-    <div class="hero-scroll-hint">
-      <span data-i18n="scroll_hint">Scroll</span>
-      <div class="scroll-line"></div>
-    </div>
-  </section>
+  <!-- BACK BUTTON -->
+  <div id="panel-back" class="panel-back" onclick="closePanel()" data-i18n="back">Retour</div>
 
-  <!-- ── TERRITOIRE ────────────────────────────────────── -->
-  <section id="territoire">
-    <div class="territoire-photo">
-      <img src="assets/images/intro.jpeg" alt="Icebergs d'Aysén, Patagonie chilienne" />
-    </div>
-    <div class="territoire-text">
-      <div class="section-label" data-i18n="terr_label">Notre Territoire</div>
-      <h2 class="territoire-title fd" data-i18n="terr_title">La Patagonie<br>comme nulle part ailleurs</h2>
-      <p class="territoire-body" data-i18n="terr_body">
-        La région d'Aysén concentre certains des paysages les plus préservés de la planète — fjords profonds, glaciers millénaires, condors, pampas sauvages. Moins de 100 000 habitants pour un territoire grand comme la Belgique.
-        <br /><br />
-        Nous vivons ici. Nous connaissons chaque sentier, chaque río, chaque lodge. Nos circuits ne ressemblent à aucun autre.
-      </p>
-      <span class="text-link" onclick="scrollTo('#experiences')" data-i18n="terr_link">Voir nos expériences</span>
-    </div>
-  </section>
-
-  <!-- ── EXPÉRIENCES ───────────────────────────────────── -->
-  <section id="experiences">
+  <!-- PANEL: EXPÉRIENCES -->
+  <div id="panel-experiences" class="panel">
     <div class="exp-header">
-      <h2 class="exp-title fd" data-i18n="exp_title">Expériences</h2>
-      <span class="exp-count" data-i18n="exp_count">04 Itinéraires exclusifs</span>
+      <div class="exp-label" data-i18n="exp_lbl">Nos Expériences</div>
+      <h2 class="exp-title" data-i18n="exp_ttl">Expériences</h2>
     </div>
-    <div class="exp-grid" id="exp-grid">
-      <!-- Cards générées par JS -->
-    </div>
-  </section>
+    <div class="exp-grid" id="exp-grid"></div>
+  </div>
 
-  <!-- ── PAMPA BANNER ──────────────────────────────────── -->
-  <section id="pampa">
-    <div id="pampa-bg"></div>
-    <div class="pampa-overlay"></div>
-    <div class="pampa-content">
-      <p class="pampa-quote fd" data-i18n="pampa_quote">
-        "Aysén is the last corner of the world still being born."
-      </p>
-      <span class="pampa-attribution" data-i18n="pampa_attr">— Bruce Chatwin · In Patagonia</span>
+  <!-- PANEL: TERRITOIRE -->
+  <div id="panel-territoire" class="panel">
+    <div class="terr-photo">
+      <img src="assets/images/intro.jpeg" alt="Aysén" />
     </div>
-  </section>
-
-  <!-- ── CONTACT ───────────────────────────────────────── -->
-  <section id="contact-section">
-    <div class="contact-left">
-      <div class="section-label" data-i18n="contact_label">Plan Your Journey</div>
-      <h2 class="contact-title fd" data-i18n="contact_title">Une expérience<br>sur mesure vous attend</h2>
-      <p class="contact-body" data-i18n="contact_body">
-        Chaque voyage est unique. Partagez-nous votre projet — dates, groupe, envies — et nous construisons ensemble votre séjour en Patagonie chilienne.
-        <br /><br />
-        Nous répondons dans les 48 heures.
-      </p>
-      <div class="contact-info-items">
-        <div class="contact-info-item">
-          <strong>Email</strong>
-          <span>info@pristinepatagonia.cl</span>
-        </div>
-        <div class="contact-info-item">
-          <strong data-i18n="contact_location_label">Basé à</strong>
-          <span>Coyhaique, Aysén, Chile</span>
-        </div>
+    <div class="terr-text">
+      <div class="terr-label" data-i18n="terr_lbl">Notre Territoire</div>
+      <h2 class="terr-ttl" data-i18n="terr_ttl">La Patagonie<br>comme nulle part ailleurs</h2>
+      <p class="terr-body" data-i18n="terr_body">La région d'Aysén concentre certains des paysages les plus préservés de la planète — fjords profonds, glaciers millénaires, condors, pampas sauvages. Moins de 100 000 habitants pour un territoire grand comme la Belgique.<br><br>Nous vivons ici. Nous connaissons chaque sentier, chaque río, chaque lodge.</p>
+      <div class="terr-stats">
+        <div class="terr-stat"><span class="terr-stat-v">67k</span><span class="terr-stat-l" data-i18n="st_a">km²</span></div>
+        <div class="terr-stat"><span class="terr-stat-v">∞</span><span class="terr-stat-l" data-i18n="st_b">Wilderness</span></div>
+        <div class="terr-stat"><span class="terr-stat-v">1</span><span class="terr-stat-l" data-i18n="st_c">Route</span></div>
       </div>
     </div>
-    <div class="contact-right">
+  </div>
+
+  <!-- PANEL: SUR MESURE -->
+  <div id="panel-surlesure" class="panel">
+    <div class="surm-left">
+      <div class="surm-label" data-i18n="surm_lbl">Sur Mesure</div>
+      <h2 class="surm-ttl" data-i18n="surm_ttl">Une expérience<br>sur mesure</h2>
+      <p class="surm-body" data-i18n="surm_body">Chaque voyage est unique. Partagez-nous votre projet — dates, groupe, envies — et nous construisons ensemble votre séjour en Patagonie chilienne.<br><br>Nous répondons dans les 48 heures.</p>
+      <div class="surm-info">
+        <div class="surm-info-item"><strong>Email</strong><span>info@pristinepatagonia.cl</span></div>
+        <div class="surm-info-item"><strong data-i18n="surm_base">Basé à</strong><span>Coyhaique, Aysén, Chile</span></div>
+      </div>
+    </div>
+    <div class="surm-right">
       <form id="contact-form" action="https://formspree.io/f/XXXXXXXX" method="POST">
         <div class="form-row">
-          <div class="form-group">
-            <label class="form-label" data-i18n="form_name">Nom</label>
-            <input class="form-input" name="name" type="text" autocomplete="name" />
-          </div>
-          <div class="form-group">
-            <label class="form-label" data-i18n="form_email">Email</label>
-            <input class="form-input" name="email" type="email" autocomplete="email" />
-          </div>
+          <div class="form-group"><label class="form-label" data-i18n="f_name">Nom</label><input class="form-input" name="name" type="text" /></div>
+          <div class="form-group"><label class="form-label" data-i18n="f_email">Email</label><input class="form-input" name="email" type="email" /></div>
         </div>
         <div class="form-row">
-          <div class="form-group">
-            <label class="form-label" data-i18n="form_country">Pays</label>
-            <input class="form-input" name="country" type="text" autocomplete="country-name" />
-          </div>
-          <div class="form-group">
-            <label class="form-label" data-i18n="form_dates">Dates envisagées</label>
-            <input class="form-input" name="dates" type="text" />
-          </div>
+          <div class="form-group"><label class="form-label" data-i18n="f_country">Pays</label><input class="form-input" name="country" type="text" /></div>
+          <div class="form-group"><label class="form-label" data-i18n="f_dates">Dates</label><input class="form-input" name="dates" type="text" /></div>
         </div>
         <div class="form-group">
-          <label class="form-label" data-i18n="form_exp">Expérience</label>
+          <label class="form-label" data-i18n="f_exp">Expérience</label>
           <select class="form-select form-input" name="experience">
-            <option value="" disabled selected data-i18n="form_exp_placeholder">Choisir...</option>
-            <option value="parc-patagonia" data-i18n="prog_1_title">Cœur du Parc Patagonia</option>
-            <option value="carretera-austral" data-i18n="prog_2_title">La Carretera Austral</option>
-            <option value="fjords-aysen" data-i18n="prog_3_title">Fjords & Glaciers d'Aysén</option>
-            <option value="lago-carrera" data-i18n="prog_4_title">Lago General Carrera</option>
-            <option value="sur-mesure" data-i18n="form_exp_custom">Voyage sur mesure</option>
+            <option value="" disabled selected data-i18n="f_exp_ph">Choisir...</option>
+            <option value="parc-patagonia" data-i18n="p1">Cœur du Parc Patagonia</option>
+            <option value="carretera-austral" data-i18n="p2">La Carretera Austral</option>
+            <option value="fjords-aysen" data-i18n="p3">Fjords & Glaciers d'Aysén</option>
+            <option value="lago-carrera" data-i18n="p4">Lago General Carrera</option>
+            <option value="sur-mesure" data-i18n="f_custom">Voyage sur mesure</option>
           </select>
         </div>
-        <div class="form-group">
-          <label class="form-label" data-i18n="form_message">Message</label>
-          <textarea class="form-textarea form-input" name="message" rows="4"></textarea>
-        </div>
-        <button type="submit" class="form-submit" data-i18n="form_submit">Envoyer ma demande</button>
-        <p class="form-note" data-i18n="form_note">Réponse garantie sous 48h · Aucun engagement</p>
+        <div class="form-group"><label class="form-label" data-i18n="f_msg">Message</label><textarea class="form-textarea form-input" name="message" rows="4"></textarea></div>
+        <button type="submit" class="form-submit" data-i18n="f_submit">Envoyer ma demande</button>
+        <p class="form-note" data-i18n="f_note">Réponse garantie sous 48h · Aucun engagement</p>
       </form>
     </div>
-  </section>
+  </div>
 
-  <!-- ── FOOTER ────────────────────────────────────────── -->
-  <footer id="footer">
-    <div class="footer-top">
-      <div class="footer-brand">
-        <span class="footer-logo-text fd">Pristine Patagonia</span>
-        <span class="footer-tagline" data-i18n="footer_tagline">Exclusive Adventures · Aysén, Chile</span>
-      </div>
-      <div class="footer-cols">
-        <div class="footer-col">
-          <div class="footer-col-title" data-i18n="footer_nav_title">Navigation</div>
-          <a onclick="scrollTo('#experiences')" data-i18n="nav_exp">Experiencias</a>
-          <a onclick="scrollTo('#territoire')" data-i18n="nav_about">Notre Territoire</a>
-          <a onclick="scrollTo('#contact-section')" data-i18n="nav_contact">Contact</a>
-        </div>
-        <div class="footer-col">
-          <div class="footer-col-title" data-i18n="footer_contact_title">Contact</div>
-          <a href="mailto:info@pristinepatagonia.cl">info@pristinepatagonia.cl</a>
-          <a href="https://instagram.com/pristinepatagonia" target="_blank" rel="noopener">Instagram</a>
-        </div>
+  <!-- PANEL: ABOUT -->
+  <div id="panel-about" class="panel">
+    <div class="about-photo">
+      <img src="assets/images/intro.jpeg" alt="Pristine Patagonia" />
+    </div>
+    <div class="about-text">
+      <div class="about-label" data-i18n="about_lbl">About Us</div>
+      <h2 class="about-ttl" data-i18n="about_ttl">Qui sommes-nous</h2>
+      <p class="about-body" data-i18n="about_body">Pristine est né d'une conviction simple : la Patagonie chilienne mérite mieux que le tourisme de masse. Nous sommes une équipe de guides et de passionnés basés à Coyhaique, au cœur de la région d'Aysén.<br><br>Chaque circuit est conçu avec soin — petits groupes, accès exclusifs, lodges partenaires, cuisine locale.</p>
+      <div class="about-values">
+        <div class="about-value"><span class="about-val-num">01</span><div class="about-val-text"><h4 data-i18n="v1t">Guides Experts</h4><p data-i18n="v1b">Natifs de la région, francophones, anglophones et hispanophones.</p></div></div>
+        <div class="about-value"><span class="about-val-num">02</span><div class="about-val-text"><h4 data-i18n="v2t">Accès Exclusifs</h4><p data-i18n="v2b">Sites hors sentiers, partenariats lodges, groupes de 8 personnes max.</p></div></div>
+        <div class="about-value"><span class="about-val-num">03</span><div class="about-val-text"><h4 data-i18n="v3t">Incoming & Agences</h4><p data-i18n="v3b">Partenaire réceptif pour agences. Prise en charge complète de vos groupes.</p></div></div>
       </div>
     </div>
-    <div class="footer-bottom">
-      <span class="footer-copy" data-i18n="footer_copy">© 2025 Pristine Patagonia. Todos los derechos reservados.</span>
-      <div class="footer-muni">
-        <img src="assets/images/logo_muni_firma.gif" alt="Municipalidad de Aysén" />
-      </div>
-    </div>
-  </footer>
+  </div>
 
-  <!-- ── JAVASCRIPT ────────────────────────────────────── -->
   <script>
-    /* ── i18n ──────────────────────────────────────────── */
-    const T = {
-      fr: {
-        brand: 'Pristine Patagonia',
-        nav_exp: 'Expériences',
-        nav_about: 'Notre Territoire',
-        nav_contact: 'Contact',
-        nav_cta: 'Planifier',
-        hero_eyebrow: 'Coyhaique · Aysén · Chili',
-        hero_title: 'Pristine Patagonia',
-        hero_sub: 'Aventures exclusives en Patagonie chilienne',
-        hero_cta: 'Découvrir les expériences',
-        scroll_hint: 'Défiler',
-        terr_label: 'Notre Territoire',
-        terr_title: 'La Patagonie\ncomme nulle part ailleurs',
-        terr_body: 'La région d\'Aysén concentre certains des paysages les plus préservés de la planète — fjords profonds, glaciers millénaires, condors, pampas sauvages. Moins de 100 000 habitants pour un territoire grand comme la Belgique.\n\nNous vivons ici. Nous connaissons chaque sentier, chaque río, chaque lodge. Nos circuits ne ressemblent à aucun autre.',
-        terr_link: 'Voir nos expériences',
-        exp_title: 'Expériences',
-        exp_count: '04 Itinéraires exclusifs',
-        pampa_quote: '"Aysén est le dernier coin du monde encore en train de naître."',
-        pampa_attr: '— Bruce Chatwin · En Patagonie',
-        contact_label: 'Planifiez votre séjour',
-        contact_title: 'Une expérience\nsur mesure vous attend',
-        contact_body: 'Chaque voyage est unique. Partagez-nous votre projet — dates, groupe, envies — et nous construisons ensemble votre séjour en Patagonie chilienne.\n\nNous répondons dans les 48 heures.',
-        contact_location_label: 'Basé à',
-        form_name: 'Nom complet',
-        form_email: 'Email',
-        form_country: 'Pays',
-        form_dates: 'Dates envisagées',
-        form_exp: 'Expérience',
-        form_exp_placeholder: 'Choisir une expérience...',
-        form_exp_custom: 'Voyage sur mesure',
-        form_message: 'Votre projet',
-        form_submit: 'Envoyer ma demande',
-        form_note: 'Réponse garantie sous 48h · Aucun engagement',
-        footer_tagline: 'Aventures Exclusives · Aysén, Chili',
-        footer_nav_title: 'Navigation',
-        footer_contact_title: 'Contact',
-        footer_copy: '© 2025 Pristine Patagonia. Tous droits réservés.',
-        prog_1_title: 'Cœur du Parc Patagonia',
-        prog_2_title: 'La Carretera Austral',
-        prog_3_title: 'Fjords & Glaciers d\'Aysén',
-        prog_4_title: 'Lac General Carrera',
-        prog_1_desc: 'Explorez les pampas, les lagunes turquoise et les condors du Parc Patagonia, joyau de la conservation chilienne.',
-        prog_2_desc: 'La route la plus épique du monde : 1 240 km entre volcans, glaciers et fjords à travers la Patagonie du Nord.',
-        prog_3_desc: 'Navigations à l\'aube, kayak en eaux glacées et glaciers millénaires des champs de glace du Nord.',
-        prog_4_desc: 'Le deuxième plus grand lac d\'Amérique du Sud, avec ses marbres de marbre sculptés par les vagues.',
-        prog_dur_1: '7 jours',
-        prog_dur_2: '10 jours',
-        prog_dur_3: '12 jours',
-        prog_dur_4: '5 jours',
-        prog_group: 'Petit groupe',
-        prog_cta: 'Nous écrire',
-      },
-      en: {
-        brand: 'Pristine Patagonia',
-        nav_exp: 'Experiences',
-        nav_about: 'Our Territory',
-        nav_contact: 'Contact',
-        nav_cta: 'Plan Your Trip',
-        hero_eyebrow: 'Coyhaique · Aysén · Chile',
-        hero_title: 'Pristine Patagonia',
-        hero_sub: 'Exclusive Adventures in Chilean Patagonia',
-        hero_cta: 'Discover the Experiences',
-        scroll_hint: 'Scroll',
-        terr_label: 'Our Territory',
-        terr_title: 'Patagonia\nlike nowhere else',
-        terr_body: 'The Aysén region holds some of the most pristine landscapes on Earth — deep fjords, ancient glaciers, condors, wild pampas. Fewer than 100,000 inhabitants for a territory the size of Belgium.\n\nWe live here. We know every trail, every río, every lodge. Our circuits are unlike any other.',
-        terr_link: 'See our experiences',
-        exp_title: 'Experiences',
-        exp_count: '04 Exclusive Itineraries',
-        pampa_quote: '"Aysén is the last corner of the world still being born."',
-        pampa_attr: '— Bruce Chatwin · In Patagonia',
-        contact_label: 'Plan Your Journey',
-        contact_title: 'A bespoke experience\nawaits you',
-        contact_body: 'Every journey is unique. Share your project — dates, group size, desires — and we\'ll design your Patagonian adventure together.\n\nWe respond within 48 hours.',
-        contact_location_label: 'Based in',
-        form_name: 'Full Name',
-        form_email: 'Email',
-        form_country: 'Country',
-        form_dates: 'Planned dates',
-        form_exp: 'Experience',
-        form_exp_placeholder: 'Choose an experience...',
-        form_exp_custom: 'Custom journey',
-        form_message: 'Your project',
-        form_submit: 'Send my request',
-        form_note: 'Response guaranteed within 48h · No commitment',
-        footer_tagline: 'Exclusive Adventures · Aysén, Chile',
-        footer_nav_title: 'Navigation',
-        footer_contact_title: 'Contact',
-        footer_copy: '© 2025 Pristine Patagonia. All rights reserved.',
-        prog_1_title: 'Heart of Patagonia Park',
-        prog_2_title: 'The Carretera Austral',
-        prog_3_title: 'Fjords & Glaciers of Aysén',
-        prog_4_title: 'Lake General Carrera',
-        prog_1_desc: 'Explore the pampas, turquoise lagoons and condors of Patagonia Park, a jewel of Chilean conservation.',
-        prog_2_desc: 'The world\'s most epic road: 1,240 km through volcanoes, glaciers and fjords across Northern Patagonia.',
-        prog_3_desc: 'Dawn navigations, kayaking in glacial waters and ancient glaciers of the Northern Ice Fields.',
-        prog_4_desc: 'South America\'s second largest lake, with its famous marble caves sculpted by waves over millennia.',
-        prog_dur_1: '7 days',
-        prog_dur_2: '10 days',
-        prog_dur_3: '12 days',
-        prog_dur_4: '5 days',
-        prog_group: 'Small group',
-        prog_cta: 'Write to us',
-      },
-      es: {
-        brand: 'Pristine Patagonia',
-        nav_exp: 'Experiencias',
-        nav_about: 'Nuestro Territorio',
-        nav_contact: 'Contacto',
-        nav_cta: 'Planificar',
-        hero_eyebrow: 'Coyhaique · Aysén · Chile',
-        hero_title: 'Pristine Patagonia',
-        hero_sub: 'Aventuras exclusivas en la Patagonia chilena',
-        hero_cta: 'Descubrir las experiencias',
-        scroll_hint: 'Desplazar',
-        terr_label: 'Nuestro Territorio',
-        terr_title: 'La Patagonia\ncomo en ningún otro lugar',
-        terr_body: 'La región de Aysén concentra algunos de los paisajes más preservados del planeta — fiordos profundos, glaciares milenarios, cóndores, pampas salvajes. Menos de 100.000 habitantes en un territorio tan grande como Bélgica.\n\nVivimos aquí. Conocemos cada sendero, cada río, cada lodge. Nuestros circuitos no se parecen a ningún otro.',
-        terr_link: 'Ver nuestras experiencias',
-        exp_title: 'Experiencias',
-        exp_count: '04 Itinerarios exclusivos',
-        pampa_quote: '"Aysén es el último rincón del mundo que aún está naciendo."',
-        pampa_attr: '— Bruce Chatwin · En la Patagonia',
-        contact_label: 'Planifica tu viaje',
-        contact_title: 'Una experiencia\na medida te espera',
-        contact_body: 'Cada viaje es único. Cuéntanos tu proyecto — fechas, grupo, deseos — y construimos juntos tu experiencia en la Patagonia chilena.\n\nRespondemos en 48 horas.',
-        contact_location_label: 'Con base en',
-        form_name: 'Nombre completo',
-        form_email: 'Email',
-        form_country: 'País',
-        form_dates: 'Fechas previstas',
-        form_exp: 'Experiencia',
-        form_exp_placeholder: 'Elegir una experiencia...',
-        form_exp_custom: 'Viaje a medida',
-        form_message: 'Tu proyecto',
-        form_submit: 'Enviar mi solicitud',
-        form_note: 'Respuesta garantizada en 48h · Sin compromiso',
-        footer_tagline: 'Aventuras Exclusivas · Aysén, Chile',
-        footer_nav_title: 'Navegación',
-        footer_contact_title: 'Contacto',
-        footer_copy: '© 2025 Pristine Patagonia. Todos los derechos reservados.',
-        prog_1_title: 'Corazón del Parque Patagonia',
-        prog_2_title: 'La Carretera Austral',
-        prog_3_title: 'Fiordos y Glaciares de Aysén',
-        prog_4_title: 'Lago General Carrera',
-        prog_1_desc: 'Explora las pampas, las lagunas turquesa y los cóndores del Parque Patagonia, joya de la conservación chilena.',
-        prog_2_desc: 'La ruta más épica del mundo: 1.240 km entre volcanes, glaciares y fiordos a través de la Patagonia Norte.',
-        prog_3_desc: 'Navegaciones al amanecer, kayak en aguas glaciales y glaciares milenarios del Campo de Hielo Norte.',
-        prog_4_desc: 'El segundo lago más grande de Sudamérica, con sus famosas cuevas de mármol esculpidas por las olas.',
-        prog_dur_1: '7 días',
-        prog_dur_2: '10 días',
-        prog_dur_3: '12 días',
-        prog_dur_4: '5 días',
-        prog_group: 'Grupo pequeño',
-        prog_cta: 'Escribirnos',
-      },
-      pt: {
-        brand: 'Pristine Patagonia',
-        nav_exp: 'Experiências',
-        nav_about: 'Nosso Território',
-        nav_contact: 'Contato',
-        nav_cta: 'Planejar',
-        hero_eyebrow: 'Coyhaique · Aysén · Chile',
-        hero_title: 'Pristine Patagonia',
-        hero_sub: 'Aventuras exclusivas na Patagônia chilena',
-        hero_cta: 'Descobrir as experiências',
-        scroll_hint: 'Rolar',
-        terr_label: 'Nosso Território',
-        terr_title: 'A Patagônia\ncomo em nenhum outro lugar',
-        terr_body: 'A região de Aysén concentra algumas das paisagens mais preservadas do planeta — fiordes profundos, geleiras milenares, condores, pampas selvagens. Menos de 100.000 habitantes em um território do tamanho da Bélgica.\n\nVivemos aqui. Conhecemos cada trilha, cada río, cada lodge. Nossos circuitos não se parecem com nenhum outro.',
-        terr_link: 'Ver nossas experiências',
-        exp_title: 'Experiências',
-        exp_count: '04 Itinerários exclusivos',
-        pampa_quote: '"Aysén é o último canto do mundo ainda sendo criado."',
-        pampa_attr: '— Bruce Chatwin · Na Patagônia',
-        contact_label: 'Planeje sua viagem',
-        contact_title: 'Uma experiência\nsobmedida aguarda você',
-        contact_body: 'Cada viagem é única. Compartilhe seu projeto — datas, grupo, desejos — e construímos juntos sua experiência na Patagônia chilena.\n\nRespondemos em 48 horas.',
-        contact_location_label: 'Sediado em',
-        form_name: 'Nome completo',
-        form_email: 'Email',
-        form_country: 'País',
-        form_dates: 'Datas previstas',
-        form_exp: 'Experiência',
-        form_exp_placeholder: 'Escolher uma experiência...',
-        form_exp_custom: 'Viagem personalizada',
-        form_message: 'Seu projeto',
-        form_submit: 'Enviar minha solicitação',
-        form_note: 'Resposta garantida em 48h · Sem compromisso',
-        footer_tagline: 'Aventuras Exclusivas · Aysén, Chile',
-        footer_nav_title: 'Navegação',
-        footer_contact_title: 'Contato',
-        footer_copy: '© 2025 Pristine Patagonia. Todos os direitos reservados.',
-        prog_1_title: 'Coração do Parque Patagônia',
-        prog_2_title: 'A Carretera Austral',
-        prog_3_title: 'Fiordes e Glaciares de Aysén',
-        prog_4_title: 'Lago General Carrera',
-        prog_1_desc: 'Explore as pampas, as lagoas turquesas e os condores do Parque Patagônia, joia da conservação chilena.',
-        prog_2_desc: 'A rota mais épica do mundo: 1.240 km entre vulcões, geleiras e fiordes pela Patagônia Norte.',
-        prog_3_desc: 'Navegações ao amanhecer, caiaque em águas glaciais e geleiras milenares do Campo de Gelo Norte.',
-        prog_4_desc: 'O segundo maior lago da América do Sul, com suas famosas cavernas de mármore esculpidas pelas ondas.',
-        prog_dur_1: '7 dias',
-        prog_dur_2: '10 dias',
-        prog_dur_3: '12 dias',
-        prog_dur_4: '5 dias',
-        prog_group: 'Pequeno grupo',
-        prog_cta: 'Escrever para nós',
-      }
-    };
-
-    let currentLang = localStorage.getItem('pp_lang') || 'fr';
-
-    function t(key) {
-      return (T[currentLang] && T[currentLang][key]) || (T['fr'][key]) || key;
+  const T={
+    fr:{
+      hint:'Explorer', back:'← Retour',
+      q_exp:'Expériences', q_exp_sub:'04 circuits exclusifs en Aysén',
+      q_terr:'Notre Territoire', q_terr_sub:'Aysén · Patagonie chilienne',
+      q_surm:'Sur Mesure', q_surm_sub:'Planifiez votre voyage',
+      q_about:'About Us', q_about_sub:'Qui sommes-nous',
+      q_arrow:'Découvrir →',
+      exp_lbl:'Nos Expériences', exp_ttl:'Expériences',
+      terr_lbl:'Notre Territoire', terr_ttl:'La Patagonie\ncomme nulle part ailleurs',
+      terr_body:'La région d\'Aysén concentre certains des paysages les plus préservés de la planète — fjords profonds, glaciers millénaires, condors, pampas sauvages. Moins de 100 000 habitants pour un territoire grand comme la Belgique.<br><br>Nous vivons ici. Nous connaissons chaque sentier, chaque río, chaque lodge.',
+      st_a:'km² de wilderness', st_b:'Wilderness absolu', st_c:'Une seule route',
+      surm_lbl:'Sur Mesure', surm_ttl:'Une expérience\nsur mesure', surm_base:'Basé à',
+      surm_body:'Chaque voyage est unique. Partagez-nous votre projet — dates, groupe, envies — et nous construisons ensemble votre séjour en Patagonie chilienne.<br><br>Nous répondons dans les 48 heures.',
+      f_name:'Nom complet', f_email:'Email', f_country:'Pays', f_dates:'Dates envisagées',
+      f_exp:'Expérience', f_exp_ph:'Choisir...', f_custom:'Voyage sur mesure',
+      f_msg:'Votre projet', f_submit:'Envoyer ma demande', f_note:'Réponse garantie sous 48h · Aucun engagement',
+      about_lbl:'About Us', about_ttl:'Qui sommes-nous',
+      about_body:'Pristine est né d\'une conviction simple : la Patagonie chilienne mérite mieux que le tourisme de masse. Nous sommes une équipe de guides et de passionnés basés à Coyhaique, au cœur de la région d\'Aysén.<br><br>Chaque circuit est conçu avec soin — petits groupes, accès exclusifs, lodges partenaires, cuisine locale.',
+      v1t:'Guides Experts', v1b:'Natifs de la région, francophones, anglophones et hispanophones.',
+      v2t:'Accès Exclusifs', v2b:'Sites hors sentiers, partenariats lodges, groupes de 8 personnes max.',
+      v3t:'Incoming & Agences', v3b:'Partenaire réceptif pour agences. Prise en charge complète de vos groupes.',
+      p1:'Cœur du Parc Patagonia', p2:'La Carretera Austral', p3:'Fjords & Glaciers d\'Aysén', p4:'Lago General Carrera',
+      pd1:'Explorez les pampas, les lagunes turquoise et les condors du Parc Patagonia.',
+      pd2:'La route la plus épique du monde : 1 240 km entre volcans, glaciers et fjords.',
+      pd3:'Navigations à l\'aube, kayak en eaux glacées, glaciers millénaires.',
+      pd4:'Le deuxième plus grand lac d\'Amérique du Sud et ses marbres sculptés par les vagues.',
+      dur1:'7 jours', dur2:'10 jours', dur3:'12 jours', dur4:'5 jours',
+      pg:'Petit groupe', pcta:'Nous écrire',
+    },
+    en:{
+      hint:'Explore', back:'← Back',
+      q_exp:'Experiences', q_exp_sub:'04 exclusive circuits in Aysén',
+      q_terr:'Our Territory', q_terr_sub:'Aysén · Chilean Patagonia',
+      q_surm:'Bespoke', q_surm_sub:'Plan your journey',
+      q_about:'About Us', q_about_sub:'Who we are',
+      q_arrow:'Discover →',
+      exp_lbl:'Our Experiences', exp_ttl:'Experiences',
+      terr_lbl:'Our Territory', terr_ttl:'Patagonia\nlike nowhere else',
+      terr_body:'The Aysén region holds some of the most pristine landscapes on Earth — deep fjords, ancient glaciers, condors, wild pampas. Fewer than 100,000 inhabitants in a territory the size of Belgium.<br><br>We live here. We know every trail, every río, every lodge.',
+      st_a:'km² of wilderness', st_b:'Absolute wilderness', st_c:'One road',
+      surm_lbl:'Bespoke', surm_ttl:'A bespoke\nexperience awaits', surm_base:'Based in',
+      surm_body:'Every journey is unique. Share your project — dates, group size, desires — and we\'ll design your Patagonian adventure together.<br><br>We respond within 48 hours.',
+      f_name:'Full Name', f_email:'Email', f_country:'Country', f_dates:'Planned dates',
+      f_exp:'Experience', f_exp_ph:'Choose...', f_custom:'Custom journey',
+      f_msg:'Your project', f_submit:'Send my request', f_note:'Response within 48h · No commitment',
+      about_lbl:'About Us', about_ttl:'Who we are',
+      about_body:'Pristine was born from a simple conviction: Chilean Patagonia deserves better than mass tourism. We are a team of guides and enthusiasts based in Coyhaique, in the heart of the Aysén region.<br><br>Every circuit is crafted with care — small groups, exclusive access, partner lodges, local cuisine.',
+      v1t:'Expert Guides', v1b:'Region natives, fluent in French, English and Spanish.',
+      v2t:'Exclusive Access', v2b:'Off-trail sites, lodge partnerships, max 8 people per group.',
+      v3t:'Incoming & Agencies', v3b:'Receptive partner for agencies. Full management of your groups.',
+      p1:'Heart of Patagonia Park', p2:'The Carretera Austral', p3:'Fjords & Glaciers of Aysén', p4:'Lake General Carrera',
+      pd1:'Explore the pampas, turquoise lagoons and condors of Patagonia Park.',
+      pd2:'The world\'s most epic road: 1,240 km through volcanoes, glaciers and fjords.',
+      pd3:'Dawn navigations, kayaking in glacial waters, ancient glaciers.',
+      pd4:'South America\'s second largest lake with its famous marble caves.',
+      dur1:'7 days', dur2:'10 days', dur3:'12 days', dur4:'5 days',
+      pg:'Small group', pcta:'Write to us',
+    },
+    es:{
+      hint:'Explorar', back:'← Volver',
+      q_exp:'Experiencias', q_exp_sub:'04 circuitos exclusivos en Aysén',
+      q_terr:'Nuestro Territorio', q_terr_sub:'Aysén · Patagonia chilena',
+      q_surm:'A Medida', q_surm_sub:'Planifica tu viaje',
+      q_about:'About Us', q_about_sub:'Quiénes somos',
+      q_arrow:'Descubrir →',
+      exp_lbl:'Nuestras Experiencias', exp_ttl:'Experiencias',
+      terr_lbl:'Nuestro Territorio', terr_ttl:'La Patagonia\ncomo en ningún otro lugar',
+      terr_body:'La región de Aysén concentra algunos de los paisajes más preservados del planeta — fiordos profundos, glaciares milenarios, cóndores, pampas salvajes. Menos de 100.000 habitantes en un territorio tan grande como Bélgica.<br><br>Vivimos aquí. Conocemos cada sendero, cada río, cada lodge.',
+      st_a:'km² de wilderness', st_b:'Wilderness absoluto', st_c:'Una sola ruta',
+      surm_lbl:'A Medida', surm_ttl:'Una experiencia\na tu medida', surm_base:'Con base en',
+      surm_body:'Cada viaje es único. Cuéntanos tu proyecto — fechas, grupo, deseos — y construimos juntos tu experiencia en la Patagonia chilena.<br><br>Respondemos en 48 horas.',
+      f_name:'Nombre completo', f_email:'Email', f_country:'País', f_dates:'Fechas previstas',
+      f_exp:'Experiencia', f_exp_ph:'Elegir...', f_custom:'Viaje a medida',
+      f_msg:'Tu proyecto', f_submit:'Enviar mi solicitud', f_note:'Respuesta en 48h · Sin compromiso',
+      about_lbl:'About Us', about_ttl:'Quiénes somos',
+      about_body:'Pristine nació de una convicción simple: la Patagonia chilena merece algo mejor que el turismo masivo. Somos un equipo de guías y apasionados con base en Coyhaique, en el corazón de la región de Aysén.<br><br>Cada circuito está diseñado con cuidado — grupos pequeños, accesos exclusivos, lodges asociados, gastronomía local.',
+      v1t:'Guías Expertos', v1b:'Nativos de la región, francófonos, anglófonos e hispanohablantes.',
+      v2t:'Accesos Exclusivos', v2b:'Sitios fuera de ruta, alianzas con lodges, grupos de máx. 8 personas.',
+      v3t:'Incoming & Agencias', v3b:'Socio receptivo para agencias. Gestión completa de tus grupos.',
+      p1:'Corazón del Parque Patagonia', p2:'La Carretera Austral', p3:'Fiordos y Glaciares de Aysén', p4:'Lago General Carrera',
+      pd1:'Explora las pampas, las lagunas turquesa y los cóndores del Parque Patagonia.',
+      pd2:'La ruta más épica del mundo: 1.240 km entre volcanes, glaciares y fiordos.',
+      pd3:'Navegaciones al amanecer, kayak en aguas glaciales, glaciares milenarios.',
+      pd4:'El segundo lago más grande de Sudamérica con sus famosas cuevas de mármol.',
+      dur1:'7 días', dur2:'10 días', dur3:'12 días', dur4:'5 días',
+      pg:'Grupo pequeño', pcta:'Escribirnos',
+    },
+    pt:{
+      hint:'Explorar', back:'← Voltar',
+      q_exp:'Experiências', q_exp_sub:'04 circuitos exclusivos em Aysén',
+      q_terr:'Nosso Território', q_terr_sub:'Aysén · Patagônia chilena',
+      q_surm:'Sob Medida', q_surm_sub:'Planeje sua viagem',
+      q_about:'About Us', q_about_sub:'Quem somos',
+      q_arrow:'Descobrir →',
+      exp_lbl:'Nossas Experiências', exp_ttl:'Experiências',
+      terr_lbl:'Nosso Território', terr_ttl:'A Patagônia\ncomo em nenhum outro lugar',
+      terr_body:'A região de Aysén concentra algumas das paisagens mais preservadas do planeta — fiordes profundos, geleiras milenares, condores, pampas selvagens. Menos de 100.000 habitantes em um território do tamanho da Bélgica.<br><br>Vivemos aqui. Conhecemos cada trilha, cada río, cada lodge.',
+      st_a:'km² de wilderness', st_b:'Wilderness absoluto', st_c:'Uma só estrada',
+      surm_lbl:'Sob Medida', surm_ttl:'Uma experiência\nsob medida', surm_base:'Sediado em',
+      surm_body:'Cada viagem é única. Compartilhe seu projeto — datas, grupo, desejos — e construímos juntos sua experiência na Patagônia chilena.<br><br>Respondemos em 48 horas.',
+      f_name:'Nome completo', f_email:'Email', f_country:'País', f_dates:'Datas previstas',
+      f_exp:'Experiência', f_exp_ph:'Escolher...', f_custom:'Viagem personalizada',
+      f_msg:'Seu projeto', f_submit:'Enviar minha solicitação', f_note:'Resposta em 48h · Sem compromisso',
+      about_lbl:'About Us', about_ttl:'Quem somos',
+      about_body:'Pristine nasceu de uma convicção simples: a Patagônia chilena merece algo melhor do que o turismo de massa. Somos uma equipe de guias e apaixonados baseados em Coyhaique, no coração da região de Aysén.<br><br>Cada circuito é criado com cuidado — grupos pequenos, acessos exclusivos, lodges parceiros, gastronomia local.',
+      v1t:'Guias Especializados', v1b:'Nativos da região, francófonos, anglófonos e hispanófonos.',
+      v2t:'Acessos Exclusivos', v2b:'Locais fora de trilha, parcerias com lodges, grupos de máx. 8 pessoas.',
+      v3t:'Incoming & Agências', v3b:'Parceiro receptivo para agências. Gestão completa dos seus grupos.',
+      p1:'Coração do Parque Patagônia', p2:'A Carretera Austral', p3:'Fiordes e Glaciares de Aysén', p4:'Lago General Carrera',
+      pd1:'Explore as pampas, as lagoas turquesas e os condores do Parque Patagônia.',
+      pd2:'A rota mais épica do mundo: 1.240 km entre vulcões, geleiras e fiordes.',
+      pd3:'Navegações ao amanhecer, caiaque em águas glaciais, geleiras milenares.',
+      pd4:'O segundo maior lago da América do Sul com suas famosas cavernas de mármore.',
+      dur1:'7 dias', dur2:'10 dias', dur3:'12 dias', dur4:'5 dias',
+      pg:'Pequeno grupo', pcta:'Escrever para nós',
     }
+  };
 
-    function applyLang() {
-      document.documentElement.lang = currentLang;
-      document.querySelectorAll('[data-i18n]').forEach(el => {
-        const key = el.getAttribute('data-i18n');
-        const val = t(key);
-        if (val) el.textContent = val;
-      });
-      // Update active lang button
-      document.querySelectorAll('.lang-btn, .mobile-langs button').forEach(btn => {
-        btn.classList.toggle('active', btn.textContent.toLowerCase() === currentLang);
-      });
-      // Rebuild experience cards
-      buildExpCards();
-      // Update select options
-      updateSelectOptions();
-    }
+  let lang = localStorage.getItem('pp_lang') || 'fr';
+  function t(k){ return (T[lang]&&T[lang][k]) || T.fr[k] || k; }
+  function applyLang(){
+    document.documentElement.lang = lang;
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+      const v = t(el.getAttribute('data-i18n'));
+      if(v) el.innerHTML = v;
+    });
+    document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.textContent.toLowerCase()===lang));
+    buildExpCards();
+  }
+  function setLang(l){ lang=l; localStorage.setItem('pp_lang',l); applyLang(); }
 
-    function setLang(lang) {
-      currentLang = lang;
-      localStorage.setItem('pp_lang', lang);
-      applyLang();
-    }
+  const PROGS = [
+    {id:'parc-patagonia',    img:'assets/images/programmes/parc-patagonia.jpeg',      n:'p1', d:'pd1', dur:'dur1', loc:'Aysén · Parc Patagonia'},
+    {id:'carretera-austral', img:'assets/images/programmes/carretera-austral.jpeg',   n:'p2', d:'pd2', dur:'dur2', loc:'Coyhaique → Villa O\'Higgins'},
+    {id:'fjords-aysen',      img:'assets/images/programmes/fjords-aysen.jpeg',        n:'p3', d:'pd3', dur:'dur3', loc:'Laguna San Rafael · Fiordos'},
+    {id:'lago-carrera',      img:'assets/images/programmes/lago-general-carrera.jpeg',n:'p4', d:'pd4', dur:'dur4', loc:'Puerto Río Tranquilo'},
+  ];
 
-    function updateSelectOptions() {
-      const sel = document.querySelector('select[name="experience"]');
-      if (!sel) return;
-      const opts = sel.querySelectorAll('option[data-i18n]');
-      opts.forEach(opt => {
-        const key = opt.getAttribute('data-i18n');
-        opt.textContent = t(key);
-      });
-    }
-
-    /* ── PROGRAMMES DATA ───────────────────────────────── */
-    const PROGRAMMES = [
-      {
-        id: 'parc-patagonia',
-        image: 'assets/images/programmes/parc-patagonia.jpeg',
-        nameKey: 'prog_1_title',
-        descKey: 'prog_1_desc',
-        durKey:  'prog_dur_1',
-        label:   'Aysén · Parc Patagonia',
-      },
-      {
-        id: 'carretera-austral',
-        image: 'assets/images/programmes/carretera-austral.jpeg',
-        nameKey: 'prog_2_title',
-        descKey: 'prog_2_desc',
-        durKey:  'prog_dur_2',
-        label:   'Coyhaique → Villa O\'Higgins',
-      },
-      {
-        id: 'fjords-aysen',
-        image: 'assets/images/programmes/fjords-aysen.jpeg',
-        nameKey: 'prog_3_title',
-        descKey: 'prog_3_desc',
-        durKey:  'prog_dur_3',
-        label:   'Laguna San Rafael · Fiordos',
-      },
-      {
-        id: 'lago-carrera',
-        image: 'assets/images/programmes/lago-general-carrera.jpeg',
-        nameKey: 'prog_4_title',
-        descKey: 'prog_4_desc',
-        durKey:  'prog_dur_4',
-        label:   'Puerto Río Tranquilo · Mármoles',
-      },
-    ];
-
-    function buildExpCards() {
-      const grid = document.getElementById('exp-grid');
-      if (!grid) return;
-      grid.innerHTML = '';
-      PROGRAMMES.forEach((prog, idx) => {
-        const card = document.createElement('div');
-        card.className = 'exp-card';
-        card.innerHTML = `
-          <div class="exp-card-bg" style="background-image: url('${prog.image}')"></div>
-          <div class="exp-card-base"></div>
-          <div class="exp-cross"></div>
-          <div class="exp-card-name">${String(idx+1).padStart(2,'0')} — ${t(prog.nameKey)}</div>
-          <div class="exp-overlay">
-            <div class="exp-overlay-label">${prog.label}</div>
-            <div class="exp-overlay-title fd">${t(prog.nameKey)}</div>
-            <div class="exp-overlay-desc">${t(prog.descKey)}</div>
-            <div class="exp-overlay-meta">
-              <div class="exp-meta-item">
-                <span class="exp-meta-label">Durée</span>
-                <span class="exp-meta-value">${t(prog.durKey)}</span>
-              </div>
-              <div class="exp-meta-item">
-                <span class="exp-meta-label">Format</span>
-                <span class="exp-meta-value">${t('prog_group')}</span>
-              </div>
-            </div>
-            <button class="exp-overlay-cta" onclick="event.stopPropagation(); contactForExp('${prog.id}')">
-              ${t('prog_cta')} →
-            </button>
+  function buildExpCards(){
+    const g = document.getElementById('exp-grid'); if(!g) return; g.innerHTML='';
+    PROGS.forEach((p,i) => {
+      const c = document.createElement('div'); c.className='exp-card';
+      c.innerHTML=`<div class="exp-card-bg" style="background-image:url('${p.img}')"></div>
+        <div class="exp-card-base"></div><div class="exp-xcross"></div>
+        <div class="exp-card-name">${String(i+1).padStart(2,'0')} — ${t(p.n)}</div>
+        <div class="exp-overlay">
+          <div class="exp-ov-loc">${p.loc}</div>
+          <div class="exp-ov-name">${t(p.n)}</div>
+          <div class="exp-ov-desc">${t(p.d)}</div>
+          <div class="exp-ov-meta">
+            <div class="exp-meta-i"><span class="exp-meta-l">Durée</span><span class="exp-meta-v">${t(p.dur)}</span></div>
+            <div class="exp-meta-i"><span class="exp-meta-l">Format</span><span class="exp-meta-v">${t('pg')}</span></div>
           </div>
-        `;
-        card.addEventListener('click', () => toggleCard(card));
-        grid.appendChild(card);
+          <button class="exp-ov-cta" onclick="event.stopPropagation();contactExp('${p.id}')">${t('pcta')} →</button>
+        </div>`;
+      c.addEventListener('click', () => {
+        document.querySelectorAll('.exp-card').forEach(x => { if(x!==c) x.classList.remove('open'); });
+        c.classList.toggle('open');
       });
-    }
-
-    function toggleCard(card) {
-      const allCards = document.querySelectorAll('.exp-card');
-      allCards.forEach(c => { if (c !== card) c.classList.remove('open'); });
-      card.classList.toggle('open');
-    }
-
-    function contactForExp(id) {
-      // Pré-sélectionne l'expérience dans le formulaire puis scroll
-      const sel = document.querySelector('select[name="experience"]');
-      if (sel) sel.value = id;
-      scrollTo('#contact-section');
-    }
-
-    /* ── NAV SCROLL ─────────────────────────────────────── */
-    function handleNavScroll() {
-      const nav = document.getElementById('nav');
-      nav.classList.toggle('solid', window.scrollY > 60);
-    }
-    window.addEventListener('scroll', handleNavScroll, { passive: true });
-
-    function scrollTo(selector) {
-      const el = document.querySelector(selector);
-      if (el) {
-        const offset = el.getBoundingClientRect().top + window.scrollY - 72;
-        window.scrollTo({ top: offset, behavior: 'smooth' });
-      }
-    }
-
-    function scrollToTop() {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-
-    /* ── MOBILE NAV ─────────────────────────────────────── */
-    function openMobileNav() {
-      document.getElementById('nav-mobile').classList.add('open');
-      document.body.style.overflow = 'hidden';
-    }
-    function closeMobileNav() {
-      document.getElementById('nav-mobile').classList.remove('open');
-      document.body.style.overflow = '';
-    }
-
-    /* ── HERO BG ANIMATION ──────────────────────────────── */
-    window.addEventListener('load', () => {
-      document.getElementById('hero-bg').classList.add('loaded');
+      g.appendChild(c);
     });
+  }
 
-    /* ── INTERSECTION OBSERVER — fade in ────────────────── */
-    const observerOptions = { threshold: 0.12, rootMargin: '0px 0px -48px 0px' };
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.style.opacity = '1';
-          entry.target.style.transform = 'translateY(0)';
-          observer.unobserve(entry.target);
-        }
-      });
-    }, observerOptions);
+  function contactExp(id){
+    const s = document.querySelector('select[name="experience"]');
+    if(s) s.value = id;
+    openPanel('surlesure');
+  }
 
-    function initObserver() {
-      document.querySelectorAll('.territoire-text, .territoire-photo, .exp-header, .contact-left, .contact-right, .pampa-content').forEach(el => {
-        el.style.opacity = '0';
-        el.style.transform = 'translateY(32px)';
-        el.style.transition = 'opacity 0.9s ease, transform 0.9s ease';
-        observer.observe(el);
+  /* ── QUADRANTS ── */
+  let quadOpen = false;
+  function toggleQuadrants(){
+    quadOpen = !quadOpen;
+    document.getElementById('cross-btn').classList.toggle('open', quadOpen);
+    document.getElementById('quadrants').classList.toggle('open', quadOpen);
+    document.getElementById('cross-hint').classList.toggle('hidden', quadOpen);
+  }
+
+  /* ── PANELS ── */
+  let currentPanel = null;
+  function openPanel(id){
+    if(quadOpen) toggleQuadrants();
+    if(currentPanel) document.getElementById('panel-'+currentPanel).classList.remove('active');
+    currentPanel = id;
+    document.getElementById('panel-'+id).classList.add('active');
+    document.getElementById('panel-back').classList.add('visible');
+    document.getElementById('cross-btn').style.display = 'none';
+    document.getElementById('cross-hint').style.display = 'none';
+  }
+
+  function closePanel(e){
+    if(e) e.preventDefault();
+    if(currentPanel){
+      document.getElementById('panel-'+currentPanel).classList.remove('active');
+      currentPanel = null;
+    }
+    document.getElementById('panel-back').classList.remove('visible');
+    document.getElementById('cross-btn').style.display = '';
+    document.getElementById('cross-hint').style.display = '';
+  }
+
+  /* ── FORM ── */
+  document.addEventListener('DOMContentLoaded', () => {
+    applyLang();
+    const form = document.getElementById('contact-form');
+    if(form){
+      form.addEventListener('submit', async e => {
+        e.preventDefault();
+        const btn = form.querySelector('.form-submit'), orig = btn.textContent;
+        btn.textContent='...'; btn.disabled=true;
+        try{
+          const res = await fetch(form.action,{method:'POST',body:new FormData(form),headers:{'Accept':'application/json'}});
+          btn.textContent = res.ok ? '✓ Envoyé' : 'Erreur — réessayer';
+          if(res.ok) form.reset(); else btn.disabled=false;
+        }catch{ btn.textContent='Erreur — réessayer'; btn.disabled=false; }
+        setTimeout(()=>{ btn.textContent=orig; btn.disabled=false; },4000);
       });
     }
-
-    /* ── FORMSPREE ──────────────────────────────────────── */
-    document.addEventListener('DOMContentLoaded', () => {
-      const form = document.getElementById('contact-form');
-      if (form) {
-        form.addEventListener('submit', async (e) => {
-          e.preventDefault();
-          const btn = form.querySelector('.form-submit');
-          const orig = btn.textContent;
-          btn.textContent = '...';
-          btn.disabled = true;
-          try {
-            const res = await fetch(form.action, {
-              method: 'POST',
-              body: new FormData(form),
-              headers: { 'Accept': 'application/json' }
-            });
-            if (res.ok) {
-              btn.textContent = '✓ Envoyé';
-              form.reset();
-            } else {
-              btn.textContent = 'Erreur — réessayer';
-              btn.disabled = false;
-            }
-          } catch {
-            btn.textContent = 'Erreur — réessayer';
-            btn.disabled = false;
-          }
-          setTimeout(() => { btn.textContent = orig; }, 4000);
-        });
-      }
-
-      applyLang();
-      initObserver();
-    });
+  });
   </script>
 </body>
 </html>
