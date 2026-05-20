@@ -226,6 +226,9 @@ textarea.form-control{resize:vertical;min-height:80px}
         <button class="nav-item" onclick="showPage('parametres')" id="nav-parametres">
           <span class="nav-icon">⚙️</span> Paramètres
         </button>
+        <button class="nav-item" onclick="showPage('categories')" id="nav-categories">
+          <span class="nav-icon">🏷️</span> Catégories site
+        </button>
         <button class="nav-item" onclick="showPage('medias')" id="nav-medias">
           <span class="nav-icon">🖼️</span> Médias du site
         </button>
@@ -315,12 +318,11 @@ textarea.form-control{resize:vertical;min-height:80px}
               <div class="form-group">
                 <label class="form-label">Catégorie</label>
                 <select class="form-control" id="pp-cat">
-                  <option>Parc Patagonia</option>
-                  <option>Fjords & Glaciers</option>
-                  <option>Carretera Austral</option>
-                  <option>Lac General Carrera</option>
-                  <option>Sur mesure</option>
-                  <option>Incoming / Agence</option>
+                  <option value="general">Général</option>
+                  <option value="culturel">Culturel</option>
+                  <option value="sports">Sports</option>
+                  <option value="hiver">Hiver</option>
+                  <option value="gastronomie">Gastronomie</option>
                 </select>
               </div>
               <div class="form-group">
@@ -476,6 +478,12 @@ textarea.form-control{resize:vertical;min-height:80px}
           <div class="card">
             <div class="card-title"><div class="card-title-left">Description courte</div></div>
             <div class="form-grid">
+              <div class="form-group span4" style="border-top:1px solid var(--border);padding-top:16px;margin-bottom:4px"><label class="form-label" style="font-weight:600;color:var(--primary)">Titres (affiché sur le site public)</label></div>
+              <div class="form-group span2"><label class="form-label">Titre FR</label><input class="form-control" id="pc-tf" placeholder="Ex: Cœur du Parc Patagonia" /></div>
+              <div class="form-group span2"><label class="form-label">Titre EN</label><input class="form-control" id="pc-te" placeholder="Ex: Heart of Patagonia Park" /></div>
+              <div class="form-group span2"><label class="form-label">Título ES</label><input class="form-control" id="pc-ts" placeholder="Ex: Corazón del Parque Patagonia" /></div>
+              <div class="form-group span2"><label class="form-label">Título PT</label><input class="form-control" id="pc-tp" placeholder="Ex: Coração do Parque Patagônia" /></div>
+              <div class="form-group span4" style="border-top:1px solid var(--border);padding-top:16px;margin-bottom:4px"><label class="form-label" style="font-weight:600;color:var(--primary)">Descriptions courtes</label></div>
               <div class="form-group span2"><label class="form-label">Français</label><textarea class="form-control" id="pc-df" placeholder="Description courte FR (150 car. max)"></textarea></div>
               <div class="form-group span2"><label class="form-label">English</label><textarea class="form-control" id="pc-de" placeholder="Short description EN"></textarea></div>
               <div class="form-group span2"><label class="form-label">Español</label><textarea class="form-control" id="pc-des" placeholder="Descripción corta ES"></textarea></div>
@@ -674,6 +682,50 @@ textarea.form-control{resize:vertical;min-height:80px}
   </div>
 </div>
 
+<!-- PAGE: CATÉGORIES -->
+<div class="page" id="page-categories" style="display:none">
+  <div class="page-title">Catégories du site</div>
+  <div class="page-sub">Gérer les filtres affichés dans la section Expériences du site public</div>
+
+  <div class="card">
+    <div class="card-title">
+      <div class="card-title-left">Catégories actives</div>
+    </div>
+    <div id="cat-list" style="min-height:60px">
+      <div style="color:var(--muted);font-size:13px;padding:1rem 0">Chargement...</div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:1.5rem">
+    <div class="card-title"><div class="card-title-left">Ajouter une catégorie</div></div>
+    <div class="form-grid" style="grid-template-columns:1fr 1fr 1fr 1fr auto;gap:12px;align-items:end">
+      <div class="form-group" style="margin:0">
+        <label class="form-label">Slug <span style="color:var(--muted);font-weight:400">(identifiant unique, minuscules)</span></label>
+        <input class="form-control" id="cat-slug" placeholder="ex: famille" />
+      </div>
+      <div class="form-group" style="margin:0">
+        <label class="form-label">Français</label>
+        <input class="form-control" id="cat-fr" placeholder="Famille" />
+      </div>
+      <div class="form-group" style="margin:0">
+        <label class="form-label">English</label>
+        <input class="form-control" id="cat-en" placeholder="Family" />
+      </div>
+      <div class="form-group" style="margin:0">
+        <label class="form-label">Español</label>
+        <input class="form-control" id="cat-es" placeholder="Familia" />
+      </div>
+      <div class="form-group" style="margin:0">
+        <label class="form-label">Português</label>
+        <input class="form-control" id="cat-pt" placeholder="Família" />
+      </div>
+    </div>
+    <div style="margin-top:1rem">
+      <button class="btn btn-primary" onclick="addCategory()">+ Ajouter</button>
+    </div>
+  </div>
+</div>
+
 <div class="notif" id="notif"></div>
 
 <script>
@@ -742,6 +794,7 @@ async function initApp(){
   await loadProgrammes();
   await loadPrestataires();
   await loadMedias();
+  await loadCategories();
 }
 
 // ── NAVIGATION ───────────────────────────────────────────
@@ -751,6 +804,7 @@ function showPage(p){
   document.getElementById('page-' + p).classList.add('active');
   const navEl = document.getElementById('nav-' + p);
   if(navEl) navEl.classList.add('active');
+  if(p === 'categories') loadCategories();
 }
 
 // ── DASHBOARD ────────────────────────────────────────────
@@ -870,7 +924,7 @@ async function editProg(id){
   clearPricingForm();
   if(prog){
     document.getElementById('pp-nom').value    = prog.nom || '';
-    document.getElementById('pp-cat').value    = prog.categorie || 'Parc Patagonia';
+    document.getElementById('pp-cat').value    = prog.categorie || 'general';
     document.getElementById('pp-jours').value  = prog.duree_jours || 7;
     document.getElementById('pp-pax').value    = prog.pax_min || 4;
     document.getElementById('pp-marche').value = prog.marche || 'Français';
@@ -883,6 +937,10 @@ async function editProg(id){
     document.getElementById('pp-brl').value    = window._params?.taux_brl || 180;
     document.getElementById('pp-tocomm').value = prog.commission_to || 15;
     // Content
+    document.getElementById('pc-tf').value  = prog.titre_fr || '';
+    document.getElementById('pc-te').value  = prog.titre_en || '';
+    document.getElementById('pc-ts').value  = prog.titre_es || '';
+    document.getElementById('pc-tp').value  = prog.titre_pt || '';
     document.getElementById('pc-df').value  = prog.desc_fr || '';
     document.getElementById('pc-de').value  = prog.desc_en || '';
     document.getElementById('pc-des').value = prog.desc_es || '';
@@ -957,6 +1015,10 @@ async function saveCurrentProg(publish){
     prix_usd: Math.round(pricePP / usdR),
     prix_eur: Math.round(pricePP / eurR),
     prix_brl: Math.round(pricePP / brlR),
+    titre_fr: document.getElementById('pc-tf').value,
+    titre_en: document.getElementById('pc-te').value,
+    titre_es: document.getElementById('pc-ts').value,
+    titre_pt: document.getElementById('pc-tp').value,
     desc_fr: document.getElementById('pc-df').value,
     desc_en: document.getElementById('pc-de').value,
     desc_es: document.getElementById('pc-des').value,
@@ -1025,7 +1087,7 @@ async function deleteProg(id){
 
 function clearPricingForm(){
   ['pp-nom','pp-usd','pp-eur','pp-brl','pp-marge','pp-ccfee','pp-tocomm',
-   'pc-df','pc-de','pc-des','pc-dp','pc-ff','pc-fe','pc-fes','pc-fp','pc-img',
+   'pc-tf','pc-te','pc-ts','pc-tp','pc-df','pc-de','pc-des','pc-dp','pc-ff','pc-fe','pc-fes','pc-fp','pc-img',
    'pf-g1','pf-g2','pf-gl','pf-gt','pf-v1','pf-fuel','pf-v2','pf-fly',
    'pf-ins','pf-eq','pf-misc','pf-x1','pf-x1l','pf-x2','pf-x2l'].forEach(id => {
     const el = document.getElementById(id);
@@ -1443,6 +1505,84 @@ function notify(msg){
   el.textContent = msg; el.classList.add('show');
   setTimeout(()=>el.classList.remove('show'), 2500);
 }
+// ── CATÉGORIES ────────────────────────────────────────────
+let _categories = [];
+
+async function loadCategories() {
+  const { data, error } = await sb.from('pp_categories').select('*').order('ordre', { ascending: true });
+  if (error) { console.error(error); return; }
+  _categories = data || [];
+  renderCategories();
+  updateCatSelect();
+}
+
+function renderCategories() {
+  const list = document.getElementById('cat-list');
+  if (!list) return;
+  if (!_categories.length) {
+    list.innerHTML = '<div style="color:var(--muted);font-size:13px;padding:1rem 0">Aucune catégorie — ajoutez-en une ci-dessous.</div>';
+    return;
+  }
+  list.innerHTML = `<table class="table" style="margin:0">
+    <thead><tr><th>Slug</th><th>FR</th><th>EN</th><th>ES</th><th>PT</th><th>Ordre</th><th></th></tr></thead>
+    <tbody>${_categories.map(c => `
+      <tr>
+        <td><code style="font-size:12px;background:#F1F5F9;padding:2px 6px;border-radius:4px">${c.slug}</code></td>
+        <td>${c.label_fr||''}</td>
+        <td style="color:var(--muted)">${c.label_en||''}</td>
+        <td style="color:var(--muted)">${c.label_es||''}</td>
+        <td style="color:var(--muted)">${c.label_pt||''}</td>
+        <td><input type="number" value="${c.ordre}" min="0"
+          style="width:56px;padding:4px 6px;border:1px solid var(--border);border-radius:4px;font-size:12px"
+          onchange="updateCatOrdre('${c.id}', this.value)" /></td>
+        <td><button class="btn btn-outline btn-sm" style="color:#e53e3e;border-color:#e53e3e"
+          onclick="deleteCategory('${c.id}','${c.slug}','${c.label_fr}')">Supprimer</button></td>
+      </tr>`).join('')}
+    </tbody></table>`;
+}
+
+function updateCatSelect() {
+  const sel = document.getElementById('pp-cat');
+  if (!sel) return;
+  const current = sel.value;
+  sel.innerHTML = '<option value="general">Général</option>' +
+    _categories.map(c => `<option value="${c.slug}">${c.label_fr}</option>`).join('');
+  if (current) sel.value = current;
+}
+
+async function addCategory() {
+  const slug = document.getElementById('cat-slug').value.trim().toLowerCase().replace(/[^a-z0-9-]/g,'');
+  const fr   = document.getElementById('cat-fr').value.trim();
+  const en   = document.getElementById('cat-en').value.trim();
+  const es   = document.getElementById('cat-es').value.trim();
+  const pt   = document.getElementById('cat-pt').value.trim();
+  if (!slug || !fr) { alert('Slug et label FR obligatoires'); return; }
+  if (_categories.find(c => c.slug === slug)) { alert('Ce slug existe déjà'); return; }
+  const ordre = _categories.length ? Math.max(..._categories.map(c => c.ordre)) + 1 : 1;
+  const { error } = await sb.from('pp_categories').insert({ slug, label_fr:fr, label_en:en, label_es:es, label_pt:pt, ordre });
+  if (error) { alert('Erreur: ' + error.message); return; }
+  ['cat-slug','cat-fr','cat-en','cat-es','cat-pt'].forEach(id => { document.getElementById(id).value = ''; });
+  await loadCategories();
+  showToast('Catégorie ajoutée');
+}
+
+async function deleteCategory(id, slug, label) {
+  const { data: progs } = await sb.from('pp_programmes').select('id').eq('categorie', slug).eq('publie', true);
+  const msg = progs && progs.length
+    ? progs.length + ' programme(s) utilisent "' + label + '". Supprimer quand même ?'
+    : 'Supprimer la catégorie "' + label + '" ?';
+  if (!confirm(msg)) return;
+  const { error } = await sb.from('pp_categories').delete().eq('id', id);
+  if (error) { alert('Erreur: ' + error.message); return; }
+  await loadCategories();
+  showToast('Catégorie supprimée');
+}
+
+async function updateCatOrdre(id, ordre) {
+  await sb.from('pp_categories').update({ ordre: parseInt(ordre) }).eq('id', id);
+  await loadCategories();
+}
+
 </script>
 </body>
 </html>

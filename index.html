@@ -9,6 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@200;300;400;500&family=Dancing+Script:wght@400;600&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
@@ -164,7 +165,13 @@
 
     /* ── PANEL: EXPÉRIENCES ── */
     #panel-experiences { background:var(--dark); }
-    .exp-header { padding:64px 60px 40px; border-bottom:1px solid rgba(255,255,255,.06); }
+    .exp-header { padding:64px 60px 28px; }
+    .exp-filters { display:flex; align-items:center; gap:0; padding:0 60px; border-bottom:1px solid rgba(255,255,255,.06); }
+    .exp-filter { font-size:10px; font-weight:400; letter-spacing:.2em; text-transform:uppercase; color:rgba(255,255,255,.35); cursor:pointer; padding:14px 20px; border-bottom:2px solid transparent; margin-bottom:-1px; transition:color .2s,border-color .2s; background:none; border-top:none; border-left:none; border-right:none; font-family:var(--fb); }
+    .exp-filter:hover { color:rgba(255,255,255,.7); }
+    .exp-filter.active { color:var(--white); border-bottom-color:var(--white); }
+    .exp-empty { padding:80px 60px; text-align:center; font-size:13px; font-weight:300; color:rgba(255,255,255,.3); }
+    .exp-loading { padding:80px 60px; text-align:center; font-size:11px; font-weight:300; color:rgba(255,255,255,.25); letter-spacing:.25em; text-transform:uppercase; }
     .sec-label { font-size:9px; font-weight:400; letter-spacing:.35em; text-transform:uppercase; color:var(--sky-lt); display:flex; align-items:center; gap:14px; margin-bottom:14px; }
     .sec-label::before { content:''; display:block; width:22px; height:1px; background:var(--sky-lt); }
     .sec-title { font-family:'ReklameScript',var(--fd); font-size:clamp(36px,5vw,62px); color:var(--white); line-height:1.05; }
@@ -323,7 +330,12 @@
       <div class="sec-label" data-i18n="exp_lbl">Nos Expériences</div>
       <h2 class="sec-title" data-i18n="exp_ttl">Expériences</h2>
     </div>
-    <div class="exp-grid" id="exp-grid"></div>
+    <div class="exp-filters" id="exp-filters">
+      <!-- Généré dynamiquement depuis pp_categories -->
+    </div>
+    <div id="exp-grid" class="exp-grid"></div>
+    <div id="exp-loading" class="exp-loading">Chargement...</div>
+    <div id="exp-empty" class="exp-empty" style="display:none" data-i18n="exp_empty">Aucune expérience dans cette catégorie pour le moment.</div>
   </div>
 
   <!-- PANEL: TERRITOIRE -->
@@ -397,10 +409,10 @@
 
   <script>
   const T={
-    fr:{hint:'Explorer',q_exp:'Expériences',q_exp_sub:'04 circuits exclusifs',q_terr:'Notre Territoire',q_terr_sub:'Aysén · Patagonie chilienne',q_surm:'Sur Mesure',q_surm_sub:'Planifiez votre voyage',q_about:'À Propos',q_about_sub:'Qui sommes-nous',exp_lbl:'Nos Expériences',exp_ttl:'Expériences',terr_lbl:'Notre Territoire',terr_ttl:'La Patagonie<br>comme nulle part ailleurs',terr_body:'La région d\'Aysén concentre certains des paysages les plus préservés de la planète — fjords profonds, glaciers millénaires, condors, pampas sauvages. Moins de 100 000 habitants pour un territoire grand comme la Belgique.<br><br>Nous vivons ici. Nous connaissons chaque sentier, chaque río, chaque lodge.',st_a:'km² de wilderness',st_b:'Wilderness absolu',st_c:'Une seule route',surm_lbl:'Sur Mesure',surm_ttl:'Une expérience<br>sur mesure',surm_base:'Basé à',surm_body:'Chaque voyage est unique. Partagez-nous votre projet — dates, groupe, envies — et nous construisons ensemble votre séjour en Patagonie chilienne.<br><br>Nous répondons dans les 48 heures.',f_name:'Nom complet',f_email:'Email',f_country:'Pays',f_dates:'Dates envisagées',f_exp:'Expérience',f_exp_ph:'Choisir...',f_custom:'Voyage sur mesure',f_msg:'Votre projet',f_submit:'Envoyer ma demande',f_note:'Réponse garantie sous 48h · Aucun engagement',about_lbl:'About Us',about_ttl:'Qui sommes-nous',about_body:'Pristine est né d\'une conviction simple : la Patagonie chilienne mérite mieux que le tourisme de masse. Nous sommes une équipe de guides et de passionnés basés à Coyhaique, au cœur de la région d\'Aysén.<br><br>Chaque circuit est conçu avec soin — petits groupes, accès exclusifs, lodges partenaires, cuisine locale.',v1t:'Guides Experts',v1b:'Natifs de la région, francophones, anglophones et hispanophones.',v2t:'Accès Exclusifs',v2b:'Sites hors sentiers, partenariats lodges, groupes de 8 personnes max.',v3t:'Incoming & Agences',v3b:'Partenaire réceptif pour agences. Prise en charge complète de vos groupes.',p1:'Cœur du Parc Patagonia',p2:'La Carretera Austral',p3:'Fjords & Glaciers d\'Aysén',p4:'Lago General Carrera',pd1:'Explorez les pampas, les lagunes turquoise et les condors du Parc Patagonia.',pd2:'La route la plus épique du monde : 1 240 km entre volcans, glaciers et fjords.',pd3:'Navigations à l\'aube, kayak en eaux glacées, glaciers millénaires.',pd4:'Le deuxième plus grand lac d\'Amérique du Sud et ses marbres sculptés par les vagues.',dur1:'7 jours',dur2:'10 jours',dur3:'12 jours',dur4:'5 jours',pg:'Petit groupe',pcta:'Nous écrire'},
-    en:{hint:'Explore',q_exp:'Experiences',q_exp_sub:'04 exclusive circuits',q_terr:'Our Territory',q_terr_sub:'Aysén · Chilean Patagonia',q_surm:'Bespoke',q_surm_sub:'Plan your journey',q_about:'About Us',q_about_sub:'Who we are',exp_lbl:'Our Experiences',exp_ttl:'Experiences',terr_lbl:'Our Territory',terr_ttl:'Patagonia<br>like nowhere else',terr_body:'The Aysén region holds some of the most pristine landscapes on Earth — deep fjords, ancient glaciers, condors, wild pampas. Fewer than 100,000 inhabitants in a territory the size of Belgium.<br><br>We live here. We know every trail, every río, every lodge.',st_a:'km² of wilderness',st_b:'Absolute wilderness',st_c:'One road',surm_lbl:'Bespoke',surm_ttl:'A bespoke<br>experience awaits',surm_base:'Based in',surm_body:'Every journey is unique. Share your project — dates, group size, desires — and we\'ll design your Patagonian adventure together.<br><br>We respond within 48 hours.',f_name:'Full Name',f_email:'Email',f_country:'Country',f_dates:'Planned dates',f_exp:'Experience',f_exp_ph:'Choose...',f_custom:'Custom journey',f_msg:'Your project',f_submit:'Send my request',f_note:'Response within 48h · No commitment',about_lbl:'About Us',about_ttl:'Who we are',about_body:'Pristine was born from a simple conviction: Chilean Patagonia deserves better than mass tourism. We are a team of guides and enthusiasts based in Coyhaique, in the heart of the Aysén region.<br><br>Every circuit is crafted with care — small groups, exclusive access, partner lodges, local cuisine.',v1t:'Expert Guides',v1b:'Region natives, fluent in French, English and Spanish.',v2t:'Exclusive Access',v2b:'Off-trail sites, lodge partnerships, max 8 people per group.',v3t:'Incoming & Agencies',v3b:'Receptive partner for agencies. Full management of your groups.',p1:'Heart of Patagonia Park',p2:'The Carretera Austral',p3:'Fjords & Glaciers of Aysén',p4:'Lake General Carrera',pd1:'Explore the pampas, turquoise lagoons and condors of Patagonia Park.',pd2:'The world\'s most epic road: 1,240 km through volcanoes, glaciers and fjords.',pd3:'Dawn navigations, kayaking in glacial waters, ancient glaciers.',pd4:'South America\'s second largest lake with its famous marble caves.',dur1:'7 days',dur2:'10 days',dur3:'12 days',dur4:'5 days',pg:'Small group',pcta:'Write to us'},
-    es:{hint:'Explorar',q_exp:'Experiencias',q_exp_sub:'04 circuitos exclusivos',q_terr:'Nuestro Territorio',q_terr_sub:'Aysén · Patagonia chilena',q_surm:'A Medida',q_surm_sub:'Planifica tu viaje',q_about:'About Us',q_about_sub:'Quiénes somos',exp_lbl:'Nuestras Experiencias',exp_ttl:'Experiencias',terr_lbl:'Nuestro Territorio',terr_ttl:'La Patagonia<br>como en ningún otro lugar',terr_body:'La región de Aysén concentra algunos de los paisajes más preservados del planeta — fiordos profundos, glaciares milenarios, cóndores, pampas salvajes. Menos de 100.000 habitantes en un territorio tan grande como Bélgica.<br><br>Vivimos aquí. Conocemos cada sendero, cada río, cada lodge.',st_a:'km² de wilderness',st_b:'Wilderness absoluto',st_c:'Una sola ruta',surm_lbl:'A Medida',surm_ttl:'Una experiencia<br>a tu medida',surm_base:'Con base en',surm_body:'Cada viaje es único. Cuéntanos tu proyecto — fechas, grupo, deseos — y construimos juntos tu experiencia en la Patagonia chilena.<br><br>Respondemos en 48 horas.',f_name:'Nombre completo',f_email:'Email',f_country:'País',f_dates:'Fechas previstas',f_exp:'Experiencia',f_exp_ph:'Elegir...',f_custom:'Viaje a medida',f_msg:'Tu proyecto',f_submit:'Enviar mi solicitud',f_note:'Respuesta en 48h · Sin compromiso',about_lbl:'About Us',about_ttl:'Quiénes somos',about_body:'Pristine nació de una convicción simple: la Patagonia chilena merece algo mejor que el turismo masivo. Somos un equipo de guías y apasionados con base en Coyhaique, en el corazón de la región de Aysén.<br><br>Cada circuito está diseñado con cuidado — grupos pequeños, accesos exclusivos, lodges asociados, gastronomía local.',v1t:'Guías Expertos',v1b:'Nativos de la región, francófonos, anglófonos e hispanohablantes.',v2t:'Accesos Exclusivos',v2b:'Sitios fuera de ruta, alianzas con lodges, grupos de máx. 8 personas.',v3t:'Incoming & Agencias',v3b:'Socio receptivo para agencias. Gestión completa de tus grupos.',p1:'Corazón del Parque Patagonia',p2:'La Carretera Austral',p3:'Fiordos y Glaciares de Aysén',p4:'Lago General Carrera',pd1:'Explora las pampas, las lagunas turquesa y los cóndores del Parque Patagonia.',pd2:'La ruta más épica del mundo: 1.240 km entre volcanes, glaciares y fiordos.',pd3:'Navegaciones al amanecer, kayak en aguas glaciales, glaciares milenarios.',pd4:'El segundo lago más grande de Sudamérica con sus famosas cuevas de mármol.',dur1:'7 días',dur2:'10 días',dur3:'12 días',dur4:'5 días',pg:'Grupo pequeño',pcta:'Escribirnos'},
-    pt:{hint:'Explorar',q_exp:'Experiências',q_exp_sub:'04 circuitos exclusivos',q_terr:'Nosso Território',q_terr_sub:'Aysén · Patagônia chilena',q_surm:'Sob Medida',q_surm_sub:'Planeje sua viagem',q_about:'About Us',q_about_sub:'Quem somos',exp_lbl:'Nossas Experiências',exp_ttl:'Experiências',terr_lbl:'Nosso Território',terr_ttl:'A Patagônia<br>como em nenhum outro lugar',terr_body:'A região de Aysén concentra algumas das paisagens mais preservadas do planeta — fiordes profundos, geleiras milenares, condores, pampas selvagens. Menos de 100.000 habitantes em um território do tamanho da Bélgica.<br><br>Vivemos aqui. Conhecemos cada trilha, cada río, cada lodge.',st_a:'km² de wilderness',st_b:'Wilderness absoluto',st_c:'Uma só estrada',surm_lbl:'Sob Medida',surm_ttl:'Uma experiência<br>sob medida',surm_base:'Sediado em',surm_body:'Cada viagem é única. Compartilhe seu projeto — datas, grupo, desejos — e construímos juntos sua experiência na Patagônia chilena.<br><br>Respondemos em 48 horas.',f_name:'Nome completo',f_email:'Email',f_country:'País',f_dates:'Datas previstas',f_exp:'Experiência',f_exp_ph:'Escolher...',f_custom:'Viagem personalizada',f_msg:'Seu projeto',f_submit:'Enviar minha solicitação',f_note:'Resposta em 48h · Sem compromisso',about_lbl:'About Us',about_ttl:'Quem somos',about_body:'Pristine nasceu de uma convicção simples: a Patagônia chilena merece algo melhor do que o turismo de massa. Somos uma equipe de guias e apaixonados baseados em Coyhaique, no coração da região de Aysén.<br><br>Cada circuito é criado com cuidado — grupos pequenos, acessos exclusivos, lodges parceiros, gastronomia local.',v1t:'Guias Especializados',v1b:'Nativos da região, francófonos, anglófonos e hispanófonos.',v2t:'Acessos Exclusivos',v2b:'Locais fora de trilha, parcerias com lodges, grupos de máx. 8 pessoas.',v3t:'Incoming & Agências',v3b:'Parceiro receptivo para agências. Gestão completa dos seus grupos.',p1:'Coração do Parque Patagônia',p2:'A Carretera Austral',p3:'Fiordes e Glaciares de Aysén',p4:'Lago General Carrera',pd1:'Explore as pampas, as lagoas turquesas e os condores do Parque Patagônia.',pd2:'A rota mais épica do mundo: 1.240 km entre vulcões, geleiras e fiordes.',pd3:'Navegações ao amanhecer, caiaque em águas glaciais, geleiras milenares.',pd4:'O segundo maior lago da América do Sul com suas famosas cavernas de mármore.',dur1:'7 dias',dur2:'10 dias',dur3:'12 dias',dur4:'5 dias',pg:'Pequeno grupo',pcta:'Escrever para nós'}
+    fr:{hint:'Explorer',q_exp:'Expériences',q_exp_sub:'04 circuits exclusifs',q_terr:'Notre Territoire',q_terr_sub:'Aysén · Patagonie chilienne',q_surm:'Sur Mesure',q_surm_sub:'Planifiez votre voyage',q_about:'À Propos',q_about_sub:'Qui sommes-nous',exp_lbl:'Nos Expériences',exp_ttl:'Expériences',terr_lbl:'Notre Territoire',terr_ttl:'La Patagonie<br>comme nulle part ailleurs',terr_body:'La région d\'Aysén concentre certains des paysages les plus préservés de la planète — fjords profonds, glaciers millénaires, condors, pampas sauvages. Moins de 100 000 habitants pour un territoire grand comme la Belgique.<br><br>Nous vivons ici. Nous connaissons chaque sentier, chaque río, chaque lodge.',st_a:'km² de wilderness',st_b:'Wilderness absolu',st_c:'Une seule route',surm_lbl:'Sur Mesure',surm_ttl:'Une expérience<br>sur mesure',surm_base:'Basé à',surm_body:'Chaque voyage est unique. Partagez-nous votre projet — dates, groupe, envies — et nous construisons ensemble votre séjour en Patagonie chilienne.<br><br>Nous répondons dans les 48 heures.',f_name:'Nom complet',f_email:'Email',f_country:'Pays',f_dates:'Dates envisagées',f_exp:'Expérience',f_exp_ph:'Choisir...',f_custom:'Voyage sur mesure',f_msg:'Votre projet',f_submit:'Envoyer ma demande',f_note:'Réponse garantie sous 48h · Aucun engagement',about_lbl:'About Us',about_ttl:'Qui sommes-nous',about_body:'Pristine est né d\'une conviction simple : la Patagonie chilienne mérite mieux que le tourisme de masse. Nous sommes une équipe de guides et de passionnés basés à Coyhaique, au cœur de la région d\'Aysén.<br><br>Chaque circuit est conçu avec soin — petits groupes, accès exclusifs, lodges partenaires, cuisine locale.',v1t:'Guides Experts',v1b:'Natifs de la région, francophones, anglophones et hispanophones.',v2t:'Accès Exclusifs',v2b:'Sites hors sentiers, partenariats lodges, groupes de 8 personnes max.',v3t:'Incoming & Agences',v3b:'Partenaire réceptif pour agences. Prise en charge complète de vos groupes.',p1:'Cœur du Parc Patagonia',p2:'La Carretera Austral',p3:'Fjords & Glaciers d\'Aysén',p4:'Lago General Carrera',pd1:'Explorez les pampas, les lagunes turquoise et les condors du Parc Patagonia.',pd2:'La route la plus épique du monde : 1 240 km entre volcans, glaciers et fjords.',pd3:'Navigations à l\'aube, kayak en eaux glacées, glaciers millénaires.',pd4:'Le deuxième plus grand lac d\'Amérique du Sud et ses marbres sculptés par les vagues.',dur1:'7 jours',dur2:'10 jours',dur3:'12 jours',dur4:'5 jours',cat_tous:'Tous',cat_culturel:'Culturel',cat_sports:'Sports',cat_hiver:'Hiver',cat_gastro:'Gastronomie',exp_empty:'Aucune expérience dans cette catégorie.',pg:'Petit groupe',pcta:'Nous écrire'},
+    en:{hint:'Explore',q_exp:'Experiences',q_exp_sub:'04 exclusive circuits',q_terr:'Our Territory',q_terr_sub:'Aysén · Chilean Patagonia',q_surm:'Bespoke',q_surm_sub:'Plan your journey',q_about:'About Us',q_about_sub:'Who we are',exp_lbl:'Our Experiences',exp_ttl:'Experiences',terr_lbl:'Our Territory',terr_ttl:'Patagonia<br>like nowhere else',terr_body:'The Aysén region holds some of the most pristine landscapes on Earth — deep fjords, ancient glaciers, condors, wild pampas. Fewer than 100,000 inhabitants in a territory the size of Belgium.<br><br>We live here. We know every trail, every río, every lodge.',st_a:'km² of wilderness',st_b:'Absolute wilderness',st_c:'One road',surm_lbl:'Bespoke',surm_ttl:'A bespoke<br>experience awaits',surm_base:'Based in',surm_body:'Every journey is unique. Share your project — dates, group size, desires — and we\'ll design your Patagonian adventure together.<br><br>We respond within 48 hours.',f_name:'Full Name',f_email:'Email',f_country:'Country',f_dates:'Planned dates',f_exp:'Experience',f_exp_ph:'Choose...',f_custom:'Custom journey',f_msg:'Your project',f_submit:'Send my request',f_note:'Response within 48h · No commitment',about_lbl:'About Us',about_ttl:'Who we are',about_body:'Pristine was born from a simple conviction: Chilean Patagonia deserves better than mass tourism. We are a team of guides and enthusiasts based in Coyhaique, in the heart of the Aysén region.<br><br>Every circuit is crafted with care — small groups, exclusive access, partner lodges, local cuisine.',v1t:'Expert Guides',v1b:'Region natives, fluent in French, English and Spanish.',v2t:'Exclusive Access',v2b:'Off-trail sites, lodge partnerships, max 8 people per group.',v3t:'Incoming & Agencies',v3b:'Receptive partner for agencies. Full management of your groups.',p1:'Heart of Patagonia Park',p2:'The Carretera Austral',p3:'Fjords & Glaciers of Aysén',p4:'Lake General Carrera',pd1:'Explore the pampas, turquoise lagoons and condors of Patagonia Park.',pd2:'The world\'s most epic road: 1,240 km through volcanoes, glaciers and fjords.',pd3:'Dawn navigations, kayaking in glacial waters, ancient glaciers.',pd4:'South America\'s second largest lake with its famous marble caves.',dur1:'7 days',dur2:'10 days',dur3:'12 days',dur4:'5 days',cat_tous:'All',cat_culturel:'Cultural',cat_sports:'Sports',cat_hiver:'Winter',cat_gastro:'Gastronomy',exp_empty:'No experiences in this category yet.',pg:'Small group',pcta:'Write to us'},
+    es:{hint:'Explorar',q_exp:'Experiencias',q_exp_sub:'04 circuitos exclusivos',q_terr:'Nuestro Territorio',q_terr_sub:'Aysén · Patagonia chilena',q_surm:'A Medida',q_surm_sub:'Planifica tu viaje',q_about:'About Us',q_about_sub:'Quiénes somos',exp_lbl:'Nuestras Experiencias',exp_ttl:'Experiencias',terr_lbl:'Nuestro Territorio',terr_ttl:'La Patagonia<br>como en ningún otro lugar',terr_body:'La región de Aysén concentra algunos de los paisajes más preservados del planeta — fiordos profundos, glaciares milenarios, cóndores, pampas salvajes. Menos de 100.000 habitantes en un territorio tan grande como Bélgica.<br><br>Vivimos aquí. Conocemos cada sendero, cada río, cada lodge.',st_a:'km² de wilderness',st_b:'Wilderness absoluto',st_c:'Una sola ruta',surm_lbl:'A Medida',surm_ttl:'Una experiencia<br>a tu medida',surm_base:'Con base en',surm_body:'Cada viaje es único. Cuéntanos tu proyecto — fechas, grupo, deseos — y construimos juntos tu experiencia en la Patagonia chilena.<br><br>Respondemos en 48 horas.',f_name:'Nombre completo',f_email:'Email',f_country:'País',f_dates:'Fechas previstas',f_exp:'Experiencia',f_exp_ph:'Elegir...',f_custom:'Viaje a medida',f_msg:'Tu proyecto',f_submit:'Enviar mi solicitud',f_note:'Respuesta en 48h · Sin compromiso',about_lbl:'About Us',about_ttl:'Quiénes somos',about_body:'Pristine nació de una convicción simple: la Patagonia chilena merece algo mejor que el turismo masivo. Somos un equipo de guías y apasionados con base en Coyhaique, en el corazón de la región de Aysén.<br><br>Cada circuito está diseñado con cuidado — grupos pequeños, accesos exclusivos, lodges asociados, gastronomía local.',v1t:'Guías Expertos',v1b:'Nativos de la región, francófonos, anglófonos e hispanohablantes.',v2t:'Accesos Exclusivos',v2b:'Sitios fuera de ruta, alianzas con lodges, grupos de máx. 8 personas.',v3t:'Incoming & Agencias',v3b:'Socio receptivo para agencias. Gestión completa de tus grupos.',p1:'Corazón del Parque Patagonia',p2:'La Carretera Austral',p3:'Fiordos y Glaciares de Aysén',p4:'Lago General Carrera',pd1:'Explora las pampas, las lagunas turquesa y los cóndores del Parque Patagonia.',pd2:'La ruta más épica del mundo: 1.240 km entre volcanes, glaciares y fiordos.',pd3:'Navegaciones al amanecer, kayak en aguas glaciales, glaciares milenarios.',pd4:'El segundo lago más grande de Sudamérica con sus famosas cuevas de mármol.',dur1:'7 días',dur2:'10 días',dur3:'12 días',dur4:'5 días',cat_tous:'Todos',cat_culturel:'Cultural',cat_sports:'Deportes',cat_hiver:'Invierno',cat_gastro:'Gastronomía',exp_empty:'Ninguna experiencia en esta categoría.',pg:'Grupo pequeño',pcta:'Escribirnos'},
+    pt:{hint:'Explorar',q_exp:'Experiências',q_exp_sub:'04 circuitos exclusivos',q_terr:'Nosso Território',q_terr_sub:'Aysén · Patagônia chilena',q_surm:'Sob Medida',q_surm_sub:'Planeje sua viagem',q_about:'About Us',q_about_sub:'Quem somos',exp_lbl:'Nossas Experiências',exp_ttl:'Experiências',terr_lbl:'Nosso Território',terr_ttl:'A Patagônia<br>como em nenhum outro lugar',terr_body:'A região de Aysén concentra algumas das paisagens mais preservadas do planeta — fiordes profundos, geleiras milenares, condores, pampas selvagens. Menos de 100.000 habitantes em um território do tamanho da Bélgica.<br><br>Vivemos aqui. Conhecemos cada trilha, cada río, cada lodge.',st_a:'km² de wilderness',st_b:'Wilderness absoluto',st_c:'Uma só estrada',surm_lbl:'Sob Medida',surm_ttl:'Uma experiência<br>sob medida',surm_base:'Sediado em',surm_body:'Cada viagem é única. Compartilhe seu projeto — datas, grupo, desejos — e construímos juntos sua experiência na Patagônia chilena.<br><br>Respondemos em 48 horas.',f_name:'Nome completo',f_email:'Email',f_country:'País',f_dates:'Datas previstas',f_exp:'Experiência',f_exp_ph:'Escolher...',f_custom:'Viagem personalizada',f_msg:'Seu projeto',f_submit:'Enviar minha solicitação',f_note:'Resposta em 48h · Sem compromisso',about_lbl:'About Us',about_ttl:'Quem somos',about_body:'Pristine nasceu de uma convicção simples: a Patagônia chilena merece algo melhor do que o turismo de massa. Somos uma equipe de guias e apaixonados baseados em Coyhaique, no coração da região de Aysén.<br><br>Cada circuito é criado com cuidado — grupos pequenos, acessos exclusivos, lodges parceiros, gastronomia local.',v1t:'Guias Especializados',v1b:'Nativos da região, francófonos, anglófonos e hispanófonos.',v2t:'Acessos Exclusivos',v2b:'Locais fora de trilha, parcerias com lodges, grupos de máx. 8 pessoas.',v3t:'Incoming & Agências',v3b:'Parceiro receptivo para agências. Gestão completa dos seus grupos.',p1:'Coração do Parque Patagônia',p2:'A Carretera Austral',p3:'Fiordes e Glaciares de Aysén',p4:'Lago General Carrera',pd1:'Explore as pampas, as lagoas turquesas e os condores do Parque Patagônia.',pd2:'A rota mais épica do mundo: 1.240 km entre vulcões, geleiras e fiordes.',pd3:'Navegações ao amanhecer, caiaque em águas glaciais, geleiras milenares.',pd4:'O segundo maior lago da América do Sul com suas famosas cavernas de mármore.',dur1:'7 dias',dur2:'10 dias',dur3:'12 dias',dur4:'5 dias',cat_tous:'Todos',cat_culturel:'Cultural',cat_sports:'Esportes',cat_hiver:'Inverno',cat_gastro:'Gastronomia',exp_empty:'Nenhuma experiência nesta categoria.',pg:'Pequeno grupo',pcta:'Escrever para nós'}
   };
 
   let lang=localStorage.getItem('pp_lang')||'fr';
@@ -409,43 +421,124 @@
     document.documentElement.lang=lang;
     document.querySelectorAll('[data-i18n]').forEach(el=>{const v=t(el.getAttribute('data-i18n'));if(v)el.innerHTML=v;});
     document.querySelectorAll('.lang-btn,.nav-lang-btn').forEach(b=>b.classList.toggle('active',b.textContent.toLowerCase()===lang));
-    buildExpCards();
+    if(allProgs.length > 0) {
+      // Reconstruire labels filtres si catégories chargées
+      if(window._loadedCats) buildFilterBar(window._loadedCats);
+      renderProgs();
+    }
   }
   function setLang(l){lang=l;localStorage.setItem('pp_lang',l);applyLang();}
 
-  const PROGS=[
-    {id:'parc-patagonia',img:'assets/images/programmes/parc-patagonia.jpeg',n:'p1',d:'pd1',dur:'dur1',loc:'Aysén · Parc Patagonia'},
-    {id:'carretera-austral',img:'assets/images/programmes/carretera-austral.jpeg',n:'p2',d:'pd2',dur:'dur2',loc:'Coyhaique → Villa O\'Higgins'},
-    {id:'fjords-aysen',img:'assets/images/programmes/fjords-aysen.jpeg',n:'p3',d:'pd3',dur:'dur3',loc:'Laguna San Rafael · Fiordos'},
-    {id:'lago-carrera',img:'assets/images/programmes/lago-general-carrera.jpeg',n:'p4',d:'pd4',dur:'dur4',loc:'Puerto Río Tranquilo'},
-  ];
+  /* ── SUPABASE ── */
+  const SB_URL = 'https://rdepvqaojrkjsayzfcal.supabase.co';
+  const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJkZXB2cWFvanJranNheXpmY2FsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg0NDg3MzIsImV4cCI6MjA5NDAyNDczMn0.MTm3lEGCz_oTUPv1J1N6H7nsmjMGiY46X6xYBMxow9U';
+  const sb = supabase.createClient(SB_URL, SB_KEY);
 
-  function buildExpCards(){
-    const g=document.getElementById('exp-grid');if(!g)return;g.innerHTML='';
-    PROGS.forEach((p,i)=>{
-      const c=document.createElement('div');c.className='exp-card';
-      c.innerHTML=`<div class="exp-card-bg" style="background-image:url('${p.img}')"></div>
+  let allProgs = [];
+  let currentCat = 'tous';
+
+  async function loadProgs() {
+    const loading = document.getElementById('exp-loading');
+    const grid = document.getElementById('exp-grid');
+    if (loading) loading.style.display = 'block';
+    if (grid) grid.innerHTML = '';
+
+    // Charger catégories et programmes en parallèle
+    const [catRes, progRes] = await Promise.all([
+      sb.from('pp_categories').select('*').order('ordre', { ascending: true }),
+      sb.from('pp_programmes')
+        .select('id, nom, titre_fr, titre_en, titre_es, titre_pt, desc_fr, desc_en, desc_es, desc_pt, image_url, duree_jours, categorie, badge')
+        .eq('publie', true)
+        .order('created_at', { ascending: true })
+    ]);
+
+    if (loading) loading.style.display = 'none';
+
+    // Construire la barre de filtres dynamiquement
+    const cats = catRes.data || [];
+    window._loadedCats = cats;
+    buildFilterBar(cats);
+
+    if (progRes.error || !progRes.data) { console.error(progRes.error); return; }
+    allProgs = progRes.data;
+    renderProgs();
+  }
+
+  function buildFilterBar(cats) {
+    const bar = document.getElementById('exp-filters');
+    if (!bar) return;
+    const tousLabel = t('cat_tous') || 'Tous';
+    let html = `<button class="exp-filter active" data-cat="tous" onclick="filterCat('tous')">${tousLabel}</button>`;
+    cats.forEach(c => {
+      const label = c['label_' + lang] || c.label_fr || c.slug;
+      html += `<button class="exp-filter" data-cat="${c.slug}" onclick="filterCat('${c.slug}')">${label}</button>`;
+    });
+    bar.innerHTML = html;
+  }
+
+  function renderProgs() {
+    const grid = document.getElementById('exp-grid');
+    const empty = document.getElementById('exp-empty');
+    if (!grid) return;
+    grid.innerHTML = '';
+
+    const filtered = currentCat === 'tous'
+      ? allProgs
+      : allProgs.filter(p => p.categorie === currentCat);
+
+    if (filtered.length === 0) {
+      if (empty) empty.style.display = 'block';
+      return;
+    }
+    if (empty) empty.style.display = 'none';
+
+    filtered.forEach((p, i) => {
+      const titre = p['titre_' + lang] || p.titre_fr || p.nom || '';
+      const desc  = p['desc_' + lang]  || p.desc_fr  || '';
+      const dur   = p.duree_jours ? p.duree_jours + ' ' + (lang === 'fr' ? 'jours' : lang === 'es' ? 'días' : lang === 'pt' ? 'dias' : 'days') : '';
+      const img   = p.image_url || 'assets/images/hero.jpeg';
+      const cat   = p.categorie || '';
+
+      const c = document.createElement('div');
+      c.className = 'exp-card';
+      c.innerHTML = `<div class="exp-card-bg" style="background-image:url('${img}')"></div>
         <div class="exp-card-base"></div><div class="exp-xcross"></div>
-        <div class="exp-card-name">${String(i+1).padStart(2,'0')} — ${t(p.n)}</div>
+        <div class="exp-card-name">${String(i+1).padStart(2,'0')} — ${titre}</div>
         <div class="exp-overlay">
-          <div class="exp-ov-loc">${p.loc}</div>
-          <div class="exp-ov-name">${t(p.n)}</div>
-          <div class="exp-ov-desc">${t(p.d)}</div>
+          <div class="exp-ov-loc">${cat}</div>
+          <div class="exp-ov-name">${titre}</div>
+          <div class="exp-ov-desc">${desc}</div>
           <div class="exp-ov-meta">
-            <div class="exp-mi"><span class="exp-ml">Durée</span><span class="exp-mv">${t(p.dur)}</span></div>
+            <div class="exp-mi"><span class="exp-ml">${lang==='fr'?'Durée':lang==='es'?'Duración':lang==='pt'?'Duração':'Duration'}</span><span class="exp-mv">${dur}</span></div>
             <div class="exp-mi"><span class="exp-ml">Format</span><span class="exp-mv">${t('pg')}</span></div>
           </div>
           <button class="exp-ov-cta" onclick="event.stopPropagation();contactExp('${p.id}')">${t('pcta')} →</button>
         </div>`;
-      c.addEventListener('click',()=>{
-        document.querySelectorAll('.exp-card').forEach(x=>{if(x!==c)x.classList.remove('open');});
+      c.addEventListener('click', () => {
+        document.querySelectorAll('.exp-card').forEach(x => { if(x!==c) x.classList.remove('open'); });
         c.classList.toggle('open');
       });
-      g.appendChild(c);
+      grid.appendChild(c);
     });
   }
 
-  function contactExp(id){const s=document.querySelector('select[name="experience"]');if(s)s.value=id;openPanel('surlesure');}
+  function filterCat(cat) {
+    currentCat = cat;
+    document.querySelectorAll('.exp-filter').forEach(b => b.classList.toggle('active', b.dataset.cat === cat));
+    renderProgs();
+  }
+
+  function contactExp(id) {
+    const s = document.querySelector('select[name="experience"]');
+    const prog = allProgs.find(p => p.id === id);
+    if (s && prog) {
+      // Essaie de matcher par nom sinon valeur generique
+      s.value = 'sur-mesure';
+      const opt = Array.from(s.options).find(o => o.text === (prog['titre_' + lang] || prog.titre_fr));
+      if (opt) s.value = opt.value;
+    }
+    openPanel('surlesure');
+  }
 
   let menuOpen=false;
   function toggleMenu(){
@@ -488,6 +581,7 @@
 
   document.addEventListener('DOMContentLoaded',()=>{
     applyLang();
+    loadProgs();
     const form=document.getElementById('contact-form');
     if(form){
       form.addEventListener('submit',async e=>{
